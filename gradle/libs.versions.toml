@@ -1,20 +1,19 @@
 [versions]
 agp = "8.10.0"
-foundation = "1.7.8"
+foundation = "1.8.1"
 kotlin = "2.1.10"
-coreKtx = "1.15.0"
+coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
-kotlinxSerializationJson = "1.6.3"
-lifecycleRuntimeKtx = "2.8.7"
+kotlinxSerializationJson = "1.7.3"
+lifecycleRuntimeKtx = "2.9.0"
 activityCompose = "1.10.1"
-composeBom = "2025.03.01"
+composeBom = "2025.05.00"
 material = "1.12.0"
 viewpager2 = "1.1.0"
-uiTextGoogleFonts = "1.7.8"
-roomCommon = "2.6.1"
-navigationCompose = "2.8.9"
+uiTextGoogleFonts = "1.8.1"
+navigationCompose = "2.9.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -36,9 +35,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
-androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
-
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
