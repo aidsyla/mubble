@@ -44,12 +44,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aidsyla.mubble.R
 import com.aidsyla.mubble.common.components.layout.TabbedPager
+import com.aidsyla.mubble.data.User
+import com.aidsyla.mubble.data.UserRepo
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    onNavigateToSettings: () -> Unit
+    onNavigateToSettings: () -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
@@ -97,7 +99,33 @@ fun ProfileScreen(
 }
 
 @Composable
-fun UserDetails(modifier: Modifier = Modifier) {
+fun TabbedPagerProfile(modifier: Modifier = Modifier) {
+    val titles = listOf("Posts", "Bubbles", "Saved")
+    val tabContent: List<@Composable () -> Unit> = listOf(
+        { ProfilePostGrid() },
+        { ProfileBubbleList() },
+        { SaveScreen() }
+    )
+    TabbedPager(modifier = modifier, titles = titles, tabContent = tabContent) {
+        UserDetails(user = UserRepo.user1)
+    }
+}
+
+@Composable
+fun SaveScreen() {
+    val titles = listOf("Posts", "Bubbles")
+    val tabContent: List<@Composable () -> Unit> = listOf(
+        { ProfilePostGrid() },
+        { ProfileBubbleList() },
+    )
+    TabbedPager(titles = titles, tabContent = tabContent)
+}
+
+@Composable
+fun UserDetails(
+    modifier: Modifier = Modifier,
+    user: User,
+) {
     Column(
         modifier = modifier
     ) {
@@ -105,22 +133,22 @@ fun UserDetails(modifier: Modifier = Modifier) {
             contentAlignment = Alignment.BottomEnd
         ) {
             Image(
-                painter = painterResource(R.drawable.ic_launcher_background),
+                painter = painterResource(user.bannerResId),
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(2f),
+                    .aspectRatio(3f),
                 contentScale = ContentScale.FillWidth
             )
             Image(
-                painter = painterResource(R.drawable.ic_launcher_background),
-                colorFilter = ColorFilter.tint(Color.Blue),
+                painter = painterResource(user.profilePictureResId),
                 contentDescription = null,
                 modifier = Modifier
                     .padding(end = 16.dp)
                     .offset(y = (50).dp)
                     .size(100.dp)
-                    .clip(CircleShape)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
             )
         }
         Row(
@@ -130,7 +158,13 @@ fun UserDetails(modifier: Modifier = Modifier) {
                 .padding(horizontal = 16.dp)
                 .padding(top = 12.dp)
         ) {
-            ProfileDetails(modifier = Modifier.weight(1f))
+            ProfileDetails(
+                modifier = Modifier.weight(1f),
+                displayName = user.displayName,
+                followerCount = user.followerCount,
+                followingCount = user.followingCount,
+                description = user.description
+            )
         }
         Spacer(modifier = Modifier.height(4.dp))
     }
@@ -178,31 +212,38 @@ fun ProfilePost(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ProfileDetails(modifier: Modifier = Modifier) {
+fun ProfileDetails(
+    modifier: Modifier = Modifier,
+    displayName: String,
+    followerCount: Int,
+    followingCount: Int,
+    description: String?,
+) {
     Column(
         modifier = modifier
     ) {
         Text(
-            text = "President Donald J. Trump",
+            text = displayName,
             style = MaterialTheme.typography.titleMedium
         )
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = "312k Followers",
+                text = "$followerCount Followers",
                 style = MaterialTheme.typography.labelMedium
             )
             Text(
-                text = "1482 Following",
+                text = "$followingCount Following",
                 style = MaterialTheme.typography.labelMedium
             )
         }
         Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = "Obviously the Material You design doesn't improve branding, but you already know the point is for cohesion.",
-            style = MaterialTheme.typography.bodySmall
-        )
+        if (description != null)
+            Text(
+                text = description,
+                style = MaterialTheme.typography.bodySmall
+            )
         Spacer(modifier = Modifier.height(8.dp))
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -222,29 +263,6 @@ fun ProfileDetails(modifier: Modifier = Modifier) {
                 Text(text = "Message", style = MaterialTheme.typography.labelMedium)
             }
         }
-    }
-}
-
-@Composable
-fun SaveScreen() {
-    val titles = listOf("Posts", "Bubbles")
-    val tabContent: List<@Composable () -> Unit> = listOf(
-        { ProfilePostGrid() },
-        { ProfileBubbleList() },
-    )
-    TabbedPager(titles = titles, tabContent = tabContent)
-}
-
-@Composable
-fun TabbedPagerProfile(modifier: Modifier = Modifier) {
-    val titles = listOf("Posts", "Bubbles", "Saved")
-    val tabContent: List<@Composable () -> Unit> = listOf(
-        { ProfilePostGrid() },
-        { ProfileBubbleList() },
-        { SaveScreen() }
-    )
-    TabbedPager(modifier = modifier, titles = titles, tabContent = tabContent) {
-        UserDetails()
     }
 }
 
