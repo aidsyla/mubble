@@ -3,20 +3,29 @@ package com.aidsyla.mubble.common.components.for_reference
 import android.util.Log
 import android.view.ContextThemeWrapper
 import android.view.ViewGroup
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.TabRowDefaults
@@ -50,6 +59,7 @@ import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.aidsyla.mubble.R
+import com.aidsyla.mubble.common.components.layout.AnimatedIndicatorWithPageOffset
 import com.aidsyla.mubble.feature.profile.ProfileBubbleList
 import com.aidsyla.mubble.feature.profile.ProfilePostGrid
 import com.aidsyla.mubble.feature.profile.UserDetails
@@ -208,7 +218,7 @@ fun ComposeTabLayout(
         val screenHeight = maxHeight
 
         Column(modifier.verticalScroll(scrollState)) {
-            UserDetails()
+//            UserDetails()
 
             TabRow(
                 selectedTabIndex = pagerState.currentPage,
@@ -257,6 +267,78 @@ fun ComposeTabLayout(
                 when (page) {
                     0 -> ProfilePostGrid()
                     1 -> ProfileBubbleList()
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ComposeTabLayout_New(
+    titles: List<String>,
+    modifier: Modifier = Modifier,
+    tabContent: List<@Composable () -> Unit>,
+    header: @Composable () -> Unit = {},
+) {
+    val coroutineScope = rememberCoroutineScope()
+    val pagerState = rememberPagerState(pageCount = { titles.size })
+    val currentScreen = pagerState.currentPage
+    val scrollState = rememberScrollState()
+
+    BoxWithConstraints {
+        val screenHeight = maxHeight
+
+        Column(modifier.verticalScroll(scrollState)) {
+            Box {
+                ProfileTopAppBarOld_2(modifier = Modifier.padding(top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()))
+                Column {
+//                    UserDetails()
+                    PrimaryTabRow(
+                        selectedTabIndex = currentScreen,
+                        indicator = {
+                            AnimatedIndicatorWithPageOffset(
+                                currentPage = pagerState.currentPage,
+                                pageOffset = pagerState.currentPageOffsetFraction
+                            )
+                        }
+                    ) {
+                        titles.forEachIndexed { index, title ->
+                            Tab(
+                                selected = currentScreen == index,
+                                onClick = {
+                                    coroutineScope.launch {
+                                        pagerState.animateScrollToPage(index)
+                                    }
+                                },
+                                text = { Text(title) },
+                                selectedContentColor = MaterialTheme.colorScheme.primary,
+                                unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                    val nestedScrollConnection = remember {
+                        object : NestedScrollConnection {
+                            override fun onPreScroll(
+                                available: Offset,
+                                source: NestedScrollSource,
+                            ): Offset {
+                                return if (available.y > 0) Offset.Zero else Offset(
+                                    x = 0f,
+                                    y = -scrollState.dispatchRawDelta(-available.y)
+                                )
+                            }
+                        }
+                    }
+                    HorizontalPager(
+                        state = pagerState,
+                        verticalAlignment = Alignment.Top,
+                        modifier = Modifier
+                            .height(screenHeight)
+                            .nestedScroll(nestedScrollConnection)
+                    ) { pageIndex ->
+                        tabContent[pageIndex].invoke()
+                    }
                 }
             }
         }
