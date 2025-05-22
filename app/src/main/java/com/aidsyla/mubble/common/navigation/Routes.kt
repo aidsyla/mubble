@@ -6,8 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable object ExploreRoute
 @Serializable object ChatListRoute
 @Serializable object ActivityRoute
-@Serializable object ProfileRoute
-@Serializable data class OtherProfileRoute(val username: String)
+@Serializable data class ProfileRoute(val userId: String? = null)
 
 @Serializable data class PostDetailsRoute(val postId: String)
 @Serializable data class UserProfileRoute(val userId: String)

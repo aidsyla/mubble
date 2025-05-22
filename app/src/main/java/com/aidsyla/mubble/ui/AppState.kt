@@ -65,12 +65,12 @@ class AppState(
             EXPLORE -> navController.navigateToExplore(topLevelNavOptions)
             CHATS -> navController.navigateToChatList(topLevelNavOptions)
             ACTIVITY -> navController.navigateToActivity(topLevelNavOptions)
-            PROFILE -> navController.navigateToProfile(topLevelNavOptions)
+            PROFILE -> navController.navigateToProfile(navOptions = topLevelNavOptions)
         }
     }
 
     fun navigateToProfileFromSettings() {
-        navController.navigate(ProfileRoute) {
+        navController.navigate(ProfileRoute()) {
             popUpTo(ProfileRoute::class.qualifiedName!!) {
                 saveState = false
             }
