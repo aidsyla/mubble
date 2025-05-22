@@ -49,10 +49,6 @@ import com.aidsyla.mubble.feature.explore.model.ImagePostFeedItem
 import com.aidsyla.mubble.feature.home.data.DummyPostRepository
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 
-enum class PostVariant {
-    POST, BUBBLE
-}
-
 @Composable
 private fun BasePostLayout(
     modifier: Modifier = Modifier,
@@ -69,7 +65,7 @@ private fun BasePostLayout(
             PostHeader(
                 name = item.displayName,
                 avatarResId = item.userAvatarResId,
-                onUserClick = { onUserClick(item.username) },
+                onUserClick = { onUserClick(item.id) },
                 onMoreClick = { onMoreClick(item.id) }
             )
         }
@@ -207,7 +203,7 @@ fun CircleHeader(
 ) {
     Row(
         modifier = modifier
-            .background(color = MaterialTheme.colorScheme.tertiaryContainer)
+            .background(color = MaterialTheme.colorScheme.surfaceContainer)
             .fillMaxWidth()
             .clickable { }
             .padding(vertical = 8.dp),

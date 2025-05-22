@@ -1,12 +1,10 @@
 package com.aidsyla.mubble.feature.explore.model
 
 import androidx.annotation.DrawableRes
-import com.aidsyla.mubble.common.components.post.PostVariant
 import java.util.UUID
 
 sealed interface FeedItem {
     val id: String
-    val variant: PostVariant
     val username: String
     val displayName: String
     @get:DrawableRes val userAvatarResId: Int
@@ -20,7 +18,6 @@ sealed interface FeedItem {
 
 data class ImagePostFeedItem(
     override val id: String = UUID.randomUUID().toString(),
-    override val variant: PostVariant = PostVariant.POST,
     override val username: String,
     override val displayName: String,
     @DrawableRes override val userAvatarResId: Int,
@@ -35,7 +32,6 @@ data class ImagePostFeedItem(
 
 data class BubbleFeedItem(
     override val id: String = UUID.randomUUID().toString(),
-    override val variant: PostVariant = PostVariant.BUBBLE,
     override val username: String,
     override val displayName: String,
     @DrawableRes override val userAvatarResId: Int,
