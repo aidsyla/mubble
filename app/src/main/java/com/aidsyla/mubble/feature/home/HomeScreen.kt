@@ -25,7 +25,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aidsyla.mubble.common.components.circle.AllButton
 import com.aidsyla.mubble.common.components.circle.CircleItem
-import com.aidsyla.mubble.common.components.layout.TabbedPager
 import com.aidsyla.mubble.ui.LocalBottomBarPadding
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -91,7 +90,7 @@ fun TabbedPagerHome(
             )
         },
     )
-    TabbedPager(modifier = modifier, titles = titles, tabContent = tabContent)
+//    TabbedPager(modifier = modifier, titles = titles, content = tabContent)
 }
 
 @Composable
@@ -108,7 +107,7 @@ fun PostList(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         postFeed(
-            items = uiState.items,
+            uiState = uiState,
             onUserClick = onUserClick,
             onMoreClick = onMoreClick,
             onPostClick = onPostClick
@@ -147,7 +146,7 @@ fun CircleScreen(
             }
         }
         postFeed(
-            items = uiState.items,
+            uiState = uiState,
             onUserClick = onUserClick,
             onMoreClick = onMoreClick,
             onPostClick = onPostClick
