@@ -29,10 +29,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.aidsyla.mubble.R
-import com.aidsyla.mubble.common.components.layout.TabbedPager
 import com.aidsyla.mubble.data.UserRepo
-import com.aidsyla.mubble.feature.profile.ProfileBubbleList
-import com.aidsyla.mubble.feature.profile.ProfilePostGrid
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -94,9 +91,9 @@ fun ChatDetailsScreen(
 fun ChatDetailsPager(modifier: Modifier = Modifier) {
     val titles = listOf("Media", "Posts", "Bubbles")
     val tabContent: List<@Composable () -> Unit> = listOf(
-        { ProfilePostGrid() },
-        { ProfilePostGrid() },
-        { ProfileBubbleList() },
+//        { ProfilePostGrid() },
+//        { ProfilePostGrid() },
+//        { ProfileBubbleList() },
     )
-    TabbedPager(modifier = modifier, titles = titles, tabContent = tabContent)
+//    TabbedPager(modifier = modifier, titles = titles, content = tabContent)
 }

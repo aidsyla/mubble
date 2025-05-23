@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,11 +40,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.aidsyla.mubble.common.components.layout.TabbedPager
 import com.aidsyla.mubble.feature.explore.model.BubbleFeedItem
 import com.aidsyla.mubble.feature.explore.model.FeedItem
 import com.aidsyla.mubble.feature.explore.model.ImagePostFeedItem
-import com.aidsyla.mubble.feature.profile.ProfileBubbleList
 import com.aidsyla.mubble.ui.LocalBottomBarPadding
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,7 +52,7 @@ fun ExploreScreen(
     onPostClick: (postId: String) -> Unit,
 ) {
     val scrollState = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -75,7 +74,7 @@ fun ExploreScreen(
             modifier = Modifier
                 .padding(top = it.calculateTopPadding(), bottom = bottomPadding)
                 .nestedScroll(scrollState.nestedScrollConnection),
-            items = uiState.value.items,
+            items = uiState.items,
             onPostClick = onPostClick,
         )
     }
@@ -95,9 +94,9 @@ fun TabbedPagerExplore(
                 onPostClick = onPostClick
             )
         },
-        { ProfileBubbleList() },
+//        { ProfileBubbleList() },
     )
-    TabbedPager(modifier = modifier, titles = titles, tabContent = tabContent)
+//    TabbedPager(modifier = modifier, titles = titles, content = tabContent)
 }
 
 @Composable
