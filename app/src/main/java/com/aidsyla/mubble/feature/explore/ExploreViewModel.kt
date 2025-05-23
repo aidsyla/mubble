@@ -3,8 +3,9 @@ package com.aidsyla.mubble.feature.explore
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aidsyla.mubble.common.components.post.PostVariant
+import com.aidsyla.mubble.feature.explore.model.BubbleFeedItem
 import com.aidsyla.mubble.feature.explore.model.FeedItem
+import com.aidsyla.mubble.feature.explore.model.ImagePostFeedItem
 import com.aidsyla.mubble.feature.home.data.DummyPostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,7 +21,7 @@ class ExploreViewModel @Inject constructor(
     private val postId: String = savedStateHandle.get<String>("postId") ?: ""
 
     val uiState: StateFlow<ExploreUiState> = flowOf(
-        ExploreUiState(items = sortExploreItemsForGrid(DummyPostRepository.dummyFeedItems))
+        ExploreUiState(items = sortExploreItemsForGrid_v6_optimized(DummyPostRepository.dummyFeedItems))
     )
         .stateIn(
             scope = viewModelScope,
@@ -28,36 +29,36 @@ class ExploreViewModel @Inject constructor(
             initialValue = ExploreUiState(isLoading = true)
         )
 
-    private fun sortExploreItemsForGrid(items: List<FeedItem>): List<FeedItem> {
-        val posts = items.filter { it.variant == PostVariant.POST }
-        val bubbles = items.filter { it.variant == PostVariant.BUBBLE }.toMutableList()
-
-        val sortedList = mutableListOf<FeedItem>()
-        val postIterator = posts.iterator()
-
-        while (postIterator.hasNext()) {
-            val post1 = postIterator.next()
-            sortedList.add(post1)
-
-            if (postIterator.hasNext()) {
-                val post2 = postIterator.next()
-                sortedList.add(post2)
-                if (bubbles.isNotEmpty()) {
-                    sortedList.add(bubbles.removeAt(0))
-                }
-            } else {
-                if (bubbles.isNotEmpty()) {
-                    sortedList.add(bubbles.removeAt(0))
-                }
-            }
-        }
-        sortedList.addAll(bubbles)
-        return sortedList
-    }
+//    private fun sortExploreItemsForGrid(items: List<FeedItem>): List<FeedItem> {
+//        val posts = items.filterIsInstance<ImagePostFeedItem>()
+//        val bubbles = items.filterIsInstance<BubbleFeedItem>()
+//
+//        val sortedList = mutableListOf<FeedItem>()
+//        val postIterator = posts.iterator()
+//
+//        while (postIterator.hasNext()) {
+//            val post1 = postIterator.next()
+//            sortedList.add(post1)
+//
+//            if (postIterator.hasNext()) {
+//                val post2 = postIterator.next()
+//                sortedList.add(post2)
+//                if (bubbles.isNotEmpty()) {
+//                    sortedList.add(bubbles.removeAt(0))
+//                }
+//            } else {
+//                if (bubbles.isNotEmpty()) {
+//                    sortedList.add(bubbles.removeAt(0))
+//                }
+//            }
+//        }
+//        sortedList.addAll(bubbles)
+//        return sortedList
+//    }
 
     private fun sortExploreItemsForGrid_v6_optimized(items: List<FeedItem>): List<FeedItem> {
-        val posts = items.filter { it.variant == PostVariant.POST }
-        val bubbles = items.filter { it.variant == PostVariant.BUBBLE }
+        val posts = items.filterIsInstance<ImagePostFeedItem>()
+        val bubbles = items.filterIsInstance<BubbleFeedItem>()
 
         val sortedList = mutableListOf<FeedItem>()
         val postIterator = posts.iterator()
