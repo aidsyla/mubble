@@ -8,7 +8,6 @@ import androidx.navigation.toRoute
 import com.aidsyla.mubble.common.navigation.ChatDetailsRoute
 import com.aidsyla.mubble.common.navigation.ChatListRoute
 import com.aidsyla.mubble.common.navigation.ChatRoute
-import com.aidsyla.mubble.common.navigation.OtherProfileRoute
 
 fun NavController.navigateToChatList(navOptions: NavOptions) =
     navigate(route = ChatListRoute, navOptions)
@@ -27,13 +26,6 @@ fun NavController.navigateToChatDetails(
 ) {
     this.navigate(ChatDetailsRoute(otherUserId = otherUserId), navOptions = navOptions)
 }
-
-fun NavController.navigateFromChatToProfile(
-    userId: String,
-    navOptions: NavOptions
-) =
-    navigate(route = OtherProfileRoute(userId), navOptions)
-
 
 
 fun NavGraphBuilder.chatListScreen(
