@@ -12,15 +12,20 @@ import com.aidsyla.mubble.feature.explore.model.FeedItem
 import com.aidsyla.mubble.feature.explore.model.ImagePostFeedItem
 
 fun LazyListScope.postFeed(
-    items: List<FeedItem>,
+    uiState: PostListUiState,
     onUserClick: (String) -> Unit,
     onMoreClick: (postId: String) -> Unit,
     onPostClick: (postId: String) -> Unit,
 ) {
     items(
-        items = items,
+        items = uiState.items,
         key = { it.id },
-        contentType = { it.variant }
+        contentType = {
+            when(it) {
+                is ImagePostFeedItem -> "Image_Post"
+                is BubbleFeedItem -> "Bubble_Post"
+            }
+        }
     ) { item ->
         when (item) {
             is ImagePostFeedItem -> PostCard(
