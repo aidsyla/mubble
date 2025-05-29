@@ -21,7 +21,7 @@ fun NavGraphBuilder.settingsStartScreen(
     onBackClick: () -> Unit
 ) {
     composable<SettingsStartRoute> {
-        SettingsStartContent(
+        SettingsStartScreen(
             onNavigateToNotifications = onNavigateToNotifications,
             onNavigateToDevicePermissions = onNavigateToDevicePermissions,
             onNavigateToManageAccount = onNavigateToManageAccount,
@@ -39,7 +39,7 @@ fun NavGraphBuilder.settingsNotificationsScreen(
     onBackClick: () -> Unit
 ) {
     composable<SettingsNotificationsRoute> {
-        SettingsNotificationsContent(
+        SettingsNotificationsScreen(
             onBackClick = onBackClick
         )
     }
@@ -53,7 +53,7 @@ fun NavGraphBuilder.settingsDevicePermissionsScreen(
     onBackClick: () -> Unit
 ) {
     composable<SettingsDevicePermissionsRoute> {
-        SettingsDevicePermissionsContent(
+        SettingsDevicePermissionsScreen(
             onBackClick = onBackClick
         )
     }
@@ -67,7 +67,7 @@ fun NavGraphBuilder.settingsManageAccountScreen(
     onBackClick: () -> Unit
 ) {
     composable<SettingsManageAccountRoute> {
-        SettingsManageAccountContent(
+        SettingsManageAccountScreen(
             onBackClick = onBackClick
         )
     }

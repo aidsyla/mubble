@@ -3,145 +3,210 @@ package com.aidsyla.mubble.feature.settings
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
+import com.aidsyla.mubble.common.components.TabButtons
+import com.aidsyla.mubble.ui.theme.MubbleTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsStartContent(
+fun SettingsStartScreen(
     modifier: Modifier = Modifier,
     onNavigateToNotifications: () -> Unit,
     onNavigateToDevicePermissions: () -> Unit,
     onNavigateToManageAccount: () -> Unit,
     onLogoutClick: () -> Unit = {},
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text("Settings")
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
+            SettingsTopBar(title = "Settings", onBackClick = onBackClick)
         }
     ) {
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(it),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Spacer(modifier = Modifier.height(8.dp))
-            SegmentedButtonDetails(
-                icon = Icons.Default.Refresh,
-                description = "Display Mode",
-                buttons = listOf("Auto", "Dark", "Light")
-            )
-            SettingItem(
-                description = "Notifications",
-                icon = Icons.Default.Notifications,
-                onClick = onNavigateToNotifications
-            )
-            SettingItem(
-                description = "Device Permissions",
-                icon = Icons.Default.ThumbUp,
-                onClick = onNavigateToDevicePermissions
-            )
-            SettingItem(
-                description = "Manage Account",
-                icon = Icons.Default.Edit,
-                onClick = onNavigateToManageAccount
-            )
-            SettingItem(
-                description = "Log out",
-                icon = Icons.Default.ExitToApp,
-                clickable = false
-            )
+        ReusableLazyColumn(paddingValues = it) {
+            item {
+                Column(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                ) {
+                    Row(
+                        modifier = Modifier.height(48.dp),
+                        horizontalArrangement = Arrangement.spacedBy(
+                            12.dp,
+                            Alignment.CenterHorizontally
+                        ),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(MubbleTheme.Icons.Appearance, null)
+                        Text("Appearance", style = MaterialTheme.typography.bodyLarge)
+                    }
+                    TabButtons(
+                        options = listOf("Auto", "Dark", "Light"),
+                        selectedIcons = MubbleTheme.AppearanceTabs.iconsSelected,
+                        unselectedIcons = MubbleTheme.AppearanceTabs.icons,
+                        selectedIndex = 0,
+                        onTabSelected = {}
+                    )
+                }
+            }
+            item {
+                HorizontalDivider(modifier = Modifier.padding(top = 16.dp, bottom = 8.dp))
+            }
+            item {
+                SettingItem(
+                    description = "Notifications",
+                    icon = MubbleTheme.Icons.Notification,
+                    onClick = onNavigateToNotifications
+                )
+            }
+            item {
+                SettingItem(
+                    description = "Device Permissions",
+                    icon = MubbleTheme.Icons.DevicePermissions,
+                    onClick = onNavigateToDevicePermissions
+                )
+            }
+            item {
+                SettingItem(
+                    description = "Manage Account",
+                    icon = MubbleTheme.Icons.ManageAccount,
+                    onClick = onNavigateToManageAccount
+                )
+            }
+            item {
+                SettingItem(
+                    description = "Log out",
+                    icon = MubbleTheme.Icons.Logout,
+                )
+            }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsNotificationsContent(
-    onBackClick: () -> Unit
+fun SettingsNotificationsScreen(
+    onBackClick: () -> Unit,
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text("Notifications")
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
+            SettingsTopBar(title = "Notifications", onBackClick = onBackClick)
         }
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it)
-        ) {
-            Row(
-                modifier = Modifier.padding(start = 16.dp, end = 12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
-            ) {
-                Icon(imageVector = Icons.Default.Notifications, null)
-                Text("Enable Notifications", style = MaterialTheme.typography.bodyLarge)
-                Spacer(modifier = Modifier.weight(1f))
-                Switch(
-                    checked = true,
-                    thumbContent = {
-                        Icon(
-                            Icons.Default.Check,
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp)
-                        )
-                    },
-                    onCheckedChange = {}
+        ReusableLazyColumn(paddingValues = it) {
+            item {
+                Row(
+                    modifier = Modifier.padding(start = 16.dp, end = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(
+                        12.dp,
+                        Alignment.CenterHorizontally
+                    )
+                ) {
+                    Icon(painter = MubbleTheme.Icons.Notification, null)
+                    Text("Enable Notifications", style = MaterialTheme.typography.bodyLarge)
+                    Spacer(modifier = Modifier.weight(1f))
+                    Switch(
+                        checked = true,
+                        thumbContent = {
+                            Icon(
+                                Icons.Default.Check,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp)
+                            )
+                        },
+                        onCheckedChange = {}
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun SettingsDevicePermissionsScreen(
+    onBackClick: () -> Unit,
+) {
+    Scaffold(
+        topBar = {
+            SettingsTopBar(title = "Device Permissions", onBackClick = onBackClick)
+        }
+    ) {
+        ReusableLazyColumn(paddingValues = it) {
+            item {
+                SettingItem(
+                    modifier = Modifier.padding(end = 8.dp),
+                    description = "Photos",
+                    icon = MubbleTheme.Icons.PhotoLibrary
+                ) {
+                    Text("Not allowed", style = MaterialTheme.typography.labelSmall)
+                }
+            }
+            item {
+                SettingItem(
+                    modifier = Modifier.padding(end = 8.dp),
+                    description = "Camera",
+                    icon = MubbleTheme.Icons.Camera
+                ) {
+                    Text("Allowed", style = MaterialTheme.typography.labelSmall)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun SettingsManageAccountScreen(
+    modifier: Modifier = Modifier,
+    onBackClick: () -> Unit,
+    onClick: () -> Unit = {},
+) {
+    val options = listOf("Public", "Private")
+    Scaffold(
+        topBar = {
+            SettingsTopBar(title = "Manage Account", onBackClick = onBackClick)
+        }
+    ) {
+        ReusableLazyColumn(paddingValues = it) {
+            item {
+                TabButtonWithDescription(
+                    description = "Account visibility",
+                    icon = MubbleTheme.Icons.AccountVisibility,
+                    options = options,
+                    selectedIcons = MubbleTheme.AccountVisibility.iconsSelected,
+                    unselectedIcons = MubbleTheme.AccountVisibility.icons,
+                    selectedIndex = 0,
+                    onTabSelected = {}
+                )
+            }
+            item {
+                HorizontalDivider(modifier = Modifier.padding(top = 16.dp, bottom = 8.dp))
+            }
+            item {
+                SettingItem(
+                    onClick = onClick,
+                    description = "Delete Account",
+                    icon = MubbleTheme.Icons.Delete
                 )
             }
         }
@@ -150,151 +215,93 @@ fun SettingsNotificationsContent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsDevicePermissionsContent(
-    onBackClick: () -> Unit
-) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text("Device Permissions")
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
-        }
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it)
-        ) {
-            SettingItem(
-                clickable = false,
-                description = "Photos",
-                isAllowed = "Allowed",
-                icon = Icons.Default.Phone
-            )
-            SettingItem(
-                clickable = false,
-                description = "Camera",
-                isAllowed = "Not allowed",
-                icon = Icons.Default.Star
-            )
-            SettingItem(
-                clickable = false,
-                description = "Microphone",
-                isAllowed = "Allowed",
-                icon = Icons.Default.AccountCircle
-            )
-        }
-    }
-
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SettingsManageAccountContent(
+fun SettingsTopBar(
     modifier: Modifier = Modifier,
+    title: String,
     onBackClick: () -> Unit,
-    onClick: () -> Unit = {},
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text("Manage Account")
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
-        }
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Spacer(modifier = Modifier.height(8.dp))
-            SegmentedButtonDetails(
-                icon = Icons.Default.Lock,
-                description = "Account visibility",
-                buttons = listOf("Private", "Public")
-            )
-            SettingItem(
-                onClick = onClick,
-                description = "Delete Account",
-                icon = Icons.Default.Delete
-            )
-        }
-    }
-}
-
-@Composable
-fun SegmentedButtonDetails(
-    modifier: Modifier = Modifier,
-    icon: ImageVector,
-    description: String,
-    buttons: List<String>,
-) {
-    Column(
-        modifier = Modifier.padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(icon, null)
-            Text(description, style = MaterialTheme.typography.bodyLarge)
-        }
-        SingleChoiceSegmentedButtonRow {
-            buttons.forEachIndexed { index, s ->
-                SegmentedButton(
-                    selected = index == 0,
-                    onClick = {},
-                    shape = SegmentedButtonDefaults.itemShape(index, buttons.size)
-                ) { Text(s) }
+    CenterAlignedTopAppBar(
+        modifier = modifier,
+        title = {
+            Text(text = title)
+        },
+        navigationIcon = {
+            IconButton(onClick = onBackClick) {
+                Icon(MubbleTheme.Icons.ArrowBack, contentDescription = "Back")
             }
         }
+    )
+}
+
+@Composable
+private fun ReusableLazyColumn(
+    modifier: Modifier = Modifier,
+    paddingValues: PaddingValues,
+    content: LazyListScope.() -> Unit,
+) {
+    LazyColumn(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(paddingValues),
+        contentPadding = PaddingValues(top = 4.dp),
+        content = content
+    )
+}
+
+@Composable
+private fun TabButtonWithDescription(
+    modifier: Modifier = Modifier,
+    description: String,
+    icon: Painter,
+    options: List<String>,
+    selectedIcons: List<Painter>,
+    unselectedIcons: List<Painter>,
+    selectedIndex: Int,
+    onTabSelected: (Int) -> Unit,
+) {
+    Column(
+        modifier = modifier.padding(horizontal = 16.dp),
+    ) {
+        Row(
+            modifier = Modifier.height(48.dp),
+            horizontalArrangement = Arrangement.spacedBy(
+                12.dp,
+                Alignment.CenterHorizontally
+            ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(painter = icon, null)
+            Text(text = description, style = MaterialTheme.typography.bodyLarge)
+        }
+        TabButtons(
+            options = options,
+            selectedIcons = selectedIcons,
+            unselectedIcons = unselectedIcons,
+            selectedIndex = selectedIndex,
+            onTabSelected = onTabSelected
+        )
     }
 }
 
 @Composable
-fun SettingItem(
+private fun SettingItem(
     modifier: Modifier = Modifier,
-    clickable: Boolean = true,
-    onClick: () -> Unit = {},
     description: String,
-    isAllowed: String = "",
-    icon: ImageVector,
+    icon: Painter,
+    onClick: (() -> Unit)? = null,
+    trailingContent: @Composable () -> Unit = {},
 ) {
-    val rowModifier = if (clickable) {
-        modifier
-            .clickable { onClick() }
-            .padding(start = 16.dp, end = 4.dp)
-    } else {
-        modifier.padding(start = 16.dp, end = 4.dp)
-    }
-
     Row(
-        modifier = rowModifier,
+        modifier = modifier
+            .height(48.dp)
+            .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier)
+            .padding(start = 16.dp, end = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
     ) {
-        Icon(imageVector = icon, contentDescription = null)
+        Icon(painter = icon, contentDescription = null)
         Text(description, style = MaterialTheme.typography.bodyLarge)
         Spacer(modifier = Modifier.weight(1f))
-        Text(isAllowed, style = MaterialTheme.typography.labelSmall)
-        IconButton(onClick = {}) {
-            Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null)
-        }
+        trailingContent()
     }
 }
