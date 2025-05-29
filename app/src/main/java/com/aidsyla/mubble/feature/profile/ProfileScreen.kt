@@ -1,8 +1,9 @@
 package com.aidsyla.mubble.feature.profile
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -60,14 +61,19 @@ fun ProfileScreen(
     val tabRowHeight = 52.dp - 1.dp
     val pagerHeight = getScreenHeight() - offsetAmount - tabRowHeight
 
-    val isPrimaryHeaderDocked by rememberIsHeaderSticky(
+    val isHeaderDocked by rememberIsHeaderSticky(
         lazyListState = lazyListState,
         itemKey = STICKY_HEADER,
         offsetAmount = offsetAmount
     )
 
-    val scrolledColor by animateColorAsState(if (!isPrimaryHeaderDocked) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.surfaceContainer)
-    val shadowElevation by animateDpAsState(if (isPrimaryHeaderDocked) 3.dp else 0.dp)
+    val transition = updateTransition(targetState = isHeaderDocked, label = "headerTransition")
+    val scrolledColor by transition.animateColor(label = "color") { docked ->
+        if (docked) MaterialTheme.colorScheme.surfaceContainer else MaterialTheme.colorScheme.surface
+    }
+    val shadowElevation by transition.animateDp(label = "elevation") { docked ->
+        if (docked) 3.dp else 0.dp
+    }
 
     when (val state = uiState) {
         ProfileScreenUiState.Loading -> {
