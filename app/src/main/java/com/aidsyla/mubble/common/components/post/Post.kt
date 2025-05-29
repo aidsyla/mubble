@@ -75,7 +75,7 @@ private fun BasePostLayout(
                 Box(contentAlignment = Alignment.BottomCenter) {
                     PostMedia(imageResId = item.postImageResId)
                     PostActions(
-                        shape = MaterialTheme.shapes.small,
+                        shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
                         likeCount = item.likeCount,
                         commentCount = item.commentCount,
                         shareCount = item.shareCount
