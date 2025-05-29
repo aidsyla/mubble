@@ -2,50 +2,94 @@ package com.aidsyla.mubble.common.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Search
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonGroupDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.Dp
 
-@Preview
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun TabButtons(modifier: Modifier = Modifier) {
-    val unCheckedIcons =
-        listOf(Icons.Outlined.Home, Icons.Outlined.Search)
-    val checkedIcons = listOf(Icons.Filled.Check, Icons.Filled.Warning)
-    var selectedIndex by remember { mutableIntStateOf(0) }
-
+fun TabButtons(
+    modifier: Modifier = Modifier,
+    spaceBetween: Dp = ButtonGroupDefaults.ConnectedSpaceBetween,
+    options: List<String>,
+    selectedIcons: List<Painter>,
+    unselectedIcons: List<Painter>,
+    selectedIndex: Int,
+    onTabSelected: (Int) -> Unit
+) {
     Row(
-        Modifier.padding(horizontal = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(ButtonGroupDefaults.ConnectedSpaceBetween),
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(spaceBetween),
+    ) {
+        val modifiers = List(options.size) { Modifier.weight(1f) }
+        val last = options.lastIndex
+        options.forEachIndexed { index, option ->
+            ToggleButton(
+                checked = selectedIndex == index,
+                onCheckedChange = {
+                    onTabSelected(index)
+                },
+                modifier = modifiers[index].semantics { role = Role.Tab },
+                shapes =
+                    when (index) {
+                        0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                        last -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                        else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                    },
+                colors = ToggleButtonDefaults.toggleButtonColors(
+                    checkedContainerColor = MaterialTheme.colorScheme.primary,
+                    checkedContentColor = MaterialTheme.colorScheme.onPrimary,
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                )
+            ) {
+                Icon(
+                    painter = if (selectedIndex == index) selectedIcons[index] else unselectedIcons[index] ,
+                    contentDescription = "Localized description"
+                )
+                Spacer(Modifier.size(ToggleButtonDefaults.IconSpacing))
+                Text(option)
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun TabButtons(
+    modifier: Modifier = Modifier,
+    spaceBetween: Dp = ButtonGroupDefaults.ConnectedSpaceBetween,
+    selectedIcons: List<Painter>,
+    unselectedIcons: List<Painter>,
+    selectedIndex: Int,
+    onTabSelected: (Int) -> Unit
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(spaceBetween),
     ) {
         val modifiers = listOf(Modifier.weight(1f), Modifier.weight(1f))
 
-        unCheckedIcons.forEachIndexed { index, img ->
+        unselectedIcons.forEachIndexed { index, icon ->
             ToggleButton(
                 checked = selectedIndex == index,
-                onCheckedChange = { selectedIndex = index },
-                modifier = modifiers[index].semantics { role = Role.RadioButton },
+                onCheckedChange = {
+                    onTabSelected(index)
+                },
+                modifier = modifiers[index].semantics { role = Role.Tab },
                 shapes =
                     when (index) {
                         0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
@@ -54,12 +98,12 @@ fun TabButtons(modifier: Modifier = Modifier) {
                 colors = ToggleButtonDefaults.toggleButtonColors(
                     checkedContainerColor = MaterialTheme.colorScheme.primary,
                     checkedContentColor = MaterialTheme.colorScheme.onPrimary,
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    contentColor = MaterialTheme.colorScheme.onSurface,
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
                 )
             ) {
                 Icon(
-                    if (selectedIndex == index) checkedIcons[index] else img,
+                    painter = if (selectedIndex == index) selectedIcons[index] else icon,
                     contentDescription = "Localized description"
                 )
             }
