@@ -30,7 +30,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
-import com.aidsyla.mubble.common.components.for_reference.debugLog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,8 +64,6 @@ fun MubbleListTabPager(
     val appBarAlpha by animateFloatAsState(
         targetValue = state.targetAppBarAlpha, label = "appBarAlpha"
     )
-
-    debugLog("${state.collapsedFraction}")
 
     val animatedAppBarColor = MaterialTheme.colorScheme.surface.copy(alpha = appBarAlpha)
 
