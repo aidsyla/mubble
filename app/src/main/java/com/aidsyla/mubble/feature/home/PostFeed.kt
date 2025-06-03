@@ -8,7 +8,6 @@ import androidx.compose.ui.unit.dp
 import com.aidsyla.mubble.common.components.post.BubbleCard
 import com.aidsyla.mubble.common.components.post.PostCard
 import com.aidsyla.mubble.feature.explore.model.BubbleFeedItem
-import com.aidsyla.mubble.feature.explore.model.FeedItem
 import com.aidsyla.mubble.feature.explore.model.ImagePostFeedItem
 
 fun LazyListScope.postFeed(
@@ -16,6 +15,7 @@ fun LazyListScope.postFeed(
     onUserClick: (String) -> Unit,
     onMoreClick: (postId: String) -> Unit,
     onPostClick: (postId: String) -> Unit,
+    isCircleScreen: Boolean = false
 ) {
     items(
         items = uiState.items,
@@ -27,16 +27,17 @@ fun LazyListScope.postFeed(
             }
         }
     ) { item ->
+        val modifier = if (isCircleScreen) Modifier.padding(horizontal = 8.dp) else Modifier
         when (item) {
             is ImagePostFeedItem -> PostCard(
-                modifier = Modifier.padding(horizontal = 8.dp),
+                modifier = modifier,
                 item = item,
                 onUserClick = onUserClick,
                 onMoreClick = onMoreClick,
                 onPostClick = onPostClick
             )
             is BubbleFeedItem -> BubbleCard(
-                modifier = Modifier.padding(horizontal = 8.dp),
+                modifier = modifier,
                 item = item,
                 onMoreClick = onMoreClick,
                 onUserClick = onUserClick,
