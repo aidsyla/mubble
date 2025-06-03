@@ -3,7 +3,9 @@ package com.aidsyla.mubble.ui.theme
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import com.aidsyla.mubble.R
 import androidx.compose.material.icons.Icons as MaterialIcons
 
@@ -24,12 +26,7 @@ object MubbleTheme {
         val icons @Composable get() = listOf(Icons.AccountPublic, Icons.AccountPrivate)
     }
 
-    object Icons {
-        val ArrowBack = MaterialIcons.AutoMirrored.Rounded.ArrowBack
-        val EditFilled @Composable get() = painterResource(R.drawable.edit_filled)
-        val Edit @Composable get() = painterResource(R.drawable.edit)
-        val Settings = MaterialIcons.Rounded.Settings
-
+    object TopLevelDestinationIcons {
         val HomeSelected = R.drawable.home_filled
         val Home = R.drawable.home
 
@@ -44,7 +41,14 @@ object MubbleTheme {
 
         val ProfileSelected = R.drawable.account_circle_filled
         val Profile = R.drawable.account_circle
+    }
 
+    object Icons {
+        val ArrowBack = MaterialIcons.AutoMirrored.Rounded.ArrowBack
+        val Search @Composable get() = painterResource(R.drawable.search)
+        val EditFilled @Composable get() = painterResource(R.drawable.edit_filled)
+        val Edit @Composable get() = painterResource(R.drawable.edit)
+        val Settings = MaterialIcons.Rounded.Settings
 
         val AppearanceFilled @Composable get() = painterResource(id = R.drawable.routine_filled)
         val Appearance @Composable get() = painterResource(id = R.drawable.routine)
@@ -64,6 +68,7 @@ object MubbleTheme {
 
 
         val DevicePermissions @Composable get() = painterResource(R.drawable.perm_device_information)
+
 
         val PhotoLibrary @Composable get() = painterResource(R.drawable.photo_library)
         val Camera @Composable get() = painterResource(R.drawable.photo_camera)

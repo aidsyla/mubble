@@ -12,36 +12,36 @@ enum class TopLevelDestination(
 ) {
     HOME(
         route = HomeRoute::class,
-        selectedIcon = MubbleTheme.Icons.HomeSelected,
-        unselectedIcon = MubbleTheme.Icons.Home,
+        selectedIcon = MubbleTheme.TopLevelDestinationIcons.HomeSelected,
+        unselectedIcon = MubbleTheme.TopLevelDestinationIcons.Home,
         iconText = "Home",
         titleText = "mubble"
     ),
     EXPLORE(
         route = ExploreRoute::class,
-        selectedIcon = MubbleTheme.Icons.SearchSelected,
-        unselectedIcon = MubbleTheme.Icons.Search,
+        selectedIcon = MubbleTheme.TopLevelDestinationIcons.SearchSelected,
+        unselectedIcon = MubbleTheme.TopLevelDestinationIcons.Search,
         iconText = "Explore",
         titleText = "Explore"
     ),
     CHATS(
         route = ChatListRoute::class,
-        selectedIcon = MubbleTheme.Icons.ChatSelected,
-        unselectedIcon = MubbleTheme.Icons.Chat,
+        selectedIcon = MubbleTheme.TopLevelDestinationIcons.ChatSelected,
+        unselectedIcon = MubbleTheme.TopLevelDestinationIcons.Chat,
         iconText = "Chats",
         titleText = "Chats"
     ),
     ACTIVITY(
         route = ActivityRoute::class,
-        selectedIcon = MubbleTheme.Icons.ActivitySelected,
-        unselectedIcon = MubbleTheme.Icons.Activity,
+        selectedIcon = MubbleTheme.TopLevelDestinationIcons.ActivitySelected,
+        unselectedIcon = MubbleTheme.TopLevelDestinationIcons.Activity,
         iconText = "Activity",
         titleText = "Activity"
     ),
     PROFILE(
         route = ProfileRoute::class,
-        selectedIcon = MubbleTheme.Icons.ProfileSelected,
-        unselectedIcon = MubbleTheme.Icons.Profile,
+        selectedIcon = MubbleTheme.TopLevelDestinationIcons.ProfileSelected,
+        unselectedIcon = MubbleTheme.TopLevelDestinationIcons.Profile,
         iconText = "Profile",
         titleText = "Profile"
     )
