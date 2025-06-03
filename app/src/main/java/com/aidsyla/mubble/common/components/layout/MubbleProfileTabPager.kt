@@ -33,11 +33,11 @@ import com.aidsyla.mubble.common.components.for_reference.AnimatedIndicator
 import com.aidsyla.mubble.common.components.for_reference.IndicatorVariant
 import kotlinx.coroutines.launch
 
-const val STICKY_HEADER = "sticky_header_primary"
+const val STICKY_HEADER = "sticky_header"
 const val STICKY_HEADER_INDEX = 1
 
 @Composable
-fun TabbedPager(
+fun MubbleProfileTabPager(
     modifier: Modifier = Modifier,
     header: @Composable (() -> Unit)? = null,
     firstPage: @Composable () -> Unit,
@@ -45,12 +45,11 @@ fun TabbedPager(
     selectedIcons: List<Painter>,
     unselectedIcons: List<Painter>,
     lazyListState: LazyListState,
-    scrolledColor: Color,
+    scrolledColor: Color? = null,
     shadowElevation: Dp,
     pagerHeight: Dp,
 ) {
-    require(selectedIcons.size == 2) { "Selected icons count must match the number of pages." }
-    require(unselectedIcons.size == 2) { "Unselected icons count must match the number of pages." }
+    require(selectedIcons.size == 2 && unselectedIcons.size == 2) { "Icons count must match the number of pages." }
 
     val coroutineScope = rememberCoroutineScope()
     val pagerState = rememberPagerState(pageCount = { selectedIcons.size })
@@ -79,7 +78,7 @@ fun TabbedPager(
         item(key = STICKY_HEADER) {
             Surface(
                 modifier = Modifier.zIndex(1f),
-                color = scrolledColor,
+                color = scrolledColor ?: MaterialTheme.colorScheme.surface,
                 shadowElevation = shadowElevation
             ) {
                 TabButtons(
@@ -116,7 +115,7 @@ fun TabbedPager(
 }
 
 @Composable
-fun TabbedPager(
+fun MubbleProfileTabPager(
     modifier: Modifier = Modifier,
     titles: List<String>,
     content: List<@Composable () -> Unit>,
@@ -206,4 +205,10 @@ fun TabbedPager(
 fun getScreenHeight(): Dp {
     return with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() }
 }
+
+@Composable
+fun getScreenWidth(): Dp {
+    return with(LocalDensity.current) { LocalWindowInfo.current.containerSize.width.toDp() }
+}
+
 

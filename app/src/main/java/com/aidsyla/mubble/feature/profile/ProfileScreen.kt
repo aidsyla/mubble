@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aidsyla.mubble.common.components.layout.STICKY_HEADER
-import com.aidsyla.mubble.common.components.layout.TabbedPager
+import com.aidsyla.mubble.common.components.layout.MubbleProfileTabPager
 import com.aidsyla.mubble.common.components.layout.getScreenHeight
 import com.aidsyla.mubble.feature.explore.model.BubbleFeedItem
 import com.aidsyla.mubble.feature.explore.model.ImagePostFeedItem
@@ -86,7 +86,6 @@ fun ProfileScreen(
                 topBar = {
                     ProfileTopAppBar(
                         modifier = Modifier,
-                        scrolledColor = scrolledColor,
                         lazyListState = lazyListState,
                         offsetAmount = offsetAmount,
                         onNavigateToSettings = onNavigateToSettings,
@@ -100,7 +99,6 @@ fun ProfileScreen(
                     posts = state.posts,
                     bubbles = state.bubbles,
                     lazyListState = lazyListState,
-                    scrolledColor = scrolledColor,
                     shadowElevation = shadowElevation,
                     pagerHeight = pagerHeight,
                 )
@@ -118,11 +116,11 @@ fun ProfileScreenContent(
     posts: List<ImagePostFeedItem>,
     bubbles: List<BubbleFeedItem>,
     lazyListState: LazyListState,
-    scrolledColor: Color,
+    scrolledColor: Color? = null,
     shadowElevation: Dp,
     pagerHeight: Dp,
 ) {
-    TabbedPager(
+    MubbleProfileTabPager(
         modifier = modifier,
         header = {
             ProfileHeader()
