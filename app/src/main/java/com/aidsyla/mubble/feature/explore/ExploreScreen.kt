@@ -13,26 +13,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -40,75 +37,67 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.aidsyla.mubble.common.components.layout.MubbleGridTabPager
+import com.aidsyla.mubble.common.components.layout.MubbleListTabPager
+import com.aidsyla.mubble.common.components.layout.MubbleTabRow
 import com.aidsyla.mubble.feature.explore.model.BubbleFeedItem
 import com.aidsyla.mubble.feature.explore.model.FeedItem
 import com.aidsyla.mubble.feature.explore.model.ImagePostFeedItem
 import com.aidsyla.mubble.ui.LocalBottomBarPadding
+import com.aidsyla.mubble.ui.theme.MubbleTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExploreScreen(
     viewModel: ExploreViewModel = hiltViewModel(),
     onPostClick: (postId: String) -> Unit,
 ) {
-    val scrollState = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Explore") },
-                actions = {
-                    IconButton(onClick = {}) {
-                        Icon(
-                            imageVector = Icons.Filled.Search,
-                            contentDescription = "Localized description"
-                        )
-                    }
-                },
-                scrollBehavior = scrollState
-            )
-        }
-    ) {
-        val bottomPadding = LocalBottomBarPadding.current
-        TabbedPagerExplore(
-            modifier = Modifier
-                .padding(top = it.calculateTopPadding(), bottom = bottomPadding)
-                .nestedScroll(scrollState.nestedScrollConnection),
-            items = uiState.items,
-            onPostClick = onPostClick,
-        )
-    }
-}
+    val tabTitles = remember { listOf("Posts", "Circles") }
+    val pagerState = rememberPagerState { tabTitles.size }
+    val bottomPadding = LocalBottomBarPadding.current
 
-@Composable
-fun TabbedPagerExplore(
-    modifier: Modifier = Modifier,
-    items: List<FeedItem>,
-    onPostClick: (postId: String) -> Unit,
-) {
-    val titles = listOf("Posts", "Circles")
-    val tabContent: List<@Composable () -> Unit> = listOf(
-        {
+    MubbleGridTabPager(
+        modifier = Modifier.padding(bottom = bottomPadding),
+        pagerState = pagerState,
+        firstPage = {
             ExplorePostGrid(
-                items = items,
+                items = uiState.items,
+                listState = it,
                 onPostClick = onPostClick
             )
         },
-//        { ProfileBubbleList() },
-    )
-//    TabbedPager(modifier = modifier, titles = titles, content = tabContent)
+        secondPage = {
+            ExplorePostGrid(
+                items = uiState.items,
+                listState = it,
+                onPostClick = onPostClick
+            )
+        },
+        actions = {
+            IconButton(onClick = {}) {
+                Icon(painter = MubbleTheme.Icons.Search, contentDescription = null)
+            }
+        }
+    ) {
+        MubbleTabRow(
+            tabTitles = tabTitles,
+            pagerState = pagerState
+        )
+    }
 }
 
 @Composable
 fun ExplorePostGrid(
     modifier: Modifier = Modifier,
     items: List<FeedItem>,
+    listState: LazyGridState,
     onPostClick: (postId: String) -> Unit,
 ) {
     LazyVerticalGrid(
         modifier = modifier,
+        state = listState,
         columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(8.dp),
+        contentPadding = PaddingValues(start = 8.dp, end = 8.dp, top = 4.dp, bottom = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
