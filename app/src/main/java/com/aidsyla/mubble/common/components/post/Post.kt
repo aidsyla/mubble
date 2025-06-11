@@ -22,6 +22,8 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -50,10 +52,10 @@ import com.aidsyla.mubble.feature.home.data.DummyPostRepository
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 
 @Composable
-private fun BasePostLayout(
+fun BasePostLayout(
     modifier: Modifier = Modifier,
     item: FeedItem,
-    useCard: Boolean,
+    useCard: Boolean = true,
     onUserClick: (String) -> Unit,
     onMoreClick: (postId: String) -> Unit,
     onPostClick: (postId: String) -> Unit,
@@ -115,6 +117,7 @@ private fun BasePostLayout(
         OutlinedCard(
             onClick = { onPostClick(item.id) },
             modifier = modifier,
+            shape = MaterialTheme.shapes.large
         ) {
             content()
         }
@@ -122,78 +125,6 @@ private fun BasePostLayout(
         Column(modifier = modifier) {
             content()
         }
-}
-
-@Composable
-fun PostCard(
-    modifier: Modifier = Modifier,
-    item: ImagePostFeedItem,
-    onUserClick: (String) -> Unit,
-    onMoreClick: (postId: String) -> Unit,
-    onPostClick: (postId: String) -> Unit,
-) {
-    BasePostLayout(
-        modifier = modifier,
-        item = item,
-        useCard = true,
-        onUserClick = onUserClick,
-        onMoreClick = onMoreClick,
-        onPostClick = onPostClick
-    )
-}
-
-@Composable
-fun PostDetails(
-    modifier: Modifier = Modifier,
-    item: ImagePostFeedItem,
-    onUserClick: (String) -> Unit,
-    onMoreClick: (postId: String) -> Unit,
-    onPostClick: (postId: String) -> Unit,
-) {
-    BasePostLayout(
-        modifier = modifier,
-        item = item,
-        useCard = false,
-        onUserClick = onUserClick,
-        onMoreClick = onMoreClick,
-        onPostClick = onPostClick
-    )
-}
-
-@Composable
-fun BubbleCard(
-    modifier: Modifier = Modifier,
-    item: BubbleFeedItem,
-    onUserClick: (String) -> Unit,
-    onMoreClick: (postId: String) -> Unit,
-    onPostClick: (postId: String) -> Unit,
-) {
-    BasePostLayout(
-        modifier = modifier,
-        item = item,
-        useCard = true,
-        onUserClick = onUserClick,
-        onMoreClick = onMoreClick,
-        onPostClick = onPostClick
-    )
-}
-
-@Composable
-fun BubbleDetails(
-    modifier: Modifier = Modifier,
-    item: BubbleFeedItem,
-    onUserClick: (String) -> Unit,
-    onMoreClick: (postId: String) -> Unit,
-    onPostClick: (postId: String) -> Unit,
-) {
-    BasePostLayout(
-        modifier = modifier,
-        item = item,
-        useCard = false,
-        onUserClick = onUserClick,
-        onMoreClick = onMoreClick,
-        onPostClick = onPostClick
-    )
 }
 
 @Composable
@@ -371,9 +302,10 @@ private fun PostCardPreview() {
         .filterIsInstance<ImagePostFeedItem>()
         .first()
     MubbleTheme {
-        PostCard(
+        BasePostLayout(
             modifier = Modifier.padding(8.dp),
             item = item,
+            useCard = true,
             onUserClick = {},
             onMoreClick = {},
             onPostClick = {}
@@ -389,8 +321,9 @@ private fun PostDetailsPreview() {
         .first()
     MubbleTheme {
         Surface {
-            PostDetails(
+            BasePostLayout(
                 item = item,
+                useCard = false,
                 onUserClick = {},
                 onMoreClick = {},
                 onPostClick = {}
@@ -407,9 +340,10 @@ private fun BubbleCardPreview() {
         .first()
 
     MubbleTheme {
-        BubbleCard(
+        BasePostLayout(
             modifier = Modifier.padding(8.dp),
             item = item,
+            useCard = true,
             onUserClick = {},
             onMoreClick = {},
             onPostClick = {}
@@ -426,8 +360,9 @@ private fun BubbleDetailsPreview() {
 
     MubbleTheme {
         Surface {
-            BubbleDetails(
+            BasePostLayout(
                 item = item,
+                useCard = false,
                 onUserClick = {},
                 onMoreClick = {},
                 onPostClick = {}

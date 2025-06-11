@@ -29,10 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.aidsyla.mubble.common.components.post.BubbleDetails
-import com.aidsyla.mubble.common.components.post.PostDetails
-import com.aidsyla.mubble.feature.explore.model.BubbleFeedItem
-import com.aidsyla.mubble.feature.explore.model.ImagePostFeedItem
+import com.aidsyla.mubble.common.components.post.BasePostLayout
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -98,21 +95,13 @@ fun PostDetailsScreen(
                 }
 
                 is PostDetailsUiState.Success -> {
-                    when (val item = state.postItem) {
-                        is ImagePostFeedItem -> PostDetails(
-                            item = item,
-                            onUserClick = {},
-                            onMoreClick = viewModel::onMoreClick,
-                            onPostClick = {}
-                        )
-
-                        is BubbleFeedItem -> BubbleDetails(
-                            item = item,
-                            onUserClick = {},
-                            onMoreClick = viewModel::onMoreClick,
-                            onPostClick = {}
-                        )
-                    }
+                    BasePostLayout(
+                        item = state.postItem,
+                        useCard = false,
+                        onUserClick = onUserClick,
+                        onMoreClick = viewModel::onMoreClick,
+                        onPostClick = { }
+                    )
                 }
             }
         }
