@@ -1,4 +1,4 @@
-package com.aidsyla.mubble.common.components.layout
+package com.aidsyla.mubble.feature.profile.components
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.core.animateFloatAsState
@@ -33,7 +33,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -45,7 +44,6 @@ import androidx.compose.ui.zIndex
 import com.aidsyla.mubble.common.components.TabButtons
 import com.aidsyla.mubble.common.components.for_reference.AnimatedIndicator
 import com.aidsyla.mubble.common.components.for_reference.IndicatorVariant
-import com.aidsyla.mubble.feature.profile.components.ProfileTopAppBar
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 import kotlinx.coroutines.launch
 

@@ -40,8 +40,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.core.view.WindowCompat
-import com.aidsyla.mubble.common.components.layout.STICKY_HEADER
-import com.aidsyla.mubble.common.components.layout.STICKY_HEADER_INDEX
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
