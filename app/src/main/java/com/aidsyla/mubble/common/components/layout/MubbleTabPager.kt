@@ -2,6 +2,7 @@ package com.aidsyla.mubble.common.components.layout
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,7 +14,9 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -58,8 +61,8 @@ fun MubbleListTabPager(
             isAtTopSecond
         )
 
-    val shadowElevation by animateDpAsState(
-        targetValue = state.targetElevation, label = "shadowElevation"
+    val dividerAlpha by animateFloatAsState(
+        targetValue = state.targetDividerAlpha, label = "dividerAlpha"
     )
     val appBarAlpha by animateFloatAsState(
         targetValue = state.targetAppBarAlpha, label = "appBarAlpha"
@@ -71,21 +74,26 @@ fun MubbleListTabPager(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             Surface(
-                color = animatedAppBarColor, shadowElevation = shadowElevation
+                color = animatedAppBarColor
             ) {
-                CenterAlignedTopAppBar(
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.Transparent,
-                        scrolledContainerColor = Color.Transparent,
-                        navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
-                        titleContentColor = MaterialTheme.colorScheme.onSurface,
-                        actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                    ),
-                    navigationIcon = navigationIcon,
-                    title = appBarTitle,
-                    actions = actions,
-                    scrollBehavior = scrollBehavior
-                )
+                Column {
+                    CenterAlignedTopAppBar(
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = Color.Transparent,
+                            scrolledContainerColor = Color.Transparent,
+                            navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+                            titleContentColor = MaterialTheme.colorScheme.onSurface,
+                            actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        ),
+                        navigationIcon = navigationIcon,
+                        title = appBarTitle,
+                        actions = actions,
+                        scrollBehavior = scrollBehavior
+                    )
+                    HorizontalDivider(
+                        color = DividerDefaults.color.copy(alpha = dividerAlpha)
+                    )
+                }
             }
         }, contentWindowInsets = WindowInsets(0.dp)
     ) {
@@ -138,8 +146,8 @@ fun MubbleGridTabPager(
             isAtTopSecond
         )
 
-    val shadowElevation by animateDpAsState(
-        targetValue = state.targetElevation, label = "shadowElevation"
+    val dividerAlpha by animateFloatAsState(
+        targetValue = state.targetDividerAlpha, label = "dividerAlpha"
     )
     val appBarAlpha by animateFloatAsState(
         targetValue = state.targetAppBarAlpha, label = "appBarAlpha"
@@ -150,21 +158,26 @@ fun MubbleGridTabPager(
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection), topBar = {
             Surface(
-                color = animatedAppBarColor, shadowElevation = shadowElevation
+                color = animatedAppBarColor
             ) {
-                CenterAlignedTopAppBar(
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.Transparent,
-                        scrolledContainerColor = Color.Transparent,
-                        navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
-                        titleContentColor = MaterialTheme.colorScheme.onSurface,
-                        actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                    ),
-                    navigationIcon = navigationIcon,
-                    title = appBarTitle,
-                    actions = actions,
-                    scrollBehavior = scrollBehavior
-                )
+                Column {
+                    CenterAlignedTopAppBar(
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = Color.Transparent,
+                            scrolledContainerColor = Color.Transparent,
+                            navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+                            titleContentColor = MaterialTheme.colorScheme.onSurface,
+                            actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        ),
+                        navigationIcon = navigationIcon,
+                        title = appBarTitle,
+                        actions = actions,
+                        scrollBehavior = scrollBehavior
+                    )
+                    HorizontalDivider(
+                        color = DividerDefaults.color.copy(alpha = dividerAlpha)
+                    )
+                }
             }
         }, contentWindowInsets = WindowInsets(0.dp)
     ) {
@@ -206,15 +219,15 @@ class CollapsingTopBarScreenState(
     val targetAppBarAlpha: Float
         get() = if ((1f - collapsedFraction) < 0.01f) 0f else 1f
 
-    val targetElevation: Dp
+    val targetDividerAlpha: Float
         get() {
             val notAtTop =
                 if (pagerState.currentPage == 0) !isAtTopFirst else !isAtTopSecond
 
             return if (targetAppBarAlpha == 1f && collapsedFraction == 0f && notAtTop) {
-                3.dp
+                1f
             } else {
-                0.dp
+                0f
             }
         }
 }

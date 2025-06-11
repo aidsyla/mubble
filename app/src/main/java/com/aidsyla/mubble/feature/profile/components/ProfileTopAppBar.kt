@@ -48,7 +48,6 @@ import com.aidsyla.mubble.ui.theme.MubbleTheme
 @Composable
 fun ProfileTopAppBar(
     modifier: Modifier = Modifier,
-    scrolledColor: Color? = null,
     transitionLength: Dp = 200.dp,
     lazyListState: LazyListState,
     offsetAmount: Dp,
@@ -65,21 +64,7 @@ fun ProfileTopAppBar(
         transitionLength = transitionLength,
         offsetAmount = offsetAmount
     )
-    val transitionColor = surface.copy(alpha = targetAlpha)
-
-    val topAppBarBackgroundColor = if (scrolledColor != null) {
-        remember(targetAlpha, scrolledColor) {
-            derivedStateOf {
-                if (targetAlpha == 1f) scrolledColor else transitionColor
-            }
-        }.value
-    } else {
-        remember(targetAlpha) {
-            derivedStateOf {
-                 transitionColor
-            }
-        }.value
-    }
+    val topAppBarBackgroundColor = surface.copy(alpha = targetAlpha)
 
     val iconColor by remember(targetAlpha) {
         derivedStateOf {
