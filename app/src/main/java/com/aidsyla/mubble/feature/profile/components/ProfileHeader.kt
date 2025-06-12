@@ -170,7 +170,7 @@ fun ProfileDetails(modifier: Modifier = Modifier) {
                 Text(
                     "Alex Smith",
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
                     "@alex_smith",
