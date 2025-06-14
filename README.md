@@ -1,25 +1,50 @@
+![Mubble Logo](docs/images/ic_launcher_round.png)
 # Mubble App
 
-**Mubble** is a work in progress social media app built with **Kotlin & Jetpack Compose**. It tries following best practices from the official Android [**architecture guidance**](https://developer.android.com/topic/architecture).
+**Mubble** is a work‑in‑progress social media app built with Kotlin & Jetpack Compose, following Android’s official [architecture guidance](https://developer.android.com/topic/architecture).
 
-The app’s intention is to become a live working example of a modern social media app, with real-world architecture and design considerations, packed with features, and hopefully serving as a useful reference for other developers.
+This project started as my learning project and bachelor thesis, and is now growing into a full-featured social media app built with modern Material 3 design and architecture.
 
 # Features
-Main app features include a **home feed** to see posts from people you follow and groups (circles) you’re part of, with the ability to join and create groups; posting **photos**, **videos**, or **text-only posts (bubbles)**; an **explore page** to discover trending content and posts matching your interests; a **chat screen** to message friends, send photos, and share posts; an **activity tab** showing updates like new follows, likes, and notifications; and a **profile screen** displaying your profile.
+### Home & Explore
+<p>
+  <img src="docs/images/light_mode_showcase.png" width="49%" alt = "Light Theme Showcase"/>
+  <img src="docs/images/dark_mode_showcase.png" width="49%"  alt="Dark Theme Showcase"/>
+</p>
+<p align="center"><em>Home & Explore tabs in light and dark themes</em></p>  
 
-For now, there is no server communication and most features aren’t implemented yet — besides most of the **UI**, they mainly showcase the app’s design and potential.
+#### Main app features include:
 
-# UI
-Mubble was first designed as a wireframe in Figma, went through a lot of iterations, and then the same design was built in Jetpack Compose. The app was designed following Material Design 3 guidelines, and uses the Material Theme Builder for theme generation.
+- **Home feed** to see posts from people you follow and groups (circles) you’re part of, with the ability to join and create groups.
+- **Posting** images, videos, or text-only posts (bubbles).
+- **Explore page** to discover trending content and posts matching your interests.
+- **Chat screen** to message friends, send photos, and share posts.
+- **Activity tab** showing updates like new follows, likes, and notifications.
+- **Profile page** displaying your profile.
+- **Videos page** containing short form content.
 
-I plan to upload the full Figma document once the design is more finalized — still some things to tweak.
-- Supports both **light** and **dark** themes.
-- **Dynamic color** (available from Android 12 and above) is planned — not yet implemented. It takes a single color from a user’s wallpaper or in-app content and creates an accessible color scheme applied to UI elements.
-- App is also implementing [**Material 3 Expressive**](https://m3.material.io/blog/building-with-m3-expressive), which introduces updated components, shapes, animations, and more expressive UI elements.
+There is no server communication and most features aren’t implemented yet — besides most of the **UI**, they mainly showcase the app’s design and potential.
 
-For now, the app doesn’t support different screen sizes due to time constraints.
+# UI & Design
 
-## Roadmap
+**Mubble** started as a Figma wireframe, went through a lot of iterations, and was then built in Jetpack Compose.
+
+The app was designed following Material Design 3 guidelines, and uses the Material Theme Builder for theme generation. Both the design and the code continue to be updated and refined regularly.
+
+### [Mubble Design Journey on Figma →](https://www.figma.com/community/file/1515513100154545700)
+> **Work in progress**: this Figma file shows early designs and their evolution.  
+> *Frames are unpolished — final screens yet to be finished.*
+
+![Mubble Design Journey Cover](docs/images/process_and_iterations_cover.png)
+
+### Theme Support
+- **Light**, **Dark**, and **Pitch Black***.
+- **Dynamic color*** (see [Material 3 dynamic color docs](https://m3.material.io/styles/color/dynamic/choosing-a-source)).
+- **Material 3 Expressive** components, shapes & animations.
+
+\* *Planned but not yet implemented — see [Roadmap](#roadmap).*
+
+# Roadmap
 
 ### Current Status
 - Home screen (mostly done; circle item UI may be updated).
@@ -38,9 +63,11 @@ For now, the app doesn’t support different screen sizes due to time constraint
 - Sendable items in chat: images, videos, posts, bubbles, profiles, circles.
 - Camera integration for direct posting or sending to friends.
 - Dynamic color support.
+- Pitch black theme.
 - Chat bubble custom themes (color changes).
 - Shared animated transitions for clickable containers (e.g., posts).
 - Image picker inside chat.
+- Short-form content support (like popular social media platforms).
 
 ### Connecting to Server (Upcoming)
 - Firebase integration.
@@ -50,7 +77,6 @@ For now, the app doesn’t support different screen sizes due to time constraint
 
 ### Long-term Ideas
 - Custom feed algorithm.
-- Short-form content support (like popular social media platforms).
 - Voice messages and phone calls in chat.
 
 ### Known Issues / TODOs
