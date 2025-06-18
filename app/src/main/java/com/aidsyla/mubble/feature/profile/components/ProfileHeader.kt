@@ -2,6 +2,7 @@ package com.aidsyla.mubble.feature.profile.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,23 +32,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.aidsyla.mubble.R
@@ -57,15 +53,13 @@ import com.aidsyla.mubble.ui.theme.MubbleTheme
 fun ProfileHeader(
     modifier: Modifier = Modifier,
 ) {
-    val density = LocalDensity.current
-    var profilePictureWidth by remember { mutableStateOf(0.dp) }
+    val profilePictureSize = getScreenWidth().div(4)
+    val offsetAmount = profilePictureSize * 0.5f
 
     Column(
         modifier = modifier.fillMaxSize()
     ) {
-        Box(
-            contentAlignment = Alignment.BottomStart
-        ) {
+        Box {
             Box(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
@@ -88,31 +82,37 @@ fun ProfileHeader(
                     .aspectRatio(2.25f),
                 contentScale = ContentScale.FillWidth
             )
-            Box(
+
+            Row(
                 modifier = Modifier
-                    .offset(y = 53.dp)
-                    .padding(start = 16.dp)
-                    .clip(shape = CircleShape)
-                    .background(color = MaterialTheme.colorScheme.surface)
-                    .padding(3.dp)
+                    .height(profilePictureSize)
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
+                    .padding(horizontal = 16.dp)
+                    .offset(y = offsetAmount),
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Image(
-                    painter = painterResource(R.drawable.profile_2),
-                    contentDescription = null,
+                Box(
                     modifier = Modifier
-                        .size(100.dp)
-                        .clip(CircleShape)
-                        .onGloballyPositioned {
-                            profilePictureWidth = with(density) { it.size.width.toDp() }
-                        }
-                    ,
-                    contentScale = ContentScale.Crop
-                )
+                        .size(profilePictureSize)
+                        .clip(shape = CircleShape)
+                        .background(color = MaterialTheme.colorScheme.surface)
+                        .padding(2.dp)
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.profile_3),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(CircleShape),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+                FollowerCount(modifier = Modifier.fillMaxHeight(0.5f))
             }
         }
-        FollowerCount(
-            profilePictureWidth = profilePictureWidth
-        )
+        Spacer(modifier = Modifier.height(offsetAmount))
         ProfileDetails()
         Spacer(modifier = Modifier.height(2.dp))
     }
@@ -121,35 +121,35 @@ fun ProfileHeader(
 @Composable
 fun FollowerCount(
     modifier: Modifier = Modifier,
-    profilePictureWidth: Dp
 ) {
-    val startPadding = profilePictureWidth + 32.dp
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = startPadding, end = 16.dp, top = 8.dp, bottom = 4.dp),
-        contentAlignment = Alignment.Center
+        modifier = modifier
+            .padding(vertical = 6.dp)
     ) {
         Row(
-            modifier = modifier
+            modifier = Modifier
                 .clip(shape = MaterialTheme.shapes.medium)
                 .background(color = MaterialTheme.colorScheme.surfaceContainer)
-                .heightIn(max = 36.dp)
-                .padding(vertical = 8.dp),
+                .heightIn(min = 48.dp, max = 60.dp)
+                .padding(vertical = 8.dp, horizontal = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 "4523 Following",
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleSmall
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+                style = MaterialTheme.typography.labelMedium
             )
             VerticalDivider()
             Text(
-                "53644 Followers",
+                "53k Followers",
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleSmall
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+                style = MaterialTheme.typography.labelMedium
             )
         }
     }
@@ -213,8 +213,9 @@ fun ProfileDetails(modifier: Modifier = Modifier) {
     }
 }
 
-
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(
+    showBackground = true, showSystemUi = true
+)
 @Composable
 private fun ProfileHeaderPreview() {
     MubbleTheme {
