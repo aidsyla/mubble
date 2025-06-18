@@ -2,6 +2,7 @@ package com.aidsyla.mubble.common.components.layout
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
@@ -33,6 +34,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
+import androidx.compose.ui.zIndex
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,7 +78,9 @@ fun MubbleListTabPager(
             Surface(
                 color = animatedAppBarColor
             ) {
-                Column {
+                Box(
+                    contentAlignment = Alignment.BottomCenter
+                ) {
                     CenterAlignedTopAppBar(
                         colors = TopAppBarDefaults.topAppBarColors(
                             containerColor = Color.Transparent,
