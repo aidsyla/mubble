@@ -18,8 +18,9 @@ class ChatListViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<ChatListUiState>(ChatListUiState.Loading)
     val uiState: StateFlow<ChatListUiState> = _uiState.asStateFlow()
 
-    private val _editUiState = MutableStateFlow<ChatEditUiState>(ChatEditUiState.Edit(isEditing = false))
-    val editUiState: StateFlow<ChatEditUiState> = _editUiState.asStateFlow()
+    private val _editUiState =
+        MutableStateFlow(Edit(isEditing = false))
+    val editUiState: StateFlow<Edit> = _editUiState.asStateFlow()
 
     init {
         val chatPreviews = getChatPreviewsForUser(UserRepo.user1.id)
@@ -30,7 +31,8 @@ class ChatListViewModel @Inject constructor(
         val userChats = allSampleChats.filter { it.participantIds.contains(currentUserId) }
 
         return userChats.mapNotNull { chat ->
-            val otherUserId = chat.participantIds.firstOrNull { it != currentUserId } ?: return@mapNotNull null
+            val otherUserId =
+                chat.participantIds.firstOrNull { it != currentUserId } ?: return@mapNotNull null
             val otherUser = UserRepo.getUser(otherUserId) ?: return@mapNotNull null
             val lastMessage = chat.messages.lastOrNull()
             ChatPreview(
@@ -46,12 +48,8 @@ class ChatListViewModel @Inject constructor(
         }
     }
 
-    fun enterEditMode() {
-        _editUiState.value = ChatEditUiState.Edit(isEditing = true)
-    }
-
-    fun exitEditMode() {
-        _editUiState.value = ChatEditUiState.Edit(isEditing = false)
+    fun editModeSwitch() {
+        _editUiState.value = Edit(isEditing = !_editUiState.value.isEditing)
     }
 }
 
@@ -59,12 +57,10 @@ sealed interface ChatListUiState {
     data object Loading : ChatListUiState
 
     data class Success(
-        val chatPreviews: List<ChatPreview>
+        val chatPreviews: List<ChatPreview>,
     ) : ChatListUiState
 }
 
-sealed interface ChatEditUiState {
-    data class Edit(
-        val isEditing: Boolean
-    ) : ChatEditUiState
-}
+data class Edit(
+    val isEditing: Boolean,
+)
