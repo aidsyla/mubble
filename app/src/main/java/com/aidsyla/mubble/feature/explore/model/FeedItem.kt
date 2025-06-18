@@ -8,7 +8,7 @@ sealed interface FeedItem {
     val username: String
     val displayName: String
     @get:DrawableRes val userAvatarResId: Int
-    val postDescription: String
+    val postDescription: String?
     val datePosted: String
     val likeCount: Int
     val commentCount: Int
@@ -21,7 +21,7 @@ data class ImagePostFeedItem(
     override val username: String,
     override val displayName: String,
     @DrawableRes override val userAvatarResId: Int,
-    override val postDescription: String,
+    override val postDescription: String? = null,
     override val datePosted: String,
     @DrawableRes val postImageResId: Int,
     override val likeCount: Int,

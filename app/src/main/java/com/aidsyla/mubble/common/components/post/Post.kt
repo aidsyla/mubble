@@ -1,48 +1,54 @@
 package com.aidsyla.mubble.common.components.post
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.EaseInOutCubic
+import androidx.compose.animation.core.EaseOutQuad
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.aidsyla.mubble.R
 import com.aidsyla.mubble.feature.explore.model.BubbleFeedItem
@@ -60,13 +66,16 @@ fun BasePostLayout(
     onMoreClick: (postId: String) -> Unit,
     onPostClick: (postId: String) -> Unit,
 ) {
+    val detailsPadding = if (!useCard) Modifier.padding(top = 4.dp) else Modifier
+    var isLiked by remember { mutableStateOf(false) }
     val content: @Composable () -> Unit = {
-        item.circleName?.let { CircleHeader(it) }
 
         if (useCard) {
             PostHeader(
                 name = item.displayName,
                 avatarResId = item.userAvatarResId,
+                circleName = item.circleName,
+                datePosted = item.datePosted,
                 onUserClick = { onUserClick(item.id) },
                 onMoreClick = { onMoreClick(item.id) }
             )
@@ -74,50 +83,55 @@ fun BasePostLayout(
 
         when (item) {
             is ImagePostFeedItem -> {
-                Box(contentAlignment = Alignment.BottomCenter) {
-                    PostMedia(imageResId = item.postImageResId)
-                    PostActions(
-                        shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp),
-                        likeCount = item.likeCount,
-                        commentCount = item.commentCount,
-                        shareCount = item.shareCount
+                item.postDescription?.let {
+                    PostDescription(
+                        modifier = detailsPadding
+                            .padding(bottom = 8.dp),
+                        description = it,
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
-                PostDetails(
-                    topPadding = 12.dp,
-                    textStyle = MaterialTheme.typography.bodySmall,
-                    description = item.postDescription,
-                    username = item.username,
-                    datePosted = item.datePosted
+                PostMedia(
+                    imageResId = item.postImageResId,
+                )
+                PostActions(
+                    likeCount = item.likeCount,
+                    commentCount = item.commentCount,
+                    shareCount = item.shareCount,
+                    isLiked = isLiked,
+                    onFilledChange = { isLiked = it }
                 )
             }
 
             is BubbleFeedItem -> {
-                PostDetails(
-                    topPadding = 0.dp,
-                    textStyle = MaterialTheme.typography.bodyLarge,
+                PostDescription(
+                    modifier = detailsPadding,
                     description = item.postDescription,
-                    username = item.username,
-                    datePosted = item.datePosted
+                    style = MaterialTheme.typography.bodyLarge
                 )
                 PostActions(
-                    shape = if (useCard) RectangleShape else RoundedCornerShape(
-                        bottomStart = 12.dp,
-                        bottomEnd = 12.dp
-                    ),
                     likeCount = item.likeCount,
                     commentCount = item.commentCount,
-                    shareCount = item.shareCount
+                    shareCount = item.shareCount,
+                    isLiked = isLiked,
+                    onFilledChange = { isLiked = it }
                 )
             }
         }
     }
 
     if (useCard)
-        OutlinedCard(
-            onClick = { onPostClick(item.id) },
-            modifier = modifier,
-            shape = MaterialTheme.shapes.large
+        Card(
+            modifier = modifier
+                .clip(shape = MaterialTheme.shapes.large)
+                .combinedClickable(
+                onClick = { onPostClick(item.id) },
+                onDoubleClick = { isLiked = !isLiked }
+            ),
+            shape = MaterialTheme.shapes.large,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainer
+            )
         ) {
             content()
         }
@@ -128,46 +142,21 @@ fun BasePostLayout(
 }
 
 @Composable
-fun CircleHeader(
-    circleName: String,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier
-            .background(color = MaterialTheme.colorScheme.surfaceContainer)
-            .fillMaxWidth()
-            .clickable { }
-            .padding(vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Image(
-            modifier = Modifier
-                .size(24.dp)
-                .clip(shape = CircleShape),
-            painter = painterResource(R.drawable.ic_launcher_background),
-            contentDescription = null
-        )
-        Text(text = circleName)
-    }
-}
-
-@Composable
 fun PostHeader(
     modifier: Modifier = Modifier,
     name: String,
     @DrawableRes avatarResId: Int,
+    datePosted: String,
+    circleName: String?,
     onUserClick: () -> Unit,
     onMoreClick: () -> Unit,
 ) {
     Row(
         modifier = modifier
-            .padding(
-                start = 16.dp, top = 12.dp, bottom = 12.dp, end = 4.dp
-            )
+            .padding(start = 16.dp, end = 4.dp)
+            .padding(vertical = 8.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -177,26 +166,92 @@ fun PostHeader(
                 .clickable { onUserClick() }
                 .padding(end = 8.dp)
         ) {
-            Image(
-                painter = painterResource(avatarResId),
-                contentDescription = "$name's avatar",
+            Box(
                 modifier = Modifier
                     .size(48.dp)
-                    .clip(shape = CircleShape),
-                contentScale = ContentScale.Crop
-            )
-            Text(
-                text = name,
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.Medium
+                    .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape)
+                    .clip(CircleShape)
+            ) {
+                Image(
+                    painter = painterResource(avatarResId),
+                    contentDescription = "$name's avatar",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
                 )
-            )
+            }
+            Column {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    Text(
+                        modifier = Modifier.alignByBaseline(),
+                        text = name,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        modifier = Modifier.alignByBaseline(),
+                        text = datePosted,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Light),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                circleName?.let {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            painter = MubbleTheme.Icons.InCircle,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                        Box(
+                            modifier = Modifier
+                                .size(24.dp)
+                                .border(
+                                    0.5.dp,
+                                    MaterialTheme.colorScheme.outlineVariant,
+                                    CircleShape
+                                )
+                                .clip(CircleShape)
+                        ) {
+                            Image(
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Crop,
+                                painter = painterResource(R.drawable.post_3),
+                                contentDescription = null
+                            )
+                        }
+                        Text(
+                            text = it,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+            }
         }
         Spacer(Modifier.weight(1f))
         IconButton(onClick = onMoreClick) {
             Icon(imageVector = Icons.Default.MoreVert, contentDescription = "More options")
         }
     }
+}
+
+@Composable
+fun PostDescription(
+    modifier: Modifier = Modifier,
+    style: TextStyle,
+    description: String,
+) {
+    Text(
+        modifier = modifier
+            .padding(horizontal = 16.dp),
+        text = description,
+        style = style,
+        color = MaterialTheme.colorScheme.onSurface
+    )
 }
 
 @Composable
@@ -207,90 +262,116 @@ fun PostMedia(
     Image(
         painter = painterResource(imageResId),
         contentDescription = "Post media",
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth(),
         contentScale = ContentScale.FillWidth
     )
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun BouncingHeartIcon(
+    isFilled: Boolean,
+    onFilledChange: (Boolean) -> Unit,
+    count: Int,
+) {
+    val sizeAnim = remember { Animatable(0f) }
+
+    LaunchedEffect(isFilled) {
+        if (isFilled) {
+            sizeAnim.snapTo(0f)
+            sizeAnim.animateTo(
+                targetValue = 40f,
+                animationSpec = tween(durationMillis = 100, easing = EaseOutQuad)
+            )
+            sizeAnim.animateTo(
+                targetValue = 26f,
+                animationSpec = tween(durationMillis = 150, easing = EaseInOutCubic)
+            )
+        } else {
+            sizeAnim.animateTo(0f, animationSpec = tween(200))
+        }
+    }
+    CompositionLocalProvider(value = LocalRippleConfiguration provides null) {
+        Row(
+            modifier = Modifier
+                .height(48.dp)
+                .clickable { onFilledChange(!isFilled) },
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Box(
+                modifier = Modifier.size(40.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    modifier = Modifier.size(26.dp),
+                    painter = MubbleTheme.Icons.Favorite,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+                if (sizeAnim.value > 0f) {
+                    Icon(
+                        modifier = Modifier.size(sizeAnim.value.dp),
+                        painter = MubbleTheme.Icons.FavoriteFilled,
+                        contentDescription = null,
+                        tint = Color.Red
+                    )
+                }
+            }
+            if (count > 0) {
+                Text(count.toString(), style = MaterialTheme.typography.labelMediumEmphasized)
+            }
+        }
+    }
 }
 
 @Composable
 fun PostActions(
     modifier: Modifier = Modifier,
-    shape: Shape,
+    isLiked: Boolean,
+    onFilledChange: (Boolean) -> Unit,
     likeCount: Int,
     commentCount: Int,
     shareCount: Int,
 ) {
-    Card(
-        modifier = modifier,
-        shape = shape, colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer
-        )
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(start = 8.dp, end = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(36.dp)
-                .padding(start = 12.dp, end = 12.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            ActionItem(imageVector = Icons.Default.FavoriteBorder, count = likeCount)
-            ActionItem(
-                imageVector = Icons.Default.Add,
-                count = commentCount
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            ActionItem(imageVector = Icons.Default.Send, count = shareCount)
-        }
+        BouncingHeartIcon(
+            count = likeCount,
+            isFilled = isLiked,
+            onFilledChange = onFilledChange
+        )
+        ActionItem(
+            painter = MubbleTheme.Icons.Comment,
+            count = commentCount
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        ActionItem(painter = MubbleTheme.Icons.Send, count = shareCount)
     }
 }
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ActionItem(
     modifier: Modifier = Modifier,
-    imageVector: ImageVector,
+    painter: Painter,
     count: Int,
 ) {
     Row(
-        modifier = modifier,
+        modifier = modifier
+            .height(48.dp)
+            .wrapContentWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
+        horizontalArrangement = Arrangement.spacedBy(7.dp)
     ) {
-        Icon(imageVector = imageVector, contentDescription = null)
+        Icon(modifier = Modifier.size(26.dp), painter = painter, contentDescription = null)
         if (count > 0) {
-            Text(count.toString(), style = MaterialTheme.typography.labelSmall)
-        }
-    }
-}
-
-@Composable
-fun PostDetails(
-    modifier: Modifier = Modifier,
-    topPadding: Dp,
-    textStyle: TextStyle,
-    description: String,
-    username: String,
-    datePosted: String,
-) {
-    Column(
-        modifier = modifier.padding(start = 16.dp, end = 16.dp, top = topPadding, bottom = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        Text(
-            text = description,
-            style = textStyle
-        )
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Text(
-                text = username,
-                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium),
-                maxLines = 1
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            Text(
-                text = datePosted,
-                style = MaterialTheme.typography.labelSmall
-            )
+            Text(count.toString(), style = MaterialTheme.typography.labelMediumEmphasized)
         }
     }
 }
