@@ -44,10 +44,15 @@ object MubbleTheme {
     }
 
     object Icons {
+        val Favorite @Composable get() = painterResource(id = R.drawable.favorite)
+        val FavoriteFilled @Composable get() = painterResource(id = R.drawable.favorite_filled)
+        val Comment @Composable get() = painterResource(id = R.drawable.forum)
+        val Send @Composable get() = painterResource(id = R.drawable.send)
+
         val ArrowBack = MaterialIcons.AutoMirrored.Rounded.ArrowBack
-        val Search @Composable get() = painterResource(R.drawable.search)
-        val EditFilled @Composable get() = painterResource(R.drawable.edit_filled)
-        val Edit @Composable get() = painterResource(R.drawable.edit)
+        val Search @Composable get() = painterResource(id = R.drawable.search)
+        val EditFilled @Composable get() = painterResource(id = R.drawable.edit_filled)
+        val Edit @Composable get() = painterResource(id = R.drawable.edit)
         val Settings = MaterialIcons.Rounded.Settings
 
         val AppearanceFilled @Composable get() = painterResource(id = R.drawable.routine_filled)
@@ -63,30 +68,31 @@ object MubbleTheme {
         val LightMode @Composable get() = painterResource(id = R.drawable.light_mode)
 
 
-        val NotificationFilled @Composable get() = painterResource(R.drawable.notifications_filled)
-        val Notification @Composable get() = painterResource(R.drawable.notifications)
+        val NotificationFilled @Composable get() = painterResource(id = R.drawable.notifications_filled)
+        val Notification @Composable get() = painterResource(id = R.drawable.notifications)
+        val NotificationsOff @Composable get() = painterResource(id = R.drawable.notifications_off)
 
 
-        val DevicePermissions @Composable get() = painterResource(R.drawable.perm_device_information)
+        val DevicePermissions @Composable get() = painterResource(id = R.drawable.perm_device_information)
 
 
-        val PhotoLibrary @Composable get() = painterResource(R.drawable.photo_library)
-        val Camera @Composable get() = painterResource(R.drawable.photo_camera)
+        val PhotoLibrary @Composable get() = painterResource(id = R.drawable.photo_library)
+        val Camera @Composable get() = painterResource(id = R.drawable.photo_camera)
 
 
-        val ManageAccount @Composable get() = painterResource(R.drawable.person)
-        val AccountVisibility @Composable get() = painterResource(R.drawable.visibility)
+        val ManageAccount @Composable get() = painterResource(id = R.drawable.person)
+        val AccountVisibility @Composable get() = painterResource(id = R.drawable.visibility)
 
-        val AccountPublicSelected @Composable get() = painterResource(R.drawable.public_filled)
-        val AccountPublic @Composable get() = painterResource(R.drawable.public_)
+        val AccountPublicSelected @Composable get() = painterResource(id = R.drawable.public_filled)
+        val AccountPublic @Composable get() = painterResource(id = R.drawable.public_)
 
-        val AccountPrivateSelected @Composable get() = painterResource(R.drawable.lock_filled)
-        val AccountPrivate @Composable get() = painterResource(R.drawable.lock)
+        val AccountPrivateSelected @Composable get() = painterResource(id = R.drawable.lock_filled)
+        val AccountPrivate @Composable get() = painterResource(id = R.drawable.lock)
 
-        val Delete @Composable get() = painterResource(R.drawable.delete)
+        val Delete @Composable get() = painterResource(id = R.drawable.delete)
 
 
-        val Logout @Composable get() = painterResource(R.drawable.logout)
+        val Logout @Composable get() = painterResource(id = R.drawable.logout)
 
 
         val PersonAdd @Composable get() = painterResource(id = R.drawable.person_add_filled)
@@ -97,5 +103,7 @@ object MubbleTheme {
 
         val BubblesSelected @Composable get() = painterResource(id = R.drawable.table_rows_filled)
         val Bubbles @Composable get() = painterResource(id = R.drawable.table_rows)
+
+        val InCircle @Composable get() = painterResource(id = R.drawable.prompt_suggestion)
     }
 }
