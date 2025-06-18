@@ -30,17 +30,17 @@ data class Chat(
 object ChatRepo {
 
     private val chat12Messages = listOf(
-        ChatMessage(senderId = UserRepo.user2.id, message = "Maybe later, thanks!", timestamp = "10:03 AM"),
-        ChatMessage(senderId = UserRepo.user1.id, message = "Great! Need any help?", timestamp = "10:02 AM"),
-        ChatMessage(senderId = UserRepo.user2.id, message = "Hey Alex! Going well, almost done with the UI.", timestamp = "10:01 AM"),
-        ChatMessage(senderId = UserRepo.user1.id, message = "Hey Jordan, how's the project going?", timestamp = "10:00 AM"),
+        ChatMessage(senderId = UserRepo.user2.id, message = "Maybe later, thanks!", timestamp = "10:03"),
+        ChatMessage(senderId = UserRepo.user1.id, message = "Great! Need any help?", timestamp = "10:02"),
+        ChatMessage(senderId = UserRepo.user2.id, message = "Hey Alex! Going well, almost done with the UI.", timestamp = "10:01"),
+        ChatMessage(senderId = UserRepo.user1.id, message = "Hey Jordan, how's the project going?", timestamp = "10:00"),
     )
 
     private val chat13Messages = listOf(
-        ChatMessage(senderId = UserRepo.user1.id, message = "👍", timestamp = "11:32 AM"),
-        ChatMessage(senderId = UserRepo.user3.id, message = "The usual spot?", timestamp = "11:31 AM"),
-        ChatMessage(senderId = UserRepo.user1.id, message = "Sure, where?", timestamp = "11:31 AM"),
-        ChatMessage(senderId = UserRepo.user3.id, message = "Lunch today?", timestamp = "11:30 AM")
+        ChatMessage(senderId = UserRepo.user1.id, message = "👍", timestamp = "11:32"),
+        ChatMessage(senderId = UserRepo.user3.id, message = "The usual spot?", timestamp = "11:31"),
+        ChatMessage(senderId = UserRepo.user1.id, message = "Sure, where?", timestamp = "11:31"),
+        ChatMessage(senderId = UserRepo.user3.id, message = "Lunch today?", timestamp = "11:30")
     )
 
     private val chat23Messages = listOf(
