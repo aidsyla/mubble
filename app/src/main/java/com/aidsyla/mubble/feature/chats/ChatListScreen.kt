@@ -3,7 +3,6 @@ package com.aidsyla.mubble.feature.chats
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
@@ -42,13 +40,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.aidsyla.mubble.common.components.CircleImage
 import com.aidsyla.mubble.data.ChatPreview
 import com.aidsyla.mubble.ui.LocalBottomBarPadding
 import com.aidsyla.mubble.ui.theme.MubbleTheme
@@ -180,13 +178,10 @@ fun ChatListItem(
                             .align(Alignment.CenterVertically),
                         onDraw = { drawCircle(color = dotColor) })
                 }
-                Image(
+                CircleImage(
                     painter = painterResource(id = chatPreview.otherUserProfilePicResId),
                     contentDescription = "${chatPreview.otherUserName} profile picture",
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(shape = CircleShape),
-                    contentScale = ContentScale.Crop
+                    borderWidth = 0.dp
                 )
                 Column(
                     modifier = Modifier.weight(1f)

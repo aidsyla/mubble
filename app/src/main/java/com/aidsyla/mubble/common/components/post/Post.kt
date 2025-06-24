@@ -6,7 +6,6 @@ import androidx.compose.animation.core.EaseInOutCubic
 import androidx.compose.animation.core.EaseOutQuad
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,13 +13,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -49,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aidsyla.mubble.R
+import com.aidsyla.mubble.common.components.CircleImage
 import com.aidsyla.mubble.feature.explore.model.BubbleFeedItem
 import com.aidsyla.mubble.feature.explore.model.FeedItem
 import com.aidsyla.mubble.feature.explore.model.ImagePostFeedItem
@@ -164,19 +162,10 @@ fun PostHeader(
                 .clickable { onUserClick() }
                 .padding(end = 8.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape)
-                    .clip(CircleShape)
-            ) {
-                Image(
-                    painter = painterResource(avatarResId),
-                    contentDescription = "$name's avatar",
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
-                )
-            }
+            CircleImage(
+                painter = painterResource(avatarResId),
+                contentDescription = "$name's avatar"
+            )
             Column {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -204,23 +193,11 @@ fun PostHeader(
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onSurface
                         )
-                        Box(
-                            modifier = Modifier
-                                .size(24.dp)
-                                .border(
-                                    0.5.dp,
-                                    MaterialTheme.colorScheme.outlineVariant,
-                                    CircleShape
-                                )
-                                .clip(CircleShape)
-                        ) {
-                            Image(
-                                modifier = Modifier.fillMaxSize(),
-                                contentScale = ContentScale.Crop,
-                                painter = painterResource(R.drawable.post_3),
-                                contentDescription = null
-                            )
-                        }
+                        CircleImage(
+                            painter = painterResource(R.drawable.post_3),
+                            size = 24.dp,
+                            borderWidth = 0.5.dp
+                        )
                         Text(
                             text = it,
                             style = MaterialTheme.typography.bodyMedium,
