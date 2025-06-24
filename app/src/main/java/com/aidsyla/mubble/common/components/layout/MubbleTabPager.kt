@@ -1,6 +1,6 @@
 package com.aidsyla.mubble.common.components.layout
 
-import androidx.compose.animation.core.animateDpAsState
+import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,9 +9,9 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.grid.LazyGridState
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -34,7 +34,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
-import androidx.compose.ui.zIndex
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -128,27 +127,33 @@ fun MubbleListTabPager(
 fun MubbleGridTabPager(
     modifier: Modifier = Modifier,
     pagerState: PagerState,
-    firstPage: @Composable (LazyGridState) -> Unit,
-    secondPage: @Composable (LazyGridState) -> Unit,
+    firstPage: @Composable (LazyStaggeredGridState) -> Unit,
+    secondPage: @Composable (LazyStaggeredGridState) -> Unit,
+    thirdPage: @Composable (LazyStaggeredGridState) -> Unit,
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
     appBarTitle: @Composable () -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
-    val firstPageListState = rememberLazyGridState()
-    val secondPageListState = rememberLazyGridState()
+    val firstPageGridState = rememberLazyStaggeredGridState()
+    val secondPageGridState = rememberLazyStaggeredGridState()
+    val thirdPageGridState = rememberLazyStaggeredGridState()
 
-    val isAtTopFirst = firstPageListState.rememberIsAtTop()
-    val isAtTopSecond = secondPageListState.rememberIsAtTop()
+    val isAtTopFirst = firstPageGridState.rememberIsAtTop()
+    val isAtTopSecond = secondPageGridState.rememberIsAtTop()
+    val isAtTopThird = thirdPageGridState.rememberIsAtTop()
 
     val state =
         rememberCollapsingTopBarScreenState(
             scrollBehavior,
             pagerState,
             isAtTopFirst,
-            isAtTopSecond
+            isAtTopSecond,
+            isAtTopThird
         )
+
+    Log.d("TEST", "MubbleGridTabPager: $isAtTopFirst")
 
     val dividerAlpha by animateFloatAsState(
         targetValue = state.targetDividerAlpha, label = "dividerAlpha"
@@ -200,8 +205,9 @@ fun MubbleGridTabPager(
                 .padding(top = pagerTopPadding)
         ) { pageIndex ->
             when (pageIndex) {
-                0 -> firstPage(firstPageListState)
-                1 -> secondPage(secondPageListState)
+                0 -> firstPage(firstPageGridState)
+                1 -> secondPage(secondPageGridState)
+                2 -> thirdPage(thirdPageGridState)
             }
         }
     }
@@ -213,6 +219,7 @@ class CollapsingTopBarScreenState(
     private val pagerState: PagerState,
     private val isAtTopFirst: Boolean,
     private val isAtTopSecond: Boolean,
+    private val isAtTopThird: Boolean?,
 ) {
     val collapsedFraction: Float
         get() = scrollBehavior.state.collapsedFraction
@@ -226,7 +233,12 @@ class CollapsingTopBarScreenState(
     val targetDividerAlpha: Float
         get() {
             val notAtTop =
-                if (pagerState.currentPage == 0) !isAtTopFirst else !isAtTopSecond
+                when(pagerState.currentPage) {
+                    0 -> !isAtTopFirst
+                    1 -> !isAtTopSecond
+                    2 -> isAtTopThird?.not() ?: false
+                    else -> false
+                }
 
             return if (targetAppBarAlpha == 1f && collapsedFraction == 0f && notAtTop) {
                 1f
@@ -243,16 +255,17 @@ private fun rememberCollapsingTopBarScreenState(
     pagerState: PagerState,
     isAtTopFirst: Boolean,
     isAtTopSecond: Boolean,
+    isAtTopThird: Boolean? = null
 ): CollapsingTopBarScreenState {
     return remember(scrollBehavior, pagerState, isAtTopFirst, isAtTopSecond) {
         CollapsingTopBarScreenState(
-            scrollBehavior, pagerState, isAtTopFirst, isAtTopSecond
+            scrollBehavior, pagerState, isAtTopFirst, isAtTopSecond, isAtTopThird
         )
     }
 }
 
 @Composable
-fun LazyGridState.rememberIsAtTop(): Boolean {
+fun LazyListState.rememberIsAtTop(): Boolean {
     return remember {
         derivedStateOf {
             firstVisibleItemIndex == 0 && firstVisibleItemScrollOffset == 0
@@ -261,7 +274,7 @@ fun LazyGridState.rememberIsAtTop(): Boolean {
 }
 
 @Composable
-fun LazyListState.rememberIsAtTop(): Boolean {
+fun LazyStaggeredGridState.rememberIsAtTop(): Boolean {
     return remember {
         derivedStateOf {
             firstVisibleItemIndex == 0 && firstVisibleItemScrollOffset == 0

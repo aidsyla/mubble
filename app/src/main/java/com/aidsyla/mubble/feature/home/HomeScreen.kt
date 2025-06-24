@@ -7,10 +7,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -25,6 +23,7 @@ import com.aidsyla.mubble.common.components.circle.AllButton
 import com.aidsyla.mubble.common.components.circle.CircleItem
 import com.aidsyla.mubble.common.components.layout.MubbleListTabPager
 import com.aidsyla.mubble.common.components.layout.MubbleTabRow
+import com.aidsyla.mubble.feature.circle.model.CircleRepo
 import com.aidsyla.mubble.ui.LocalBottomBarPadding
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 
@@ -122,12 +121,12 @@ fun CircleScreen(
                 item {
                     AllButton()
                 }
-                items(7) {
-                    CircleItem(isFullWidth = false, modifier = Modifier.fillParentMaxWidth(0.5f)) {
-                        FilledIconButton(onClick = {}) {
-                            Icon(imageVector = Icons.Default.Add, contentDescription = null)
-                        }
-                    }
+                items(CircleRepo.dummyCircles) {
+                    CircleItem(
+                        circle = it,
+                        showIcon = false,
+                        modifier = Modifier.fillParentMaxWidth(0.5f)
+                    )
                 }
             }
         }

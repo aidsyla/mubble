@@ -15,13 +15,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -39,7 +37,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aidsyla.mubble.R
-import com.aidsyla.mubble.common.components.circle.CircleItem
 
 @Preview
 @OptIn(ExperimentalMaterial3Api::class)
@@ -292,11 +289,11 @@ fun SignUpScreen4(modifier: Modifier = Modifier) {
                 )
             }
             items(8) {
-                CircleItem(isFullWidth = true) {
-                    FilledIconButton(onClick = {}, modifier = Modifier.size(32.dp)) {
-                        Icon(imageVector = Icons.Default.Add, contentDescription = null)
-                    }
-                }
+//                CircleItem(isFullWidth = true) {
+//                    FilledIconButton(onClick = {}, modifier = Modifier.size(32.dp)) {
+//                        Icon(imageVector = Icons.Default.Add, contentDescription = null)
+//                    }
+//                }
             }
         }
     }

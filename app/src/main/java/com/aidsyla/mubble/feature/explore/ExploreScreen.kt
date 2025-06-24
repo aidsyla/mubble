@@ -2,27 +2,29 @@ package com.aidsyla.mubble.feature.explore
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -37,12 +40,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.aidsyla.mubble.common.components.circle.CircleItem
 import com.aidsyla.mubble.common.components.layout.MubbleGridTabPager
-import com.aidsyla.mubble.common.components.layout.MubbleListTabPager
 import com.aidsyla.mubble.common.components.layout.MubbleTabRow
+import com.aidsyla.mubble.feature.circle.model.Circle
+import com.aidsyla.mubble.feature.circle.model.CircleRepo
 import com.aidsyla.mubble.feature.explore.model.BubbleFeedItem
-import com.aidsyla.mubble.feature.explore.model.FeedItem
 import com.aidsyla.mubble.feature.explore.model.ImagePostFeedItem
+import com.aidsyla.mubble.feature.home.data.DummyPostRepository
 import com.aidsyla.mubble.ui.LocalBottomBarPadding
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 
@@ -52,24 +57,29 @@ fun ExploreScreen(
     onPostClick: (postId: String) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val tabTitles = remember { listOf("Posts", "Circles") }
-    val pagerState = rememberPagerState { tabTitles.size }
+    val tabTitles = remember { listOf("Circles", "Media", "Bubbles") }
+    val pagerState = rememberPagerState(initialPage = 1) { tabTitles.size }
     val bottomPadding = LocalBottomBarPadding.current
 
     MubbleGridTabPager(
         modifier = Modifier.padding(bottom = bottomPadding),
         pagerState = pagerState,
         firstPage = {
-            ExplorePostGrid(
-                items = uiState.items,
-                listState = it,
-                onPostClick = onPostClick
+            ExploreCircleGrid(
+                items = CircleRepo.dummyCircles
             )
         },
         secondPage = {
             ExplorePostGrid(
-                items = uiState.items,
-                listState = it,
+                items = uiState.media,
+                state = it,
+                onPostClick = onPostClick
+            )
+        },
+        thirdPage = {
+            ExploreBubbleGrid(
+                items = uiState.bubbles,
+                state = it,
                 onPostClick = onPostClick
             )
         },
@@ -87,19 +97,59 @@ fun ExploreScreen(
 }
 
 @Composable
-fun ExplorePostGrid(
+fun ExploreCircleGrid(
     modifier: Modifier = Modifier,
-    items: List<FeedItem>,
-    listState: LazyGridState,
-    onPostClick: (postId: String) -> Unit,
+    items: List<Circle>,
 ) {
     LazyVerticalGrid(
-        modifier = modifier,
-        state = listState,
         columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(start = 8.dp, end = 8.dp, top = 4.dp, bottom = 16.dp),
+        contentPadding = PaddingValues(top = 4.dp, start = 8.dp, end = 8.dp, bottom = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(items) {
+            CircleItem(circle = it, showIcon = true, modifier = Modifier.fillMaxWidth())
+        }
+    }
+}
+
+@Composable
+fun ExploreBubbleGrid(
+    modifier: Modifier = Modifier,
+    items: List<BubbleFeedItem>,
+    state: LazyStaggeredGridState,
+    onPostClick: (postId: String) -> Unit,
+) {
+    LazyVerticalStaggeredGrid(
+        state = state,
+        columns = StaggeredGridCells.Fixed(2),
+        contentPadding = PaddingValues(top = 4.dp, start = 8.dp, end = 8.dp, bottom = 8.dp),
+        verticalItemSpacing = 8.dp,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.fillMaxSize()
+    ) {
+        exploreBubblesFeed(
+            items = items,
+            onProfileClick = {},
+            onPostClick = onPostClick
+        )
+    }
+}
+
+@Composable
+fun ExplorePostGrid(
+    modifier: Modifier = Modifier,
+    items: List<ImagePostFeedItem>,
+    state: LazyStaggeredGridState,
+    onPostClick: (postId: String) -> Unit,
+) {
+    LazyVerticalStaggeredGrid(
+        state = state,
+        columns = StaggeredGridCells.Fixed(2),
+        contentPadding = PaddingValues(top = 4.dp, start = 8.dp, end = 8.dp, bottom = 8.dp),
+        verticalItemSpacing = 8.dp,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.fillMaxSize()
     ) {
         explorePostsFeed(
             items = items,
@@ -115,19 +165,27 @@ fun ExplorePost(
     item: ImagePostFeedItem,
     onPostClick: (postId: String) -> Unit,
 ) {
-    Card(
-        modifier = modifier.aspectRatio(1f),
-        onClick = { onPostClick(item.id) }
+    Box(
+        modifier = modifier
+            .clip(MaterialTheme.shapes.medium)
+            .clickable { onPostClick(item.id) }
     ) {
-        ExploreHeader(
-            avatarResId = item.userAvatarResId,
-            username = item.username
-        )
         Image(
             painter = painterResource(item.postImageResId),
             contentDescription = "Post media",
-            modifier = modifier.fillMaxWidth(),
-            contentScale = ContentScale.Crop
+            modifier = Modifier
+                .fillMaxWidth(),
+        )
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .background(MubbleTheme.Gradients.fadingBlackGradient)
+        )
+        ExploreHeader(
+            modifier = Modifier
+                .align(Alignment.TopStart),
+            avatarResId = item.userAvatarResId,
+            username = item.username
         )
     }
 }
@@ -136,6 +194,7 @@ fun ExplorePost(
 fun ExploreHeader(
     modifier: Modifier = Modifier,
     username: String,
+    textColor: Color = Color.White,
     @DrawableRes avatarResId: Int,
 ) {
     Row(
@@ -153,8 +212,9 @@ fun ExploreHeader(
         )
         Text(
             text = username, style = MaterialTheme.typography.labelMedium.copy(
-                fontWeight = FontWeight.W900
-            )
+                fontWeight = FontWeight.Bold
+            ),
+            color = textColor
         )
     }
 }
@@ -166,9 +226,8 @@ fun ExploreBubble(
 ) {
     ExploreBubble(
         modifier = modifier,
-        displayName = item.displayName,
+        username = item.username,
         description = item.postDescription,
-        likeCount = item.likeCount,
         avatarResId = item.userAvatarResId
     )
 }
@@ -176,66 +235,54 @@ fun ExploreBubble(
 @Composable
 fun ExploreBubble(
     modifier: Modifier = Modifier,
-    displayName: String,
+    username: String,
     description: String,
-    likeCount: Int,
     @DrawableRes avatarResId: Int,
 ) {
     Card(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium
     ) {
-        Row(
-            modifier = Modifier.padding(start = 12.dp, end = 8.dp, top = 16.dp, bottom = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Image(
-                painter = painterResource(avatarResId),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(shape = CircleShape),
-                contentScale = ContentScale.Crop
-            )
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = displayName, style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.SemiBold
-                    )
-                )
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-            Column(
-                modifier = Modifier
-                    .width(48.dp)
-                    .clickable { },
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.FavoriteBorder,
-                    contentDescription = null,
-                )
-                Text(text = likeCount.toString(), style = MaterialTheme.typography.labelSmall)
-            }
-        }
+        ExploreHeader(
+            avatarResId = avatarResId,
+            username = username,
+            textColor = MaterialTheme.colorScheme.onSurface
+        )
+        Text(
+            text = description,
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+                .padding(bottom = 8.dp)
+        )
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun ExplorePostPreview() {
-//    ExplorePost()
+    val item = DummyPostRepository.dummyFeedItems
+        .filterIsInstance<ImagePostFeedItem>()
+        .first()
+    MubbleTheme {
+        ExplorePost(
+            item = item,
+            onPostClick = {}
+        )
+    }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun ExploreBubblePreview() {
-//    ExploreBubble()
+    val item = DummyPostRepository.dummyFeedItems
+        .filterIsInstance<BubbleFeedItem>()
+        .first()
+    MubbleTheme {
+        Surface {
+            ExploreBubble(
+                item = item
+            )
+        }
+    }
 }
-

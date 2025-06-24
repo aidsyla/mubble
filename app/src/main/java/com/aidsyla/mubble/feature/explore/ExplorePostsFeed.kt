@@ -1,36 +1,35 @@
 package com.aidsyla.mubble.feature.explore
 
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyGridScope
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridScope
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import com.aidsyla.mubble.feature.explore.model.BubbleFeedItem
-import com.aidsyla.mubble.feature.explore.model.FeedItem
 import com.aidsyla.mubble.feature.explore.model.ImagePostFeedItem
 
-fun LazyGridScope.explorePostsFeed(
-    items: List<FeedItem>,
+fun LazyStaggeredGridScope.explorePostsFeed(
+    items: List<ImagePostFeedItem>,
     onProfileClick: (userId: String) -> Unit,
     onPostClick: (postId: String) -> Unit,
 ) {
     items(
         items = items,
-        key = { it.id },
-        span = { item ->
-            when (item) {
-                is ImagePostFeedItem -> GridItemSpan(1)
-                is BubbleFeedItem -> GridItemSpan(2)
-            }
-        }
     ) { item ->
-        when (item) {
-            is ImagePostFeedItem -> ExplorePost(
-                item = item,
-                onPostClick = onPostClick
-            )
+        ExplorePost(
+            item = item,
+            onPostClick = onPostClick
+        )
+    }
+}
 
-            is BubbleFeedItem -> ExploreBubble(
-                item = item,
-            )
-        }
+fun LazyStaggeredGridScope.exploreBubblesFeed(
+    items: List<BubbleFeedItem>,
+    onProfileClick: (userId: String) -> Unit,
+    onPostClick: (postId: String) -> Unit,
+) {
+    items(
+        items = items,
+    ) { item ->
+        ExploreBubble(
+            item = item
+        )
     }
 }
