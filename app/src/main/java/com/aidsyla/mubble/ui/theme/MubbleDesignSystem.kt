@@ -3,9 +3,9 @@ package com.aidsyla.mubble.ui.theme
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
 import com.aidsyla.mubble.R
 import androidx.compose.material.icons.Icons as MaterialIcons
 
@@ -17,12 +17,21 @@ object MubbleTheme {
     }
 
     object AppearanceTabs {
-        val iconsSelected @Composable get() = listOf(Icons.AutoSelected, Icons.DarkModeSelected, Icons.LightModeSelected)
+        val iconsSelected
+            @Composable get() = listOf(
+                Icons.AutoSelected,
+                Icons.DarkModeSelected,
+                Icons.LightModeSelected
+            )
         val icons @Composable get() = listOf(Icons.Auto, Icons.DarkMode, Icons.LightMode)
     }
 
     object AccountVisibility {
-        val iconsSelected @Composable get() = listOf(Icons.AccountPublicSelected, Icons.AccountPrivateSelected)
+        val iconsSelected
+            @Composable get() = listOf(
+                Icons.AccountPublicSelected,
+                Icons.AccountPrivateSelected
+            )
         val icons @Composable get() = listOf(Icons.AccountPublic, Icons.AccountPrivate)
     }
 
@@ -44,9 +53,11 @@ object MubbleTheme {
     }
 
     object Icons {
+        val MoreHorizontal @Composable get() = painterResource(id = R.drawable.more_horiz)
+
         val Favorite @Composable get() = painterResource(id = R.drawable.favorite)
         val FavoriteFilled @Composable get() = painterResource(id = R.drawable.favorite_filled)
-        val Comment @Composable get() = painterResource(id = R.drawable.forum)
+        val Comment @Composable get() = painterResource(id = R.drawable.comment)
         val Send @Composable get() = painterResource(id = R.drawable.send)
 
         val ArrowBack = MaterialIcons.AutoMirrored.Rounded.ArrowBack
@@ -105,5 +116,41 @@ object MubbleTheme {
         val Bubbles @Composable get() = painterResource(id = R.drawable.table_rows)
 
         val InCircle @Composable get() = painterResource(id = R.drawable.prompt_suggestion)
+    }
+
+    object Gradients {
+        val fadingBlackGradient = Brush.verticalGradient(
+            colorStops = arrayOf(
+                0.0f to Color(0x80000000),
+                0.05f to Color(0x73000000),
+                0.10f to Color(0x66000000),
+                0.15f to Color(0x57000000),
+                0.20f to Color(0x47000000),
+                0.25f to Color(0x38000000),
+                0.30f to Color(0x29000000),
+                0.35f to Color(0x1A000000),
+                0.40f to Color(0x0F000000),
+                0.50f to Color(0x08000000),
+                0.60f to Color(0x03000000),
+            )
+        )
+
+        val fadingBlackGradient2 = Brush.verticalGradient(
+            startY = Float.POSITIVE_INFINITY,
+            endY = 0f,
+            colorStops = arrayOf(
+                0.00f to Color(0xCC000000),
+                0.08f to Color(0xBF000000),
+                0.13f to Color(0xAD000000),
+                0.18f to Color(0x97000000),
+                0.23f to Color(0x78000000),
+                0.28f to Color(0x55000000),
+                0.33f to Color(0x40000000),
+                0.38f to Color(0x2E000000),
+                0.43f to Color(0x1A000000),
+                0.50f to Color(0x0F000000),
+                0.70f to Color(0x00000000)
+            )
+        )
     }
 }
