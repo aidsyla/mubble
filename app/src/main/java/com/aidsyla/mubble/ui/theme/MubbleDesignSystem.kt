@@ -39,11 +39,14 @@ object MubbleTheme {
         val HomeSelected = R.drawable.home_filled
         val Home = R.drawable.home
 
-        val SearchSelected = R.drawable.search_filled
-        val Search = R.drawable.search
+        val ExploreSelected = R.drawable.globe_filled
+        val Explore = R.drawable.globe
 
-        val ChatSelected = R.drawable.chat_bubble_filled
-        val Chat = R.drawable.chat_bubble
+        val VideosSelected = R.drawable.slow_motion_video
+        val Videos = VideosSelected
+
+        val ChatSelected = R.drawable.chat_filled
+        val Chat = R.drawable.chat
 
         val ActivitySelected = R.drawable.notifications_filled
         val Activity = R.drawable.notifications

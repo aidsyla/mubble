@@ -3,7 +3,7 @@ package com.aidsyla.mubble.common.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
-import com.aidsyla.mubble.feature.activity.activityScreen
+import com.aidsyla.mubble.feature.videos.videosScreen
 import com.aidsyla.mubble.feature.chats.chatDetailsScreen
 import com.aidsyla.mubble.feature.chats.chatListScreen
 import com.aidsyla.mubble.feature.chats.chatScreen
@@ -60,7 +60,7 @@ fun AppNavHost(
             onBackClick = navController::popBackStack,
             onProfileClick = {}
         )
-        activityScreen()
+        videosScreen()
         profileScreen(
             onNavigateToSettings = navController::navigateToSettings,
             onBackClick = navController::popBackStack

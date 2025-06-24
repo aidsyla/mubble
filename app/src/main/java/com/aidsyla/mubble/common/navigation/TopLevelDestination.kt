@@ -7,42 +7,36 @@ enum class TopLevelDestination(
     val route: KClass<*>,
     val selectedIcon: Int,
     val unselectedIcon: Int,
-    val iconText: String,
-    val titleText: String
+    val iconText: String
 ) {
     HOME(
         route = HomeRoute::class,
         selectedIcon = MubbleTheme.TopLevelDestinationIcons.HomeSelected,
         unselectedIcon = MubbleTheme.TopLevelDestinationIcons.Home,
-        iconText = "Home",
-        titleText = "mubble"
+        iconText = "Home"
     ),
     EXPLORE(
         route = ExploreRoute::class,
-        selectedIcon = MubbleTheme.TopLevelDestinationIcons.SearchSelected,
-        unselectedIcon = MubbleTheme.TopLevelDestinationIcons.Search,
-        iconText = "Explore",
-        titleText = "Explore"
+        selectedIcon = MubbleTheme.TopLevelDestinationIcons.ExploreSelected,
+        unselectedIcon = MubbleTheme.TopLevelDestinationIcons.Explore,
+        iconText = "Explore"
+    ),
+    VIDEOS(
+        route = VideosRoute::class,
+        selectedIcon = MubbleTheme.TopLevelDestinationIcons.VideosSelected,
+        unselectedIcon = MubbleTheme.TopLevelDestinationIcons.Videos,
+        iconText = "Videos"
     ),
     CHATS(
         route = ChatListRoute::class,
         selectedIcon = MubbleTheme.TopLevelDestinationIcons.ChatSelected,
         unselectedIcon = MubbleTheme.TopLevelDestinationIcons.Chat,
-        iconText = "Chats",
-        titleText = "Chats"
-    ),
-    ACTIVITY(
-        route = ActivityRoute::class,
-        selectedIcon = MubbleTheme.TopLevelDestinationIcons.ActivitySelected,
-        unselectedIcon = MubbleTheme.TopLevelDestinationIcons.Activity,
-        iconText = "Activity",
-        titleText = "Activity"
+        iconText = "Chats"
     ),
     PROFILE(
         route = ProfileRoute::class,
         selectedIcon = MubbleTheme.TopLevelDestinationIcons.ProfileSelected,
         unselectedIcon = MubbleTheme.TopLevelDestinationIcons.Profile,
-        iconText = "Profile",
-        titleText = "Profile"
+        iconText = "Profile"
     )
 }

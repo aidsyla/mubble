@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable object HomeRoute
 @Serializable object ExploreRoute
+@Serializable object VideosRoute
 @Serializable object ChatListRoute
 @Serializable object ActivityRoute
 @Serializable data class ProfileRoute(val userId: String? = null)

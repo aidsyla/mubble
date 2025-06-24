@@ -13,12 +13,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.aidsyla.mubble.common.navigation.ProfileRoute
 import com.aidsyla.mubble.common.navigation.TopLevelDestination
-import com.aidsyla.mubble.common.navigation.TopLevelDestination.ACTIVITY
 import com.aidsyla.mubble.common.navigation.TopLevelDestination.CHATS
 import com.aidsyla.mubble.common.navigation.TopLevelDestination.EXPLORE
 import com.aidsyla.mubble.common.navigation.TopLevelDestination.HOME
 import com.aidsyla.mubble.common.navigation.TopLevelDestination.PROFILE
-import com.aidsyla.mubble.feature.activity.navigateToActivity
+import com.aidsyla.mubble.common.navigation.TopLevelDestination.VIDEOS
+import com.aidsyla.mubble.feature.videos.navigateToVideos
 import com.aidsyla.mubble.feature.chats.navigateToChatList
 import com.aidsyla.mubble.feature.explore.navigateToExplore
 import com.aidsyla.mubble.feature.home.navigateToHome
@@ -63,8 +63,8 @@ class AppState(
         when (topLevelDestination) {
             HOME -> navController.navigateToHome(topLevelNavOptions)
             EXPLORE -> navController.navigateToExplore(topLevelNavOptions)
+            VIDEOS -> navController.navigateToVideos(topLevelNavOptions)
             CHATS -> navController.navigateToChatList(topLevelNavOptions)
-            ACTIVITY -> navController.navigateToActivity(topLevelNavOptions)
             PROFILE -> navController.navigateToProfile(navOptions = topLevelNavOptions)
         }
     }
