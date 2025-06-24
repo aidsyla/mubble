@@ -146,10 +146,10 @@ private class MubbleTabRowState(
     }
 
     private val dynamicWidthDp: Dp by derivedStateOf {
-//        val baseWidth = 36.dp
-//        val maxExtraWidth = 46.dp
-//        baseWidth + (maxExtraWidth * fWidth)
-        currentWidthDp + (36.dp * fWidth)
+        val baseWidth = 36.dp
+//        val maxExtraWidth = 36.dp
+        baseWidth + (baseWidth * fWidth)
+//        currentWidthDp + (36.dp * fWidth)
     }
 
     private val indicatorCenterDp: Dp by derivedStateOf {
