@@ -89,7 +89,7 @@ fun CircleItem(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .padding(start = 12.dp, end = 4.dp, bottom = 8.dp)
+                .padding(start = 12.dp, end = 4.dp, bottom = if (showIcon) 4.dp else 8.dp)
                 .align(Alignment.BottomStart),
         ) {
             Column {
