@@ -60,7 +60,9 @@ fun AppNavHost(
             onBackClick = navController::popBackStack,
             onProfileClick = {}
         )
-        videosScreen()
+        videosScreen(
+            onBackClick = navController::popBackStack,
+        )
         profileScreen(
             onNavigateToSettings = navController::navigateToSettings,
             onBackClick = navController::popBackStack
