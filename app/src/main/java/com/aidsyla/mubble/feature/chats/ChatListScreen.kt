@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -58,41 +59,40 @@ fun ChatListScreen(
     val scrollState = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     Scaffold(
+        modifier = modifier,
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    AnimatedContent(
-                        targetState = editUiState.isEditing
-                    ) {
-                        if (it) Text(text = "0 Selected") else Text(text = "Chats")
+                AnimatedContent(
+                    targetState = editUiState.isEditing
+                ) {
+                    if (it) Text(text = "0 Selected") else Text(text = "Chats")
+                }
+            }, navigationIcon = {
+                AnimatedContent(
+                    targetState = editUiState.isEditing,
+                ) {
+                    IconButton(onClick = { viewModel.editModeSwitch() }) {
+                        Icon(
+                            painter = if (it) MubbleTheme.Icons.ArrowBack else MubbleTheme.Icons.EditFilled,
+                            contentDescription = null
+                        )
                     }
-                }, navigationIcon = {
-                    AnimatedContent(
-                        targetState = editUiState.isEditing,
-                    ) {
-                        IconButton(onClick = { viewModel.editModeSwitch() }) {
-                            Icon(
-                                painter = if (it) MubbleTheme.Icons.ArrowBack else MubbleTheme.Icons.EditFilled,
-                                contentDescription = null
-                            )
-                        }
+                }
+            }, actions = {
+                AnimatedContent(targetState = editUiState.isEditing) {
+                    if (it) IconButton(onClick = { }) {
+                        Icon(
+                            painter = MubbleTheme.Icons.Delete, contentDescription = null
+                        )
                     }
-                }, actions = {
-                    AnimatedContent(targetState = editUiState.isEditing) {
-                        if (it)
-                            IconButton(onClick = { }) {
-                                Icon(
-                                    painter = MubbleTheme.Icons.Delete, contentDescription = null
-                                )
-                            }
-                        else
-                            IconButton(onClick = { }) {
-                                Icon(
-                                    painter = MubbleTheme.Icons.Search, contentDescription = null
-                                )
-                            }
+                    else IconButton(onClick = { }) {
+                        Icon(
+                            painter = MubbleTheme.Icons.Search, contentDescription = null
+                        )
                     }
-                }, scrollBehavior = scrollState
+                }
+            }, scrollBehavior = scrollState
             )
         },
     ) { innerPadding ->
@@ -132,9 +132,8 @@ fun ChatListItem(
 ) {
     val dotColor = MaterialTheme.colorScheme.primary
     var isSelected by remember { mutableStateOf(false) }
-    val targetColor =
-        if (isSelected) MaterialTheme.colorScheme.surfaceContainerHigh
-        else MaterialTheme.colorScheme.surface
+    val targetColor = if (isSelected) MaterialTheme.colorScheme.surfaceContainerHigh
+    else MaterialTheme.colorScheme.surface
     val backgroundColor by animateColorAsState(targetValue = targetColor)
 
     val chatModifier = if (!isEditing) modifier.clickable {
@@ -166,13 +165,6 @@ fun ChatListItem(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.Top
             ) {
-                if (chatPreview.isUnread) {
-                    Canvas(
-                        modifier = Modifier
-                            .size(8.dp)
-                            .align(Alignment.CenterVertically),
-                        onDraw = { drawCircle(color = dotColor) })
-                }
                 CircleImage(
                     painter = painterResource(id = chatPreview.otherUserProfilePicResId),
                     contentDescription = "${chatPreview.otherUserName} profile picture",
@@ -183,15 +175,22 @@ fun ChatListItem(
                 ) {
                     Text(
                         text = chatPreview.otherUserName,
-                        style = MaterialTheme.typography.titleMedium
+                        style = if (chatPreview.isUnread) MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold) else MaterialTheme.typography.titleMedium
                     )
                     Text(
                         text = chatPreview.lastMessage,
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = if (chatPreview.isUnread) MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold) else MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1
                     )
+                }
+                if (chatPreview.isUnread) {
+                    Canvas(
+                        modifier = Modifier
+                            .size(8.dp)
+                            .align(Alignment.CenterVertically),
+                        onDraw = { drawCircle(color = dotColor) })
                 }
                 Column(
                     modifier = Modifier.align(Alignment.CenterVertically),
