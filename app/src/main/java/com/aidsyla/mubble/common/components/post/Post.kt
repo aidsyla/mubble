@@ -62,7 +62,6 @@ fun BasePostLayout(
     onMoreClick: (postId: String) -> Unit,
     onPostClick: (postId: String) -> Unit,
 ) {
-    val detailsPadding = if (!useCard) Modifier.padding(top = 4.dp) else Modifier
     var isLiked by remember { mutableStateOf(false) }
     val content: @Composable () -> Unit = {
 
@@ -81,7 +80,7 @@ fun BasePostLayout(
             is ImagePostFeedItem -> {
                 item.postDescription?.let {
                     PostDescription(
-                        modifier = detailsPadding
+                        modifier = Modifier
                             .padding(bottom = 8.dp),
                         description = it,
                         style = MaterialTheme.typography.bodyMedium
@@ -101,7 +100,7 @@ fun BasePostLayout(
 
             is BubbleFeedItem -> {
                 PostDescription(
-                    modifier = detailsPadding,
+                    modifier = Modifier,
                     description = item.postDescription,
                     style = MaterialTheme.typography.bodyLarge
                 )
