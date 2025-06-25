@@ -39,7 +39,11 @@ fun AppScreen(
     val currentDestination = appState.currentDestination
     val currentTopLevelDestination = appState.currentTopLevelDestination
 
-    val showNavBar = currentTopLevelDestination != null || currentDestination.isRouteInSettingsHierarchy()
+    val isVideoScreen = currentDestination.isRouteInHierarchy(TopLevelDestination.VIDEOS.route)
+
+    val showNavBar =
+        (currentTopLevelDestination != null || currentDestination.isRouteInSettingsHierarchy()) &&
+                !isVideoScreen
 
     val navBarVisibilityState = remember {
         MutableTransitionState(initialState = true)
@@ -80,7 +84,10 @@ fun AppScreen(
                             icon = {
                                 val icon =
                                     if (selected) destination.selectedIcon else destination.unselectedIcon
-                                Icon(painterResource(icon), contentDescription = destination.iconText)
+                                Icon(
+                                    painterResource(icon),
+                                    contentDescription = destination.iconText
+                                )
                             }
                         )
                     }
