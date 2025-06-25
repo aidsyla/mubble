@@ -1,6 +1,5 @@
 package com.aidsyla.mubble.ui.theme
 
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Brush
@@ -56,12 +55,25 @@ object MubbleTheme {
     }
 
     object Icons {
+        val MubbleIcon @Composable get() = painterResource(id = R.drawable.mubble_icon)
+
+        val Pause @Composable get() = painterResource(id = R.drawable.pause)
+        val Resume @Composable get() = painterResource(id = R.drawable.resume)
+        val VolumeUp @Composable get() = painterResource(id = R.drawable.volume_up)
+        val VolumeOff @Composable get() = painterResource(id = R.drawable.no_sound)
+        val Speed0_5x @Composable get() = painterResource(id = R.drawable.speed_0_5x)
+        val Speed1x @Composable get() = painterResource(id = R.drawable.speed_1x)
+        val Speed2x @Composable get() = painterResource(id = R.drawable.speed_2x)
+        val ExpandContent @Composable get() = painterResource(id = R.drawable.expand_content)
+        val CollapseContent @Composable get() = painterResource(id = R.drawable.collapse_content)
+
         val MoreHorizontal @Composable get() = painterResource(id = R.drawable.more_horiz)
 
         val Favorite @Composable get() = painterResource(id = R.drawable.favorite)
         val FavoriteFilled @Composable get() = painterResource(id = R.drawable.favorite_filled)
         val Comment @Composable get() = painterResource(id = R.drawable.comment)
         val Send @Composable get() = painterResource(id = R.drawable.send)
+        val Save @Composable get() = painterResource(id = R.drawable.bookmark)
 
         val ArrowBack @Composable get() = painterResource(id = R.drawable.arrow_back)
         val Search @Composable get() = painterResource(id = R.drawable.search)
