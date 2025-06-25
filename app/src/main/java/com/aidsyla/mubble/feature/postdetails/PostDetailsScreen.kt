@@ -1,16 +1,11 @@
 package com.aidsyla.mubble.feature.postdetails
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -24,12 +19,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.aidsyla.mubble.common.components.CircleImage
 import com.aidsyla.mubble.common.components.post.BasePostLayout
+import com.aidsyla.mubble.ui.theme.MubbleTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,19 +55,16 @@ fun PostDetailsScreen(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
-                                Image(
+                                CircleImage(
                                     painter = painterResource(
                                         id = state.postItem.userAvatarResId
                                     ),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(48.dp)
-                                        .clip(CircleShape),
-                                    contentScale = ContentScale.Crop,
+                                    size = 40.dp,
+                                    borderWidth = 0.5.dp
                                 )
                                 Text(
-                                    state.postItem.displayName,
-                                    style = MaterialTheme.typography.titleMedium
+                                    text = state.postItem.displayName,
+                                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
                                 )
                             }
                         }
@@ -78,9 +72,14 @@ fun PostDetailsScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(MubbleTheme.Icons.ArrowBack, contentDescription = "Back")
                     }
                 },
+                actions = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(MubbleTheme.Icons.MoreHorizontal, contentDescription = "Back")
+                    }
+                }
             )
         }
     ) { paddingValues ->
