@@ -81,6 +81,14 @@ fun ExploreScreen(
                 onPostClick = onPostClick
             )
         },
+        navigationIcon = {
+            IconButton(onClick = {}, enabled = false) {
+                Icon(
+                    painter = MubbleTheme.Icons.MubbleIcon, contentDescription = null,
+                    tint = Color.Unspecified
+                )
+            }
+        },
         actions = {
             IconButton(onClick = {}) {
                 Icon(painter = MubbleTheme.Icons.Search, contentDescription = null)
