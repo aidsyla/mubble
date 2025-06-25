@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -24,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.aidsyla.mubble.R
+import com.aidsyla.mubble.ui.theme.MubbleTheme
 
 @Composable
 fun CommentList(modifier: Modifier = Modifier) {
@@ -36,9 +36,11 @@ fun CommentList(modifier: Modifier = Modifier) {
 
 @Composable
 fun Replies(modifier: Modifier = Modifier) {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .padding(vertical = 4.dp), contentAlignment = Alignment.Center) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp), contentAlignment = Alignment.Center
+    ) {
         Text(text = "3 Replies")
     }
 }
@@ -79,7 +81,7 @@ fun CommentItem(modifier: Modifier = Modifier, startPadding: Dp = 8.dp) {
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.clickable { }
                 ) {
-                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+                    Icon(painter = MubbleTheme.Icons.ArrowBack, contentDescription = null)
                     Text(text = "Reply")
                 }
             }

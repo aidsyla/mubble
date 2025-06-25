@@ -120,7 +120,7 @@ fun ProfileTopAppBar(
                 )
             ) {
                 Icon(
-                    imageVector = MubbleTheme.Icons.ArrowBack,
+                    painter = MubbleTheme.Icons.ArrowBack,
                     contentDescription = null,
                     modifier = Modifier
                         .offset(x = 1.dp, y = 1.dp)
@@ -129,7 +129,7 @@ fun ProfileTopAppBar(
                     tint = shadowColor,
                 )
                 Icon(
-                    imageVector = MubbleTheme.Icons.ArrowBack,
+                    painter = MubbleTheme.Icons.ArrowBack,
                     contentDescription = "Back",
                 )
             }

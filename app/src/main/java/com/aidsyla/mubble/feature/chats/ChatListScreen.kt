@@ -14,11 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -77,7 +72,7 @@ fun ChatListScreen(
                     ) {
                         IconButton(onClick = { viewModel.editModeSwitch() }) {
                             Icon(
-                                imageVector = if (it) Icons.Filled.ArrowBack else Icons.Filled.Edit,
+                                painter = if (it) MubbleTheme.Icons.ArrowBack else MubbleTheme.Icons.EditFilled,
                                 contentDescription = null
                             )
                         }
@@ -87,13 +82,13 @@ fun ChatListScreen(
                         if (it)
                             IconButton(onClick = { }) {
                                 Icon(
-                                    imageVector = Icons.Filled.Delete, contentDescription = null
+                                    painter = MubbleTheme.Icons.Delete, contentDescription = null
                                 )
                             }
                         else
                             IconButton(onClick = { }) {
                                 Icon(
-                                    imageVector = Icons.Filled.Search, contentDescription = null
+                                    painter = MubbleTheme.Icons.Search, contentDescription = null
                                 )
                             }
                     }

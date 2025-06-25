@@ -63,7 +63,7 @@ object MubbleTheme {
         val Comment @Composable get() = painterResource(id = R.drawable.comment)
         val Send @Composable get() = painterResource(id = R.drawable.send)
 
-        val ArrowBack = MaterialIcons.AutoMirrored.Rounded.ArrowBack
+        val ArrowBack @Composable get() = painterResource(id = R.drawable.arrow_back)
         val Search @Composable get() = painterResource(id = R.drawable.search)
         val EditFilled @Composable get() = painterResource(id = R.drawable.edit_filled)
         val Edit @Composable get() = painterResource(id = R.drawable.edit)
