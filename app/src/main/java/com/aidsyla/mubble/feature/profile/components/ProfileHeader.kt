@@ -124,7 +124,7 @@ fun FollowerCount(
 ) {
     Box(
         modifier = modifier
-            .padding(vertical = 6.dp)
+            .padding(vertical = 8.dp)
     ) {
         Row(
             modifier = Modifier
@@ -159,7 +159,7 @@ fun FollowerCount(
 @Composable
 fun ProfileDetails(modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .padding(horizontal = 16.dp)
             .padding(top = 8.dp),
     ) {
