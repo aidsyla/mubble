@@ -12,8 +12,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -29,7 +29,7 @@ import com.aidsyla.mubble.common.navigation.SettingsStartRoute
 import com.aidsyla.mubble.common.navigation.TopLevelDestination
 import kotlin.reflect.KClass
 
-val LocalBottomBarPadding = staticCompositionLocalOf { 0.dp }
+val LocalBottomBarPadding = compositionLocalOf { 0.dp }
 
 @Composable
 fun AppScreen(
