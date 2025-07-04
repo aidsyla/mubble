@@ -1,5 +1,6 @@
-package com.aidsyla.mubble.common.navigation // Or your package
+package com.aidsyla.mubble.common.navigation
 
+import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
 import kotlinx.serialization.Serializable
 
 @Serializable object HomeRoute
@@ -9,7 +10,7 @@ import kotlinx.serialization.Serializable
 @Serializable object ActivityRoute
 @Serializable data class ProfileRoute(val userId: String? = null)
 
-@Serializable data class PostDetailsRoute(val postId: String)
+@Serializable data class PostDetailsRoute(val postId: String, val origin: PostOrigin)
 @Serializable data class UserProfileRoute(val userId: String)
 @Serializable data class UserPostsRoute(val userId: String)
 

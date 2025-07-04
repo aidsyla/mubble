@@ -15,7 +15,9 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    ) : ViewModel() {
+) : ViewModel() {
+    var firstPageClickedIndex: Int = -1
+    var secondPageClickedIndex: Int = -1
 
     val uiState: StateFlow<PostListUiState> = flowOf(
         PostListUiState(items = DummyPostRepository.dummyFeedItems)

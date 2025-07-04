@@ -1,6 +1,7 @@
 package com.aidsyla.mubble.common.components.layout
 
 import android.util.Log
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.pager.HorizontalPager
@@ -34,22 +34,27 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
+import com.aidsyla.mubble.common.navigation.LocalNavAnimatedVisibilityScope
+import com.aidsyla.mubble.common.navigation.LocalSharedTransitionScope
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun MubbleListTabPager(
     modifier: Modifier = Modifier,
+    scrollBehavior: TopAppBarScrollBehavior,
     pagerState: PagerState,
+    firstPageListState: LazyListState,
+    secondPageListState: LazyListState,
     firstPage: @Composable (LazyListState) -> Unit,
     secondPage: @Composable (LazyListState) -> Unit,
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
     appBarTitle: @Composable () -> Unit,
 ) {
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-
-    val firstPageListState = rememberLazyListState()
-    val secondPageListState = rememberLazyListState()
+    val sharedTransitionScope = LocalSharedTransitionScope.current
+        ?: throw IllegalStateException("No SharedElementScope found")
+    val animatedContentScope = LocalNavAnimatedVisibilityScope.current
+        ?: throw IllegalStateException("No AnimatedVisibility found")
 
     val isAtTopFirst = firstPageListState.rememberIsAtTop()
     val isAtTopSecond = secondPageListState.rememberIsAtTop()
@@ -74,30 +79,40 @@ fun MubbleListTabPager(
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            Surface(
-                color = animatedAppBarColor
-            ) {
-                Box(
-                    contentAlignment = Alignment.BottomCenter
-                ) {
-                    CenterAlignedTopAppBar(
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color.Transparent,
-                            scrolledContainerColor = Color.Transparent,
-                            navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
-                            titleContentColor = MaterialTheme.colorScheme.onSurface,
-                            actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        ),
-                        navigationIcon = navigationIcon,
-                        title = appBarTitle,
-                        actions = actions,
-                        scrollBehavior = scrollBehavior
-                    )
-                    HorizontalDivider(
-                        color = DividerDefaults.color.copy(alpha = dividerAlpha)
-                    )
+            with(animatedContentScope) {
+                with(sharedTransitionScope) {
+                    Surface(
+                        modifier = Modifier
+                            .renderInSharedTransitionScopeOverlay(
+                                zIndexInOverlay = 1f
+                            )
+                            .animateEnterExit(),
+                        color = animatedAppBarColor
+                    ) {
+                        Box(
+                            contentAlignment = Alignment.BottomCenter
+                        ) {
+                            CenterAlignedTopAppBar(
+                                colors = TopAppBarDefaults.topAppBarColors(
+                                    containerColor = Color.Transparent,
+                                    scrolledContainerColor = Color.Transparent,
+                                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+                                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                                    actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                                ),
+                                navigationIcon = navigationIcon,
+                                title = appBarTitle,
+                                actions = actions,
+                                scrollBehavior = scrollBehavior
+                            )
+                            HorizontalDivider(
+                                color = DividerDefaults.color.copy(alpha = dividerAlpha)
+                            )
+                        }
+                    }
                 }
             }
+
         }, contentWindowInsets = WindowInsets(0.dp)
     ) {
         val topInset = it.calculateTopPadding()
@@ -233,7 +248,7 @@ class CollapsingTopBarScreenState(
     val targetDividerAlpha: Float
         get() {
             val notAtTop =
-                when(pagerState.currentPage) {
+                when (pagerState.currentPage) {
                     0 -> !isAtTopFirst
                     1 -> !isAtTopSecond
                     2 -> isAtTopThird?.not() ?: false
@@ -255,7 +270,7 @@ private fun rememberCollapsingTopBarScreenState(
     pagerState: PagerState,
     isAtTopFirst: Boolean,
     isAtTopSecond: Boolean,
-    isAtTopThird: Boolean? = null
+    isAtTopThird: Boolean? = null,
 ): CollapsingTopBarScreenState {
     return remember(scrollBehavior, pagerState, isAtTopFirst, isAtTopSecond) {
         CollapsingTopBarScreenState(

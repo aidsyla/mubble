@@ -2,13 +2,14 @@ package com.aidsyla.mubble.feature.explore
 
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridScope
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
 import com.aidsyla.mubble.feature.explore.model.BubbleFeedItem
 import com.aidsyla.mubble.feature.explore.model.ImagePostFeedItem
 
 fun LazyStaggeredGridScope.explorePostsFeed(
     items: List<ImagePostFeedItem>,
     onProfileClick: (userId: String) -> Unit,
-    onPostClick: (postId: String) -> Unit,
+    onPostClick: (postId: String, origin: PostOrigin) -> Unit,
 ) {
     items(
         items = items,
@@ -23,13 +24,14 @@ fun LazyStaggeredGridScope.explorePostsFeed(
 fun LazyStaggeredGridScope.exploreBubblesFeed(
     items: List<BubbleFeedItem>,
     onProfileClick: (userId: String) -> Unit,
-    onPostClick: (postId: String) -> Unit,
+    onPostClick: (postId: String, origin: PostOrigin) -> Unit,
 ) {
     items(
         items = items,
     ) { item ->
         ExploreBubble(
-            item = item
+            item = item,
+            onPostClick = onPostClick
         )
     }
 }

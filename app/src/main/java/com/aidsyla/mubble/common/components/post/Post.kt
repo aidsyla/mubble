@@ -1,22 +1,34 @@
 package com.aidsyla.mubble.common.components.post
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.EaseInOutCubic
 import androidx.compose.animation.core.EaseOutQuad
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.calculateCentroid
+import androidx.compose.foundation.gestures.calculateCentroidSize
+import androidx.compose.foundation.gestures.calculatePan
+import androidx.compose.foundation.gestures.calculateZoom
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -30,50 +42,98 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.input.pointer.PointerInputScope
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInWindow
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastAny
+import androidx.compose.ui.util.fastForEach
+import androidx.compose.ui.util.lerp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.window.DialogWindowProvider
 import com.aidsyla.mubble.R
 import com.aidsyla.mubble.common.components.CircleImage
+import com.aidsyla.mubble.common.navigation.LocalNavAnimatedVisibilityScope
+import com.aidsyla.mubble.common.navigation.LocalSharedTransitionScope
+import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
+import com.aidsyla.mubble.common.navigation.shared_elements.PostSharedElementKey
+import com.aidsyla.mubble.common.navigation.shared_elements.PostSharedElementType
 import com.aidsyla.mubble.feature.explore.model.BubbleFeedItem
 import com.aidsyla.mubble.feature.explore.model.FeedItem
 import com.aidsyla.mubble.feature.explore.model.ImagePostFeedItem
 import com.aidsyla.mubble.feature.home.data.DummyPostRepository
 import com.aidsyla.mubble.ui.theme.MubbleTheme
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
+import kotlin.math.abs
+import kotlin.math.max
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun BasePostLayout(
     modifier: Modifier = Modifier,
     item: FeedItem,
+    origin: PostOrigin = PostOrigin.None,
     useCard: Boolean = true,
+    isInPostDetails: Boolean = false,
     onUserClick: (String) -> Unit,
     onMoreClick: (postId: String) -> Unit,
     onPostClick: (postId: String) -> Unit,
 ) {
+    val sharedTransitionScope = LocalSharedTransitionScope.current
+        ?: throw IllegalStateException("No SharedElementScope found")
+    val animatedContentScope = LocalNavAnimatedVisibilityScope.current
+        ?: throw IllegalStateException("No AnimatedVisibility found")
+
     var isLiked by remember { mutableStateOf(false) }
     val content: @Composable () -> Unit = {
 
         if (useCard) {
-            PostHeader(
-                name = item.displayName,
-                avatarResId = item.userAvatarResId,
-                circleName = item.circleName,
-                datePosted = item.datePosted,
-                onUserClick = { onUserClick(item.id) },
-                onMoreClick = { onMoreClick(item.id) }
-            )
+            with(sharedTransitionScope) {
+                PostHeader(
+                    sharedElementModifier = Modifier.sharedElement(
+                        rememberSharedContentState(
+                            key = PostSharedElementKey(
+                                postId = item.id,
+                                origin = origin,
+                                type = PostSharedElementType.ProfileAvatar
+                            )
+                        ),
+                        animatedVisibilityScope = animatedContentScope
+                    ),
+                    name = item.displayName,
+                    avatarResId = item.userAvatarResId,
+                    circleName = item.circleName,
+                    datePosted = item.datePosted,
+                    onUserClick = { onUserClick(item.id) },
+                    onMoreClick = { onMoreClick(item.id) }
+                )
+            }
         }
 
         when (item) {
@@ -86,9 +146,24 @@ fun BasePostLayout(
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
-                PostMedia(
-                    imageResId = item.postImageResId,
-                )
+                with(sharedTransitionScope) {
+                    ZoomablePostMedia(
+                        modifier = Modifier
+                            .sharedElement(
+                                rememberSharedContentState(
+                                    key = PostSharedElementKey(
+                                        postId = item.id,
+                                        origin = origin,
+                                        type = PostSharedElementType.Image
+                                    )
+                                ),
+                                animatedVisibilityScope = animatedContentScope
+                            ),
+                        imageRes = item.postImageResId,
+                        isInPostDetails = isInPostDetails
+                    )
+                }
+
                 PostActions(
                     likeCount = item.likeCount,
                     commentCount = item.commentCount,
@@ -99,11 +174,23 @@ fun BasePostLayout(
             }
 
             is BubbleFeedItem -> {
-                PostDescription(
-                    modifier = Modifier,
-                    description = item.postDescription,
-                    style = MaterialTheme.typography.bodyLarge
-                )
+                with(sharedTransitionScope) {
+                    PostDescription(
+                        modifier = Modifier.sharedBounds(
+                            rememberSharedContentState(
+                                key = PostSharedElementKey(
+                                    postId = item.id,
+                                    origin = origin,
+                                    type = PostSharedElementType.Bubble
+                                )
+                            ),
+                            animatedVisibilityScope = animatedContentScope,
+                        ),
+                        description = item.postDescription,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+
+                }
                 PostActions(
                     likeCount = item.likeCount,
                     commentCount = item.commentCount,
@@ -116,19 +203,21 @@ fun BasePostLayout(
     }
 
     if (useCard)
-        Card(
-            modifier = modifier
-                .clip(shape = MaterialTheme.shapes.large)
-                .combinedClickable(
-                onClick = { onPostClick(item.id) },
-                onDoubleClick = { isLiked = !isLiked }
-            ),
-            shape = MaterialTheme.shapes.large,
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surfaceContainer
-            )
-        ) {
-            content()
+        CompositionLocalProvider(LocalRippleConfiguration provides null) {
+            Card(
+                modifier = modifier
+                    .clip(shape = MaterialTheme.shapes.large)
+                    .combinedClickable(
+                        onClick = { onPostClick(item.id) },
+                        onDoubleClick = { isLiked = !isLiked }
+                    ),
+                shape = MaterialTheme.shapes.large,
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer
+                )
+            ) {
+                content()
+            }
         }
     else
         Column(modifier = modifier) {
@@ -139,6 +228,7 @@ fun BasePostLayout(
 @Composable
 fun PostHeader(
     modifier: Modifier = Modifier,
+    sharedElementModifier: Modifier = Modifier,
     name: String,
     @DrawableRes avatarResId: Int,
     datePosted: String,
@@ -162,6 +252,7 @@ fun PostHeader(
                 .padding(end = 8.dp)
         ) {
             CircleImage(
+                modifier = sharedElementModifier,
                 painter = painterResource(avatarResId),
                 contentDescription = "$name's avatar"
             )
@@ -170,7 +261,8 @@ fun PostHeader(
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     Text(
-                        modifier = Modifier.alignByBaseline(),
+                        modifier = Modifier
+                            .alignByBaseline(),
                         text = name,
                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
                         color = MaterialTheme.colorScheme.onSurface
@@ -219,27 +311,281 @@ fun PostDescription(
     style: TextStyle,
     description: String,
 ) {
-    Text(
-        modifier = modifier
-            .padding(horizontal = 16.dp),
-        text = description,
-        style = style,
-        color = MaterialTheme.colorScheme.onSurface
-    )
+    Box(modifier = modifier) {
+        Text(
+            modifier = Modifier
+                .padding(horizontal = 16.dp),
+            text = description,
+            style = style,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+    }
+}
+
+suspend fun PointerInputScope.detectTransformGesturesCustom(
+    panZoomLock: Boolean = false,
+    onGestureEnd: () -> Unit = {},
+    onGesture: (centroid: Offset, pan: Offset, zoom: Float) -> Unit,
+) {
+    awaitEachGesture {
+        var totalZoom = 1f
+        var totalPan = Offset.Zero
+        var pastTouchSlop = false
+        val touchSlop = viewConfiguration.touchSlop
+        var lockedToPanZoom = false
+        awaitFirstDown(requireUnconsumed = false)
+        do {
+            val event = awaitPointerEvent()
+            val canceled = event.changes.fastAny { it.isConsumed }
+            val pointerCount = event.changes.count { it.pressed }
+
+            if (!canceled) {
+                val rawZoom = event.calculateZoom()
+                val rawPan = event.calculatePan()
+                val centroid = event.calculateCentroid(useCurrent = false)
+
+                if (!pastTouchSlop && pointerCount >= 2) {
+                    totalZoom *= rawZoom
+                    totalPan += rawPan
+
+                    val centroidSize = event.calculateCentroidSize(useCurrent = false)
+                    val zoomMotion = abs(1 - totalZoom) * centroidSize
+                    val panMotion = totalPan.getDistance()
+
+                    if (zoomMotion > touchSlop || panMotion > touchSlop) {
+                        pastTouchSlop = true
+                        lockedToPanZoom = panZoomLock
+                    }
+                }
+
+                if (pastTouchSlop) {
+                    when {
+                        pointerCount >= 2 -> {
+                            val effectivePan = if (lockedToPanZoom) Offset.Zero else rawPan
+                            if (rawZoom != 1f || effectivePan != Offset.Zero) {
+                                onGesture(centroid, effectivePan, rawZoom)
+                            }
+                            event.changes.fastForEach {
+                                if (it.positionChanged()) it.consume()
+                            }
+                        }
+
+                        pointerCount == 1 -> {
+                            val singlePan = event.calculatePan()
+                            if (singlePan != Offset.Zero) {
+                                onGesture(centroid, singlePan, 1f)
+                                event.changes.fastForEach {
+                                    if (it.positionChanged()) it.consume()
+                                }
+                            }
+                        }
+
+                        pointerCount == 0 -> {
+                            break
+                        }
+                    }
+                }
+            }
+        } while (!canceled && event.changes.fastAny { it.pressed })
+        onGestureEnd()
+    }
 }
 
 @Composable
-fun PostMedia(
+fun ZoomablePostMedia(
     modifier: Modifier = Modifier,
-    @DrawableRes imageResId: Int,
+    @DrawableRes imageRes: Int,
+    isInPostDetails: Boolean,
 ) {
-    Image(
-        painter = painterResource(imageResId),
-        contentDescription = "Post media",
-        modifier = modifier
-            .fillMaxWidth(),
-        contentScale = ContentScale.FillWidth
-    )
+    val coroutineScope = rememberCoroutineScope()
+    val imagePadding = if (isInPostDetails) 0.dp else 16.dp
+    var hasLaunched by remember { mutableStateOf(false) }
+
+    var layoutCoordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
+
+    var initialCenter by remember { mutableStateOf(Offset.Zero) }
+    var initialSize by remember { mutableStateOf(IntSize.Zero) }
+    var initialOffset by remember { mutableStateOf(Offset.Zero) }
+
+    var zoom by remember { mutableFloatStateOf(1f) }
+    var offset by remember { mutableStateOf(Offset.Zero) }
+    var centerOffset by remember { mutableStateOf(Offset.Zero) }
+
+    val zoomAnimatable = remember { Animatable(1f) }
+    val offsetAnimatable = remember { Animatable(Offset.Zero, Offset.VectorConverter) }
+    val centerOffsetAnimatable = remember { Animatable(Offset.Zero, Offset.VectorConverter) }
+    val backgroundAlphaAnim = remember { Animatable(0f) }
+
+    // Slight flicker sometimes, yet to test more and find ways to reproduce bug
+    val isZooming by remember {
+        if (hasLaunched)
+            derivedStateOf { true }
+        else
+            derivedStateOf { zoomAnimatable.value != 1f || centerOffsetAnimatable.value != Offset.Zero }
+    }
+
+    centerOffset =
+        if (initialSize == IntSize.Zero) Offset.Zero else {
+            Offset(
+                x = (initialSize.width / 2f) * (zoom - 1) - offset.x * zoom,
+                y = (initialSize.height / 2f) * (zoom - 1) - offset.y * zoom
+            )
+        }
+
+    LaunchedEffect(zoom) {
+        if (!zoomAnimatable.isRunning) {
+            zoomAnimatable.snapTo(zoom)
+        }
+    }
+    LaunchedEffect(offset) {
+        if (!offsetAnimatable.isRunning) {
+            offsetAnimatable.snapTo(offset)
+        }
+    }
+    LaunchedEffect(centerOffset) {
+        if (!centerOffsetAnimatable.isRunning) {
+            centerOffsetAnimatable.snapTo(centerOffset)
+        }
+    }
+
+    fun resetToCenter() {
+        coroutineScope.launch {
+            val zoomJob = launch {
+                zoomAnimatable.snapTo(zoom)
+                zoomAnimatable.animateTo(
+                    targetValue = 1f,
+                    animationSpec = tween(
+                        durationMillis = 300,
+                        easing = FastOutSlowInEasing
+                    )
+                )
+                zoom = 1f
+            }
+
+            val offsetJob = launch {
+                centerOffsetAnimatable.snapTo(centerOffset)
+                centerOffsetAnimatable.animateTo(
+                    targetValue = Offset.Zero,
+                    animationSpec = tween(
+                        durationMillis = 300,
+                        easing = FastOutSlowInEasing
+                    )
+                )
+                offset = Offset.Zero
+                centerOffset = Offset.Zero
+            }
+
+            val bgJob = launch {
+                backgroundAlphaAnim.animateTo(
+                    targetValue = 0f,
+                    animationSpec = tween(
+                        durationMillis = 300,
+                        easing = FastOutSlowInEasing
+                    )
+                )
+            }
+            joinAll(zoomJob, offsetJob, bgJob)
+            hasLaunched = false
+        }
+    }
+
+    if (hasLaunched) {
+        Dialog(
+            onDismissRequest = {},
+            properties = DialogProperties(
+                usePlatformDefaultWidth = false,
+                decorFitsSystemWindows = false,
+            )
+        ) {
+            val dialogWindowProvider = LocalView.current.parent as? DialogWindowProvider
+            dialogWindowProvider?.window?.setDimAmount(0f)
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = Color.Black.copy(alpha = backgroundAlphaAnim.value))
+                    .graphicsLayer {
+                        translationX = initialOffset.x
+                        translationY = initialOffset.y
+                    }
+                    .padding(end = imagePadding)
+            ) {
+                Image(
+                    painter = painterResource(imageRes),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .graphicsLayer(
+                            scaleX = zoomAnimatable.value,
+                            scaleY = zoomAnimatable.value,
+                            translationX = centerOffsetAnimatable.value.x,
+                            translationY = centerOffsetAnimatable.value.y,
+                        )
+                        .fillMaxWidth(),
+                    contentScale = ContentScale.FillWidth
+                )
+            }
+        }
+    }
+
+    Box(
+        modifier = Modifier.wrapContentSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter = painterResource(imageRes),
+            contentDescription = null,
+            modifier = modifier
+                .onGloballyPositioned { coordinates ->
+                    layoutCoordinates = coordinates
+                    initialSize = coordinates.size
+                    val position = coordinates.localToRoot(Offset.Zero)
+                    initialCenter = Offset(
+                        x = position.x + initialSize.width / 2f,
+                        y = position.y + initialSize.height / 2f
+                    )
+                }
+                .pointerInput(Unit) {
+                    detectTransformGesturesCustom(
+                        onGestureEnd = {
+                            resetToCenter()
+                        }
+                    ) { centroid, pan, gestureZoom ->
+                        layoutCoordinates?.let { c ->
+                            hasLaunched = true
+                            val oldZoom = zoom
+                            val newZoom = max(zoom * gestureZoom, 0.7f)
+
+                            offset = (offset + centroid / oldZoom) -
+                                    (centroid / newZoom + pan / oldZoom)
+                            zoom = newZoom
+
+                            val maxScale = 1.6f
+                            val t = ((newZoom - 1f) / (maxScale - 1f)).coerceIn(0f, 1f)
+
+                            coroutineScope.launch {
+                                if (backgroundAlphaAnim.value == 0f) {
+                                    backgroundAlphaAnim.animateTo(
+                                        targetValue = 0.2f,
+                                        animationSpec = tween(
+                                            durationMillis = 100,
+                                            easing = FastOutSlowInEasing
+                                        )
+                                    )
+                                } else if (!backgroundAlphaAnim.isRunning)
+                                    backgroundAlphaAnim.snapTo(lerp(0.2f, 0.7f, t))
+                            }
+                            initialOffset = c.positionInWindow()
+                        }
+                    }
+                }
+                .fillMaxWidth(),
+            contentScale = ContentScale.FillWidth
+        )
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .background(color = if (isZooming) MaterialTheme.colorScheme.surfaceContainerHigh else Color.Transparent)
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -350,20 +696,25 @@ fun ActionItem(
     }
 }
 
+val post = DummyPostRepository.dummyFeedItems
+    .filterIsInstance<ImagePostFeedItem>()
+    .first()
+
+val bubble = DummyPostRepository.dummyFeedItems
+    .filterIsInstance<BubbleFeedItem>()
+    .first()
+
 @Preview(showBackground = true, name = "Post Card Preview")
 @Composable
 private fun PostCardPreview() {
-    val item = DummyPostRepository.dummyFeedItems
-        .filterIsInstance<ImagePostFeedItem>()
-        .first()
     MubbleTheme {
         BasePostLayout(
             modifier = Modifier.padding(8.dp),
-            item = item,
+            item = post,
             useCard = true,
             onUserClick = {},
             onMoreClick = {},
-            onPostClick = {}
+            onPostClick = {},
         )
     }
 }
@@ -371,17 +722,14 @@ private fun PostCardPreview() {
 @Preview(showBackground = true, name = "Post Details Preview")
 @Composable
 private fun PostDetailsPreview() {
-    val item = DummyPostRepository.dummyFeedItems
-        .filterIsInstance<ImagePostFeedItem>()
-        .first()
     MubbleTheme {
         Surface {
             BasePostLayout(
-                item = item,
+                item = post,
                 useCard = false,
                 onUserClick = {},
                 onMoreClick = {},
-                onPostClick = {}
+                onPostClick = {},
             )
         }
     }
@@ -390,18 +738,14 @@ private fun PostDetailsPreview() {
 @Preview(showBackground = true, name = "Bubble Card Preview")
 @Composable
 private fun BubbleCardPreview() {
-    val item = DummyPostRepository.dummyFeedItems
-        .filterIsInstance<BubbleFeedItem>()
-        .first()
-
     MubbleTheme {
         BasePostLayout(
             modifier = Modifier.padding(8.dp),
-            item = item,
+            item = bubble,
             useCard = true,
             onUserClick = {},
             onMoreClick = {},
-            onPostClick = {}
+            onPostClick = {},
         )
     }
 }
@@ -409,18 +753,14 @@ private fun BubbleCardPreview() {
 @Preview(showBackground = true, name = "Bubble Details Preview")
 @Composable
 private fun BubbleDetailsPreview() {
-    val item = DummyPostRepository.dummyFeedItems
-        .filterIsInstance<BubbleFeedItem>()
-        .first()
-
     MubbleTheme {
         Surface {
             BasePostLayout(
-                item = item,
+                item = bubble,
                 useCard = false,
                 onUserClick = {},
                 onMoreClick = {},
-                onPostClick = {}
+                onPostClick = {},
             )
         }
     }

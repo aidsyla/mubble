@@ -13,9 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.aidsyla.mubble.feature.profile.components.MubbleProfileTabPager
+import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
 import com.aidsyla.mubble.feature.explore.model.BubbleFeedItem
 import com.aidsyla.mubble.feature.explore.model.ImagePostFeedItem
+import com.aidsyla.mubble.feature.profile.components.MubbleProfileTabPager
 import com.aidsyla.mubble.feature.profile.components.ProfileHeader
 import com.aidsyla.mubble.feature.profile.components.bubbleList
 import com.aidsyla.mubble.feature.profile.components.postGrid
@@ -25,7 +26,8 @@ import com.aidsyla.mubble.ui.LocalBottomBarPadding
 fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel(),
     onNavigateToSettings: () -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onPostClick: (postId: String, origin: PostOrigin) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -41,10 +43,16 @@ fun ProfileScreen(
                     ProfileHeader()
                 },
                 firstPage = {
-                    ProfilePostGrid(items = state.posts)
+                    ProfilePostGrid(
+                        items = state.posts,
+                        onPostClick = onPostClick
+                    )
                 },
                 secondPage = {
-                    ProfileBubbleList(items = state.bubbles)
+                    ProfileBubbleList(
+                        items = state.bubbles,
+                        onPostClick = onPostClick
+                    )
                 },
                 onNavigateToSettings = onNavigateToSettings,
                 onBackClick = onBackClick
@@ -60,6 +68,7 @@ fun ProfileScreen(
 fun ProfilePostGrid(
     modifier: Modifier = Modifier,
     items: List<ImagePostFeedItem>,
+    onPostClick: (postId: String, origin: PostOrigin) -> Unit
 ) {
     val bottomPadding = LocalBottomBarPadding.current
     LazyVerticalGrid(
@@ -74,7 +83,10 @@ fun ProfilePostGrid(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)
     ) {
-        postGrid(items = items)
+        postGrid(
+            items = items,
+            onPostClick = onPostClick
+        )
     }
 }
 
@@ -82,6 +94,7 @@ fun ProfilePostGrid(
 fun ProfileBubbleList(
     modifier: Modifier = Modifier,
     items: List<BubbleFeedItem>,
+    onPostClick: (postId: String, origin: PostOrigin) -> Unit
 ) {
     val bottomPadding = LocalBottomBarPadding.current
     LazyColumn(
@@ -94,6 +107,9 @@ fun ProfileBubbleList(
         ),
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)
     ) {
-        bubbleList(items = items)
+        bubbleList(
+            items = items,
+            onPostClick = onPostClick
+        )
     }
 }
