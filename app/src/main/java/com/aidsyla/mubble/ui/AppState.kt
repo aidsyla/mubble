@@ -18,11 +18,11 @@ import com.aidsyla.mubble.common.navigation.TopLevelDestination.EXPLORE
 import com.aidsyla.mubble.common.navigation.TopLevelDestination.HOME
 import com.aidsyla.mubble.common.navigation.TopLevelDestination.PROFILE
 import com.aidsyla.mubble.common.navigation.TopLevelDestination.VIDEOS
-import com.aidsyla.mubble.feature.videos.navigateToVideos
 import com.aidsyla.mubble.feature.chats.navigateToChatList
 import com.aidsyla.mubble.feature.explore.navigateToExplore
 import com.aidsyla.mubble.feature.home.navigateToHome
 import com.aidsyla.mubble.feature.profile.navigateToProfile
+import com.aidsyla.mubble.feature.videos.navigateToVideos
 
 @Stable
 class AppState(
