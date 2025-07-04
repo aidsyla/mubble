@@ -131,7 +131,7 @@ fun FollowerCount(
                 .clip(shape = MaterialTheme.shapes.medium)
                 .background(color = MaterialTheme.colorScheme.surfaceContainer)
                 .heightIn(min = 48.dp, max = 60.dp)
-                .padding(vertical = 8.dp, horizontal = 4.dp),
+                .padding(vertical = 4.dp, horizontal = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
@@ -142,7 +142,9 @@ fun FollowerCount(
                 maxLines = 1,
                 style = MaterialTheme.typography.labelMedium
             )
-            VerticalDivider()
+            VerticalDivider(
+                modifier = Modifier.padding(vertical = 4.dp)
+            )
             Text(
                 "53k Followers",
                 modifier = Modifier.weight(1f),
