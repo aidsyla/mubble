@@ -281,7 +281,8 @@ private fun ExploreHeader(
                             postId = id, origin = origin, type = PostSharedElementType.ProfileAvatar
                         )
                     ), animatedVisibilityScope = animatedContentScope
-                ), painter = painterResource(avatarResId), size = 24.dp
+                ), painter = painterResource(avatarResId), size = 24.dp,
+                borderWidth = 0.2.dp
             )
             Text(
                 modifier = Modifier.sharedBounds(

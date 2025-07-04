@@ -254,7 +254,8 @@ fun PostHeader(
             CircleImage(
                 modifier = sharedElementModifier,
                 painter = painterResource(avatarResId),
-                contentDescription = "$name's avatar"
+                contentDescription = "$name's avatar",
+                borderWidth = 0.2.dp
             )
             Column {
                 Row(
@@ -287,7 +288,7 @@ fun PostHeader(
                         CircleImage(
                             painter = painterResource(R.drawable.post_3),
                             size = 24.dp,
-                            borderWidth = 0.5.dp
+                            borderWidth = 0.1.dp
                         )
                         Text(
                             text = it,
