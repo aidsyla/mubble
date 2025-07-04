@@ -150,7 +150,7 @@ object MubbleTheme {
             )
         )
 
-        val fadingBlackGradient2 = Brush.verticalGradient(
+        val fadingBlackGradientReversed = Brush.verticalGradient(
             startY = Float.POSITIVE_INFINITY,
             endY = 0f,
             colorStops = arrayOf(

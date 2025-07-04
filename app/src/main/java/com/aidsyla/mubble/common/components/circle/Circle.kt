@@ -86,7 +86,7 @@ fun CircleItem(
         Box(
             modifier = Modifier
                 .matchParentSize()
-                .background(MubbleTheme.Gradients.fadingBlackGradient2)
+                .background(MubbleTheme.Gradients.fadingBlackGradientReversed)
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
