@@ -1,5 +1,6 @@
 package com.aidsyla.mubble.common.components.post
 
+import android.view.WindowManager
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.core.Animatable
@@ -498,8 +499,17 @@ fun ZoomablePostMedia(
                 decorFitsSystemWindows = false,
             )
         ) {
-            val dialogWindowProvider = LocalView.current.parent as? DialogWindowProvider
-            dialogWindowProvider?.window?.setDimAmount(0f)
+            val view = LocalView.current
+            val dialogWindowProvider = view.parent as DialogWindowProvider
+            dialogWindowProvider.window.setDimAmount(0f)
+            val window = dialogWindowProvider.window
+            LaunchedEffect(view) {
+                window.setFlags(
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+                )
+            }
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()
