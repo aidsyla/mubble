@@ -43,7 +43,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -62,8 +61,11 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -393,6 +395,77 @@ suspend fun PointerInputScope.detectTransformGesturesCustom(
     }
 }
 
+//@Composable
+//fun ZoomablePostOverlay4(
+//    scale: Float,
+//    offset: Offset,
+//) {
+//    val density = LocalDensity.current
+//
+//    val topPx = state.initialOffset.y
+//    val heightPx = state.initialSize.height.toFloat()
+//    val bottomPx = topPx + heightPx
+//    val centerOfImagePx = topPx + heightPx / 2
+//
+//    // Get screen height in pixels
+//    val screenHeightPx = with(density) { getScreenHeight().value.toDp() }
+//    val screenCenterPx = screenHeightPx / 2
+//
+//    // Compare image center with screen center
+//    val contentAlignment = if (centerOfImagePx > screenCenterPx) Alignment.TopCenter else Alignment.BottomCenter
+//
+//    // For logging/debug
+//    Log.d("Zoomable", "topPx: $topPx")
+//    Log.d("Zoomable", "bottomPx: $bottomPx")
+//    Log.d("Zoomable", "centerOfImagePx: $centerOfImagePx")
+//    Log.d("Zoomable", "screenHeightPx: $screenHeightPx")
+//    Log.d("Zoomable", "contentAlignment: $contentAlignment")
+//
+//    Box(
+//        Modifier
+//            .pointerInput(Unit) {
+//                awaitPointerEventScope {
+//                    while (true) awaitPointerEvent()
+//                }
+//            }
+//            .wrapContentSize()
+//            .padding(end = 16.dp)
+//    ) {
+//        Box(
+//            modifier = Modifier
+//                .matchParentSize()
+//                .graphicsLayer {
+//                    translationX = state.initialOffset.x
+//                    translationY = state.initialOffset.y
+//                },
+//            contentAlignment = contentAlignment
+//        ) {
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(with(density) { state.initialSize.height.toDp() })
+//                    .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+//            )
+//        }
+//
+//        Image(
+//            painter = painterResource(state.imageRes),
+//            contentDescription = null,
+//            contentScale = ContentScale.FillWidth,
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .graphicsLayer {
+//                    translationX = -offset.x * scale
+//                    translationY = -offset.y * scale
+//                    scaleX = scale
+//                    scaleY = scale
+//                    transformOrigin = TransformOrigin(0f, 0f)
+//                }
+//        )
+//    }
+//}
+
+
 @Composable
 fun ZoomablePostMedia(
     modifier: Modifier = Modifier,
@@ -402,6 +475,7 @@ fun ZoomablePostMedia(
     val coroutineScope = rememberCoroutineScope()
     val imagePadding = if (isInPostDetails) 0.dp else 16.dp
     var hasLaunched by remember { mutableStateOf(false) }
+    var isAnimatingBack by remember { mutableStateOf(false) }
 
     var layoutCoordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
 
@@ -417,14 +491,6 @@ fun ZoomablePostMedia(
     val offsetAnimatable = remember { Animatable(Offset.Zero, Offset.VectorConverter) }
     val centerOffsetAnimatable = remember { Animatable(Offset.Zero, Offset.VectorConverter) }
     val backgroundAlphaAnim = remember { Animatable(0f) }
-
-    // Slight flicker sometimes, yet to test more and find ways to reproduce bug
-    val isZooming by remember {
-        if (hasLaunched)
-            derivedStateOf { true }
-        else
-            derivedStateOf { zoomAnimatable.value != 1f || centerOffsetAnimatable.value != Offset.Zero }
-    }
 
     centerOffset =
         if (initialSize == IntSize.Zero) Offset.Zero else {
@@ -452,29 +518,29 @@ fun ZoomablePostMedia(
 
     fun resetToCenter() {
         coroutineScope.launch {
+            isAnimatingBack = true
             val zoomJob = launch {
-                zoomAnimatable.snapTo(zoom)
                 zoomAnimatable.animateTo(
                     targetValue = 1f,
                     animationSpec = tween(
                         durationMillis = 300,
                         easing = FastOutSlowInEasing
                     )
-                )
-                zoom = 1f
+                ) {
+                    zoom = value
+                }
             }
 
             val offsetJob = launch {
-                centerOffsetAnimatable.snapTo(centerOffset)
                 centerOffsetAnimatable.animateTo(
                     targetValue = Offset.Zero,
                     animationSpec = tween(
                         durationMillis = 300,
                         easing = FastOutSlowInEasing
                     )
-                )
-                offset = Offset.Zero
-                centerOffset = Offset.Zero
+                ) {
+                    centerOffset = value
+                }
             }
 
             val bgJob = launch {
@@ -487,9 +553,24 @@ fun ZoomablePostMedia(
                 )
             }
             joinAll(zoomJob, offsetJob, bgJob)
+            offset = Offset.Zero
+            isAnimatingBack = false
             hasLaunched = false
         }
     }
+
+    val density = LocalDensity.current
+    var imageSize by remember { mutableFloatStateOf(0f) }
+    val imageHeight = with(density) { imageSize.toDp() }
+
+    val topPx = initialOffset.y
+    val centerOfImagePx = topPx + imageSize / 2
+
+    val screenHeightPx = with(density) { LocalConfiguration.current.screenHeightDp.dp.toPx() }
+    val screenCenterPx = screenHeightPx / 2
+
+    val contentAlignment =
+        if (centerOfImagePx > screenCenterPx) Alignment.TopCenter else Alignment.BottomCenter
 
     if (hasLaunched) {
         Dialog(
@@ -509,7 +590,6 @@ fun ZoomablePostMedia(
                     WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
                 )
             }
-
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -520,19 +600,33 @@ fun ZoomablePostMedia(
                     }
                     .padding(end = imagePadding)
             ) {
-                Image(
-                    painter = painterResource(imageRes),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .graphicsLayer(
-                            scaleX = zoomAnimatable.value,
-                            scaleY = zoomAnimatable.value,
-                            translationX = centerOffsetAnimatable.value.x,
-                            translationY = centerOffsetAnimatable.value.y,
+                Box(modifier = Modifier.wrapContentSize()) {
+                    Box(
+                        modifier = Modifier
+                            .matchParentSize(),
+                        contentAlignment = contentAlignment
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(imageHeight)
+                                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                         )
-                        .fillMaxWidth(),
-                    contentScale = ContentScale.FillWidth
-                )
+                    }
+                    Image(
+                        painter = painterResource(imageRes),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .graphicsLayer(
+                                scaleX = zoomAnimatable.value,
+                                scaleY = zoomAnimatable.value,
+                                translationX = centerOffsetAnimatable.value.x,
+                                translationY = centerOffsetAnimatable.value.y,
+                            )
+                            .fillMaxWidth(),
+                        contentScale = ContentScale.FillWidth
+                    )
+                }
             }
         }
     }
@@ -554,47 +648,57 @@ fun ZoomablePostMedia(
                         y = position.y + initialSize.height / 2f
                     )
                 }
-                .pointerInput(Unit) {
-                    detectTransformGesturesCustom(
-                        onGestureEnd = {
-                            resetToCenter()
-                        }
-                    ) { centroid, pan, gestureZoom ->
-                        layoutCoordinates?.let { c ->
-                            hasLaunched = true
-                            val oldZoom = zoom
-                            val newZoom = max(zoom * gestureZoom, 0.7f)
+                .then(
+                    if (isAnimatingBack)
+                        Modifier else
+                        Modifier.pointerInput(Unit) {
+                            detectTransformGesturesCustom(
+                                onGestureEnd = {
+                                    resetToCenter()
+                                }
+                            ) { centroid, pan, gestureZoom ->
+                                layoutCoordinates?.let { c ->
+                                    initialOffset = c.positionInWindow()
 
-                            offset = (offset + centroid / oldZoom) -
-                                    (centroid / newZoom + pan / oldZoom)
-                            zoom = newZoom
+                                    val boxTop = c.boundsInWindow().top
+                                    val boxBottom = c.boundsInWindow().bottom
 
-                            val maxScale = 1.6f
-                            val t = ((newZoom - 1f) / (maxScale - 1f)).coerceIn(0f, 1f)
+                                    val visibleTop = boxTop.coerceIn(0f, screenHeightPx)
+                                    val visibleBottom = boxBottom.coerceIn(0f, screenHeightPx)
 
-                            coroutineScope.launch {
-                                if (backgroundAlphaAnim.value == 0f) {
-                                    backgroundAlphaAnim.animateTo(
-                                        targetValue = 0.2f,
-                                        animationSpec = tween(
-                                            durationMillis = 100,
-                                            easing = FastOutSlowInEasing
+                                    val visibleHeight = visibleBottom - visibleTop
+
+                                    imageSize = visibleHeight
+
+                                }
+                                hasLaunched = true
+                                val oldZoom = zoom
+                                val newZoom = max(zoom * gestureZoom, 0.7f)
+
+                                offset = (offset + centroid / oldZoom) -
+                                        (centroid / newZoom + pan / oldZoom)
+                                zoom = newZoom
+
+                                val maxScale = 1.6f
+                                val t = ((newZoom - 1f) / (maxScale - 1f)).coerceIn(0f, 1f)
+
+                                coroutineScope.launch {
+                                    if (backgroundAlphaAnim.value == 0f) {
+                                        backgroundAlphaAnim.animateTo(
+                                            targetValue = 0.2f,
+                                            animationSpec = tween(
+                                                durationMillis = 100,
+                                                easing = FastOutSlowInEasing
+                                            )
                                         )
-                                    )
-                                } else if (!backgroundAlphaAnim.isRunning)
-                                    backgroundAlphaAnim.snapTo(lerp(0.2f, 0.7f, t))
+                                    } else if (!backgroundAlphaAnim.isRunning)
+                                        backgroundAlphaAnim.snapTo(lerp(0.2f, 0.7f, t))
+                                }
                             }
-                            initialOffset = c.positionInWindow()
                         }
-                    }
-                }
+                )
                 .fillMaxWidth(),
             contentScale = ContentScale.FillWidth
-        )
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .background(color = if (isZooming) MaterialTheme.colorScheme.surfaceContainerHigh else Color.Transparent)
         )
     }
 }
@@ -650,7 +754,10 @@ fun BouncingHeartIcon(
                 }
             }
             if (count > 0) {
-                Text(count.toString(), style = MaterialTheme.typography.labelMediumEmphasized)
+                Text(
+                    count.toString(),
+                    style = MaterialTheme.typography.labelMediumEmphasized
+                )
             }
         }
     }
@@ -700,9 +807,16 @@ fun ActionItem(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(7.dp)
     ) {
-        Icon(modifier = Modifier.size(26.dp), painter = painter, contentDescription = null)
+        Icon(
+            modifier = Modifier.size(26.dp),
+            painter = painter,
+            contentDescription = null
+        )
         if (count > 0) {
-            Text(count.toString(), style = MaterialTheme.typography.labelMediumEmphasized)
+            Text(
+                count.toString(),
+                style = MaterialTheme.typography.labelMediumEmphasized
+            )
         }
     }
 }
