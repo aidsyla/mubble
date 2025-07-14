@@ -6,8 +6,8 @@ import java.util.UUID
 
 data class User(
     val id: String = UUID.randomUUID().toString(),
-    @DrawableRes val bannerResId: Int,
-    @DrawableRes val profilePictureResId: Int,
+    @param:DrawableRes val bannerResId: Int,
+    @param:DrawableRes val profilePictureResId: Int,
     val username: String,
     val displayName: String,
     val followerCount: Int,

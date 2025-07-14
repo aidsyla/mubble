@@ -7,7 +7,7 @@ data class ChatPreview(
     val chatId: String = UUID.randomUUID().toString(),
     val otherUserId: String,
     val otherUserName: String,
-    @DrawableRes val otherUserProfilePicResId: Int,
+    @param:DrawableRes val otherUserProfilePicResId: Int,
     val lastMessage: String,
     val timestamp: String,
     val isUnread: Boolean,

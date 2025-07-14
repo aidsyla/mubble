@@ -6,7 +6,7 @@ import com.aidsyla.mubble.R
 data class Circle(
     val name: String,
     val memberCount: Int,
-    @DrawableRes
+    @param:DrawableRes
     val bannerResId: Int,
 )
 
