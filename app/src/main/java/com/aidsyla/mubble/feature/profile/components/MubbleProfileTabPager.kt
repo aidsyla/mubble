@@ -18,11 +18,8 @@ import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Tab
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -42,8 +39,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.aidsyla.mubble.common.components.TabButtons
-import com.aidsyla.mubble.common.components.for_reference.AnimatedIndicator
-import com.aidsyla.mubble.common.components.for_reference.IndicatorVariant
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 import kotlinx.coroutines.launch
 
@@ -144,131 +139,6 @@ fun MubbleProfileTabPager(
                         HorizontalDivider(
                             color = DividerDefaults.color.copy(alpha = dividerAlpha)
                         )
-                    }
-                }
-            }
-            item {
-                HorizontalPager(
-                    state = pagerState,
-                    verticalAlignment = Alignment.Top,
-                    modifier = Modifier
-                        .nestedScroll(nestedScrollConnection)
-                        .height(pagerHeight)
-                ) { pageIndex ->
-                    when (pageIndex) {
-                        0 -> firstPage()
-                        1 -> secondPage()
-                    }
-                }
-            }
-        }
-    }
-}
-
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MubbleProfileTabPager(
-    modifier: Modifier = Modifier,
-    titles: List<String>,
-    header: @Composable (() -> Unit)? = null,
-    firstPage: @Composable () -> Unit,
-    secondPage: @Composable () -> Unit,
-    onNavigateToSettings: () -> Unit,
-    onBackClick: () -> Unit,
-) {
-    require(titles.size == 2) { "Titles and content must have the same size" }
-
-    val lazyListState = rememberLazyListState()
-
-    val coroutineScope = rememberCoroutineScope()
-    val pagerState = rememberPagerState(pageCount = { titles.size })
-    val currentScreen = pagerState.currentPage
-    val nestedScrollConnection = remember {
-        object : NestedScrollConnection {
-            override fun onPreScroll(
-                available: Offset,
-                source: NestedScrollSource,
-            ): Offset {
-                return if (available.y > 0) Offset.Zero else Offset(
-                    x = 0f,
-                    y = -lazyListState.dispatchRawDelta(-available.y)
-                )
-            }
-        }
-    }
-
-    val statusBars = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
-    val offsetAmount = TopAppBarDefaults.TopAppBarExpandedHeight + statusBars
-
-    val tabRowHeight = 52.dp - 1.dp
-    val pagerHeight = getScreenHeight() - offsetAmount - tabRowHeight
-
-    val isHeaderDocked by rememberIsHeaderSticky(
-        lazyListState = lazyListState,
-        itemKey = STICKY_HEADER,
-        offsetAmount = offsetAmount
-    )
-    val dividerAlpha by animateFloatAsState(
-        targetValue = if (isHeaderDocked) 1f else 0f
-    )
-
-    Scaffold(
-        modifier = Modifier,
-        topBar = {
-            ProfileTopAppBar(
-                modifier = Modifier,
-                lazyListState = lazyListState,
-                offsetAmount = offsetAmount,
-                onNavigateToSettings = onNavigateToSettings,
-                onBackClick = onBackClick
-            )
-        },
-        contentWindowInsets = WindowInsets(0, 0, 0, 0)
-    ) {
-        LazyColumn(
-            state = lazyListState,
-            modifier = modifier.fillMaxSize(),
-        ) {
-            if (header != null)
-                item {
-                    header()
-                }
-            item(key = STICKY_HEADER) {
-                Surface(
-                    modifier = Modifier.zIndex(1f),
-                    color = MaterialTheme.colorScheme.surface
-                ) {
-                    PrimaryTabRow(
-                        modifier = Modifier
-                            .fillParentMaxWidth(),
-                        selectedTabIndex = currentScreen,
-                        indicator = {
-                            AnimatedIndicator(
-                                indicatorVariant = IndicatorVariant.PRIMARY,
-                                pagerState = pagerState
-                            )
-                        },
-                        divider = {
-                            HorizontalDivider(
-                                color = DividerDefaults.color.copy(alpha = dividerAlpha)
-                            )
-                        }
-                    ) {
-                        titles.forEachIndexed { index, title ->
-                            Tab(
-                                modifier = Modifier.zIndex(2f),
-                                selected = currentScreen == index,
-                                onClick = {
-                                    coroutineScope.launch {
-                                        pagerState.animateScrollToPage(index)
-                                    }
-                                },
-                                text = { Text(title) },
-                                selectedContentColor = MaterialTheme.colorScheme.primary,
-                                unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
                     }
                 }
             }
