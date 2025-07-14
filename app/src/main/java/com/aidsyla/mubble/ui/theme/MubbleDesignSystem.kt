@@ -150,6 +150,21 @@ object MubbleTheme {
             )
         )
 
+        val captionScrimGradient = Brush.verticalGradient(
+            colorStops = arrayOf(
+                0.0f to Color(0x80000000),
+                0.10f to Color(0x73000000),
+                0.15f to Color(0x66000000),
+                0.22f to Color(0x57000000),
+                0.28f to Color(0x47000000),
+                0.33f to Color(0x38000000),
+                0.40f to Color(0x29000000),
+                0.45f to Color(0x1A000000),
+                0.50f to Color(0x08000000),
+                0.60f to Color(0x03000000),
+            )
+        )
+
         val fadingBlackGradientReversed = Brush.verticalGradient(
             startY = Float.POSITIVE_INFINITY,
             endY = 0f,
