@@ -5,6 +5,9 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -14,6 +17,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -60,37 +64,44 @@ fun AppScreen(
                 enter = fadeIn(animationSpec = tween(700)),
                 exit = fadeOut(animationSpec = tween(700))
             ) {
-                NavigationBar {
-                    appState.topLevelDestinations.forEach { destination ->
-                        val selected = when (destination) {
-                            TopLevelDestination.PROFILE -> {
-                                currentDestination.isRouteInHierarchy(TopLevelDestination.PROFILE.route) ||
-                                        currentDestination.isRouteInSettingsHierarchy()
-                            }
-
-                            else -> {
-                                currentDestination.isRouteInHierarchy(destination.route)
-                            }
-                        }
-                        NavigationBarItem(
-                            selected = selected,
-                            onClick = {
-                                if (destination == TopLevelDestination.PROFILE && currentDestination.isRouteInSettingsHierarchy()) {
-                                    appState.navigateToProfileFromSettings()
-                                } else {
-                                    appState.navigateToTopLevelDestination(destination)
+                Box {
+                    NavigationBar(
+                        modifier = Modifier.height(80.dp)
+                    ) {
+                        appState.topLevelDestinations.forEach { destination ->
+                            val selected = when (destination) {
+                                TopLevelDestination.PROFILE -> {
+                                    currentDestination.isRouteInHierarchy(TopLevelDestination.PROFILE.route) ||
+                                            currentDestination.isRouteInSettingsHierarchy()
                                 }
-                            },
-                            icon = {
-                                val icon =
-                                    if (selected) destination.selectedIcon else destination.unselectedIcon
-                                Icon(
-                                    painterResource(icon),
-                                    contentDescription = destination.iconText
-                                )
+
+                                else -> {
+                                    currentDestination.isRouteInHierarchy(destination.route)
+                                }
                             }
-                        )
+                            NavigationBarItem(
+                                selected = selected,
+                                onClick = {
+                                    if (destination == TopLevelDestination.PROFILE && currentDestination.isRouteInSettingsHierarchy()) {
+                                        appState.navigateToProfileFromSettings()
+                                    } else {
+                                        appState.navigateToTopLevelDestination(destination)
+                                    }
+                                },
+                                icon = {
+                                    val icon =
+                                        if (selected) destination.selectedIcon else destination.unselectedIcon
+                                    Icon(
+                                        painterResource(icon),
+                                        contentDescription = destination.iconText
+                                    )
+                                }
+                            )
+                        }
                     }
+                    HorizontalDivider(
+                        modifier = Modifier.align(Alignment.TopCenter),
+                    )
                 }
             }
         }
