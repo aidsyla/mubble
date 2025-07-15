@@ -1,7 +1,10 @@
 package com.aidsyla.mubble.feature.profile.components
 
+import androidx.annotation.DrawableRes
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,11 +30,17 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,13 +54,38 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import com.aidsyla.mubble.R
+import com.aidsyla.mubble.data.User
+import com.aidsyla.mubble.data.UserRepo
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileHeader(
     modifier: Modifier = Modifier,
+    user: User,
+) {
+    ProfileHeader(
+        modifier = modifier,
+        profilePictureResId = user.profilePictureResId,
+        bannerResId = user.bannerResId,
+        displayName = user.displayName,
+        username = user.username,
+        description = user.description,
+        followingCount = user.followingCount,
+        followerCount = user.followerCount
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ProfileHeader(
+    modifier: Modifier = Modifier,
+    @DrawableRes profilePictureResId: Int,
+    @DrawableRes bannerResId: Int,
+    displayName: String,
+    username: String,
+    description: String?,
+    followingCount: Int,
+    followerCount: Int,
 ) {
     val profilePictureSize = getScreenWidth().div(4)
     val offsetAmount = profilePictureSize * 0.5f
@@ -75,7 +109,7 @@ fun ProfileHeader(
                     )
             )
             Image(
-                painter = painterResource(R.drawable.post_1),
+                painter = painterResource(bannerResId),
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -101,7 +135,7 @@ fun ProfileHeader(
                         .padding(2.dp)
                 ) {
                     Image(
-                        painter = painterResource(R.drawable.profile_3),
+                        painter = painterResource(profilePictureResId),
                         contentDescription = null,
                         modifier = Modifier
                             .fillMaxSize()
@@ -109,11 +143,19 @@ fun ProfileHeader(
                         contentScale = ContentScale.Crop
                     )
                 }
-                FollowerCount(modifier = Modifier.fillMaxHeight(0.5f))
+                FollowerCount(
+                    modifier = Modifier.fillMaxHeight(0.5f),
+                    followingCount = followingCount,
+                    followerCount = followerCount
+                )
             }
         }
         Spacer(modifier = Modifier.height(offsetAmount))
-        ProfileDetails()
+        ProfileDetails(
+            displayName = displayName,
+            username = username,
+            description = description
+        )
         Spacer(modifier = Modifier.height(2.dp))
     }
 }
@@ -121,6 +163,8 @@ fun ProfileHeader(
 @Composable
 fun FollowerCount(
     modifier: Modifier = Modifier,
+    followingCount: Int,
+    followerCount: Int,
 ) {
     Box(
         modifier = modifier
@@ -135,7 +179,7 @@ fun FollowerCount(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                "4523 Following",
+                "$followingCount Following",
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
                 overflow = TextOverflow.Ellipsis,
@@ -146,7 +190,7 @@ fun FollowerCount(
                 modifier = Modifier.padding(vertical = 4.dp)
             )
             Text(
-                "53k Followers",
+                "$followerCount Followers",
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
                 overflow = TextOverflow.Ellipsis,
@@ -159,9 +203,16 @@ fun FollowerCount(
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun ProfileDetails(modifier: Modifier = Modifier) {
+fun ProfileDetails(
+    modifier: Modifier = Modifier,
+    displayName: String,
+    username: String,
+    description: String?,
+) {
+    var isDescriptionExpanded by remember { mutableStateOf(false) }
     Column(
         modifier = modifier
+            .animateContentSize()
             .padding(horizontal = 16.dp)
             .padding(top = 8.dp),
     ) {
@@ -170,12 +221,12 @@ fun ProfileDetails(modifier: Modifier = Modifier) {
         ) {
             Column {
                 Text(
-                    "Alex Smith",
+                    text = displayName,
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    "@alex_smith",
+                    text = "@$username",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -208,10 +259,19 @@ fun ProfileDetails(modifier: Modifier = Modifier) {
             }
         }
         Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            "Obviously the Material You design doesn't improve branding, but you already know the point is for cohesion.",
-            style = MaterialTheme.typography.bodyMedium
-        )
+        description?.let {
+            CompositionLocalProvider(LocalRippleConfiguration provides null) {
+                Text(
+                    modifier = Modifier.clickable {
+                        isDescriptionExpanded = !isDescriptionExpanded
+                    },
+                    text = it,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = if (isDescriptionExpanded) Int.MAX_VALUE else 2,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
     }
 }
 
@@ -221,6 +281,8 @@ fun ProfileDetails(modifier: Modifier = Modifier) {
 @Composable
 private fun ProfileHeaderPreview() {
     MubbleTheme {
-        ProfileHeader()
+        ProfileHeader(
+            user = UserRepo.user1
+        )
     }
 }

@@ -31,7 +31,9 @@ fun OtherUserProfileScreen(
                 modifier = Modifier,
                 isCurrentUser = false,
                 header = {
-                    ProfileHeader()
+                    ProfileHeader(
+                        user = state.user
+                    )
                 },
                 firstPage = {
                     ProfilePostGrid(

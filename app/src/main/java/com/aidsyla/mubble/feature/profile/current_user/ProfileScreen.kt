@@ -40,7 +40,9 @@ fun ProfileScreen(
                 modifier = Modifier,
                 isCurrentUser = true,
                 header = {
-                    ProfileHeader()
+                    ProfileHeader(
+                        user = state.user
+                    )
                 },
                 firstPage = {
                     ProfilePostGrid(
