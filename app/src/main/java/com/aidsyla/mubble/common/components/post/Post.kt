@@ -216,7 +216,7 @@ fun BasePostLayout(
                     ),
                 shape = MaterialTheme.shapes.large,
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
                 )
             ) {
                 content()
@@ -395,77 +395,6 @@ suspend fun PointerInputScope.detectTransformGesturesCustom(
     }
 }
 
-//@Composable
-//fun ZoomablePostOverlay4(
-//    scale: Float,
-//    offset: Offset,
-//) {
-//    val density = LocalDensity.current
-//
-//    val topPx = state.initialOffset.y
-//    val heightPx = state.initialSize.height.toFloat()
-//    val bottomPx = topPx + heightPx
-//    val centerOfImagePx = topPx + heightPx / 2
-//
-//    // Get screen height in pixels
-//    val screenHeightPx = with(density) { getScreenHeight().value.toDp() }
-//    val screenCenterPx = screenHeightPx / 2
-//
-//    // Compare image center with screen center
-//    val contentAlignment = if (centerOfImagePx > screenCenterPx) Alignment.TopCenter else Alignment.BottomCenter
-//
-//    // For logging/debug
-//    Log.d("Zoomable", "topPx: $topPx")
-//    Log.d("Zoomable", "bottomPx: $bottomPx")
-//    Log.d("Zoomable", "centerOfImagePx: $centerOfImagePx")
-//    Log.d("Zoomable", "screenHeightPx: $screenHeightPx")
-//    Log.d("Zoomable", "contentAlignment: $contentAlignment")
-//
-//    Box(
-//        Modifier
-//            .pointerInput(Unit) {
-//                awaitPointerEventScope {
-//                    while (true) awaitPointerEvent()
-//                }
-//            }
-//            .wrapContentSize()
-//            .padding(end = 16.dp)
-//    ) {
-//        Box(
-//            modifier = Modifier
-//                .matchParentSize()
-//                .graphicsLayer {
-//                    translationX = state.initialOffset.x
-//                    translationY = state.initialOffset.y
-//                },
-//            contentAlignment = contentAlignment
-//        ) {
-//            Box(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .height(with(density) { state.initialSize.height.toDp() })
-//                    .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-//            )
-//        }
-//
-//        Image(
-//            painter = painterResource(state.imageRes),
-//            contentDescription = null,
-//            contentScale = ContentScale.FillWidth,
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .graphicsLayer {
-//                    translationX = -offset.x * scale
-//                    translationY = -offset.y * scale
-//                    scaleX = scale
-//                    scaleY = scale
-//                    transformOrigin = TransformOrigin(0f, 0f)
-//                }
-//        )
-//    }
-//}
-
-
 @Composable
 fun ZoomablePostMedia(
     modifier: Modifier = Modifier,
@@ -479,7 +408,6 @@ fun ZoomablePostMedia(
 
     var layoutCoordinates by remember { mutableStateOf<LayoutCoordinates?>(null) }
 
-    var initialCenter by remember { mutableStateOf(Offset.Zero) }
     var initialSize by remember { mutableStateOf(IntSize.Zero) }
     var initialOffset by remember { mutableStateOf(Offset.Zero) }
 
@@ -610,7 +538,7 @@ fun ZoomablePostMedia(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(imageHeight)
-                                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                         )
                     }
                     Image(
@@ -642,11 +570,6 @@ fun ZoomablePostMedia(
                 .onGloballyPositioned { coordinates ->
                     layoutCoordinates = coordinates
                     initialSize = coordinates.size
-                    val position = coordinates.localToRoot(Offset.Zero)
-                    initialCenter = Offset(
-                        x = position.x + initialSize.width / 2f,
-                        y = position.y + initialSize.height / 2f
-                    )
                 }
                 .then(
                     if (isAnimatingBack)
