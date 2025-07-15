@@ -1,6 +1,7 @@
 package com.aidsyla.mubble.feature.postdetails
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -76,6 +77,9 @@ fun PostDetailsScreen(
                                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                                     modifier = Modifier
                                         .clip(shape = MaterialTheme.shapes.extraLarge)
+                                        .clickable {
+                                            onUserClick(state.postItem.id)
+                                        }
                                         .padding(end = 8.dp)
                                 ) {
                                     with(sharedTransitionScope) {
@@ -165,14 +169,16 @@ fun PostDetailsScreen(
                         )
                     }
                 ) {
-                    Box(modifier = Modifier.fillMaxSize().padding(it)) {
+                    Box(modifier = Modifier
+                        .fillMaxSize()
+                        .padding(it)) {
                         BasePostLayout(
                             modifier = Modifier,
                             item = state.postItem,
                             origin = origin,
                             useCard = false,
                             isInPostDetails = true,
-                            onUserClick = onUserClick,
+                            onUserClick = {},
                             onMoreClick = viewModel::onMoreClick,
                             onPostClick = { }
                         )
