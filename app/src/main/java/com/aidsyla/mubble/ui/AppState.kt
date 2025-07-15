@@ -70,7 +70,7 @@ class AppState(
     }
 
     fun navigateToProfileFromSettings() {
-        navController.navigate(ProfileRoute()) {
+        navController.navigate(ProfileRoute) {
             popUpTo(ProfileRoute::class.qualifiedName!!) {
                 saveState = false
             }

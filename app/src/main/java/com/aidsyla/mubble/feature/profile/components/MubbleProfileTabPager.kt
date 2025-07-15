@@ -50,11 +50,14 @@ const val STICKY_HEADER_INDEX = 1
 @Composable
 fun MubbleProfileTabPager(
     modifier: Modifier = Modifier,
+    isCurrentUser: Boolean,
     header: @Composable (() -> Unit)? = null,
     firstPage: @Composable () -> Unit,
     secondPage: @Composable () -> Unit,
-    onNavigateToSettings: () -> Unit,
-    onBackClick: () -> Unit,
+    onNavigateToSettings: () -> Unit = {},
+    onMoreClick: () -> Unit = {},
+    onEditClick: () -> Unit = {},
+    onBackClick: () -> Unit = {},
 ) {
     val selectedIcons = MubbleTheme.ProfileTabs.iconsSelected
     val unselectedIcons = MubbleTheme.ProfileTabs.icons
@@ -100,9 +103,12 @@ fun MubbleProfileTabPager(
         topBar = {
             ProfileTopAppBar(
                 modifier = Modifier,
+                isCurrentUser = isCurrentUser,
                 lazyListState = lazyListState,
                 offsetAmount = offsetAmount,
                 onNavigateToSettings = onNavigateToSettings,
+                onMoreClick = onMoreClick,
+                onEditClick = onEditClick,
                 onBackClick = onBackClick
             )
         },

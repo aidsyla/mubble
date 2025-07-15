@@ -18,7 +18,8 @@ import com.aidsyla.mubble.feature.explore.exploreScreen
 import com.aidsyla.mubble.feature.home.homeScreen
 import com.aidsyla.mubble.feature.home.navigateToPostDetails
 import com.aidsyla.mubble.feature.home.postDetailsScreen
-import com.aidsyla.mubble.feature.profile.navigateToProfile
+import com.aidsyla.mubble.feature.profile.navigateToOtherProfile
+import com.aidsyla.mubble.feature.profile.otherUserProfileScreen
 import com.aidsyla.mubble.feature.profile.profileScreen
 import com.aidsyla.mubble.feature.settings.navigateToSettings
 import com.aidsyla.mubble.feature.settings.navigateToSettingsDevicePermissions
@@ -53,7 +54,7 @@ fun AppNavHost(
                 modifier = Modifier
             ) {
                 homeScreen(onUserClick = { userId ->
-                    navController.navigateToProfile(userId)
+                    navController.navigateToOtherProfile(userId)
                 }, onPostClick = { postId, origin ->
                     navController.navigateToPostDetails(
                         postId, origin
@@ -80,6 +81,15 @@ fun AppNavHost(
                 )
                 profileScreen(
                     onNavigateToSettings = navController::navigateToSettings,
+                    onPostClick = { postId, origin ->
+                        navController.navigateToPostDetails(
+                            postId, origin
+                        )
+                    })
+
+                otherUserProfileScreen(
+                    onMoreClick = {},
+                    onEditClick = {},
                     onBackClick = navController::popBackStack,
                     onPostClick = { postId, origin ->
                         navController.navigateToPostDetails(
@@ -88,7 +98,7 @@ fun AppNavHost(
                     })
 
                 postDetailsScreen(onUserClick = { userId ->
-                    navController.navigateToProfile(userId)
+                    navController.navigateToOtherProfile(userId)
                 }, onBackClick = { navController.popBackStack() })
 
                 settingsStartScreen(

@@ -1,4 +1,4 @@
-package com.aidsyla.mubble.feature.profile
+package com.aidsyla.mubble.feature.profile.current_user
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -26,7 +26,6 @@ import com.aidsyla.mubble.ui.LocalBottomBarPadding
 fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel(),
     onNavigateToSettings: () -> Unit,
-    onBackClick: () -> Unit,
     onPostClick: (postId: String, origin: PostOrigin) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -36,9 +35,10 @@ fun ProfileScreen(
 
         }
 
-        is ProfileScreenUiState.CurrentUser -> {
+        is ProfileScreenUiState.Success -> {
             MubbleProfileTabPager(
                 modifier = Modifier,
+                isCurrentUser = true,
                 header = {
                     ProfileHeader()
                 },
@@ -55,11 +55,7 @@ fun ProfileScreen(
                     )
                 },
                 onNavigateToSettings = onNavigateToSettings,
-                onBackClick = onBackClick
             )
-        }
-
-        is ProfileScreenUiState.OtherUser -> {
         }
     }
 }

@@ -1,6 +1,5 @@
-package com.aidsyla.mubble.feature.profile
+package com.aidsyla.mubble.feature.profile.current_user
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aidsyla.mubble.data.User
@@ -18,10 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-
-    private val viewedUserId: String? = savedStateHandle.get<String>("userId")
 
     private val _uiState = MutableStateFlow<ProfileScreenUiState>(ProfileScreenUiState.Loading)
     val uiState: StateFlow<ProfileScreenUiState> = _uiState.asStateFlow()
@@ -33,21 +29,14 @@ class ProfileViewModel @Inject constructor(
     private fun loadProfile() {
         viewModelScope.launch {
             val currentUserId = getCurrentUser().id
-
-            if (viewedUserId == null || viewedUserId == currentUserId) {
-                val user = UserRepo.getUser(currentUserId)
-                if (user != null)
-                    _uiState.value = ProfileScreenUiState.CurrentUser(
-                        user = user,
-                        posts = DummyPostRepository.dummyFeedItems.filterIsInstance<ImagePostFeedItem>(),
-                        bubbles = DummyPostRepository.dummyFeedItems.filterIsInstance<BubbleFeedItem>(),
-                        savedPosts = DummyPostRepository.dummyFeedItems
-                    )
-            } else {
-                val user = UserRepo.getUser(viewedUserId)
-                if (user != null)
-                    _uiState.value = ProfileScreenUiState.OtherUser(user)
-            }
+            val user = UserRepo.getUser(currentUserId)
+            if (user != null)
+                _uiState.value = ProfileScreenUiState.Success(
+                    user = user,
+                    posts = DummyPostRepository.dummyFeedItems.filterIsInstance<ImagePostFeedItem>(),
+                    bubbles = DummyPostRepository.dummyFeedItems.filterIsInstance<BubbleFeedItem>(),
+                    savedPosts = DummyPostRepository.dummyFeedItems
+                )
         }
     }
 
@@ -58,11 +47,7 @@ sealed interface ProfileScreenUiState {
 
     data object Loading : ProfileScreenUiState
 
-    data class OtherUser(
-        val user: User,
-    ) : ProfileScreenUiState
-
-    data class CurrentUser(
+    data class Success(
         val user: User,
         val posts: List<ImagePostFeedItem>,
         val bubbles: List<BubbleFeedItem>,
