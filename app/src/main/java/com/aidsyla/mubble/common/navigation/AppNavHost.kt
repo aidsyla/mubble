@@ -16,8 +16,8 @@ import com.aidsyla.mubble.feature.chats.navigateToChat
 import com.aidsyla.mubble.feature.chats.navigateToChatDetails
 import com.aidsyla.mubble.feature.explore.exploreScreen
 import com.aidsyla.mubble.feature.home.homeScreen
-import com.aidsyla.mubble.feature.home.navigateToPostDetails
-import com.aidsyla.mubble.feature.home.postDetailsScreen
+import com.aidsyla.mubble.feature.postdetails.navigateToPostDetails
+import com.aidsyla.mubble.feature.postdetails.postDetailsScreen
 import com.aidsyla.mubble.feature.profile.navigateToOtherProfile
 import com.aidsyla.mubble.feature.profile.otherUserProfileScreen
 import com.aidsyla.mubble.feature.profile.profileScreen
