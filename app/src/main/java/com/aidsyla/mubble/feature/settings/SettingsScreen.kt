@@ -24,23 +24,43 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.aidsyla.mubble.app.LocalDarkTheme
 import com.aidsyla.mubble.common.components.TabButtons
+import com.aidsyla.mubble.model.DarkThemeConfig
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsStartScreen(
     modifier: Modifier = Modifier,
+    viewModel: SettingsViewModel = hiltViewModel(),
     onNavigateToNotifications: () -> Unit,
     onNavigateToDevicePermissions: () -> Unit,
     onNavigateToManageAccount: () -> Unit,
     onLogoutClick: () -> Unit = {},
     onBackClick: () -> Unit,
 ) {
+    val settingsUiState by viewModel.settingsUiState.collectAsStateWithLifecycle()
+
+    val selectedIndex = when (val state = settingsUiState) {
+        SettingsUiState.Loading -> 0
+        is SettingsUiState.Success -> when (state.darkThemeConfig) {
+            DarkThemeConfig.FOLLOW_SYSTEM -> 0
+            DarkThemeConfig.DARK -> 1
+            DarkThemeConfig.LIGHT -> 2
+        }
+    }
+
     Scaffold(
+        modifier = modifier,
         topBar = {
             SettingsTopBar(title = "Settings", onBackClick = onBackClick)
         }
@@ -65,8 +85,15 @@ fun SettingsStartScreen(
                         options = listOf("Auto", "Dark", "Light"),
                         selectedIcons = MubbleTheme.AppearanceTabs.iconsSelected,
                         unselectedIcons = MubbleTheme.AppearanceTabs.icons,
-                        selectedIndex = 0,
-                        onTabSelected = {}
+                        selectedIndex = selectedIndex,
+                        onTabSelected = { index ->
+                            val newConfig = when (index) {
+                                0 -> DarkThemeConfig.FOLLOW_SYSTEM
+                                1 -> DarkThemeConfig.DARK
+                                else -> DarkThemeConfig.LIGHT
+                            }
+                            viewModel.updateDarkThemeConfig(newConfig)
+                        }
                     )
                 }
             }
@@ -98,6 +125,7 @@ fun SettingsStartScreen(
                 SettingItem(
                     description = "Log out",
                     icon = MubbleTheme.Icons.Logout,
+                    onClick = onLogoutClick
                 )
             }
         }
@@ -183,6 +211,7 @@ fun SettingsManageAccountScreen(
 ) {
     val options = listOf("Public", "Private")
     Scaffold(
+        modifier = modifier,
         topBar = {
             SettingsTopBar(title = "Manage Account", onBackClick = onBackClick)
         }
@@ -220,17 +249,20 @@ fun SettingsTopBar(
     title: String,
     onBackClick: () -> Unit,
 ) {
-    CenterAlignedTopAppBar(
-        modifier = modifier,
-        title = {
-            Text(text = title)
-        },
-        navigationIcon = {
-            IconButton(onClick = onBackClick) {
-                Icon(MubbleTheme.Icons.ArrowBack, contentDescription = "Back")
+    val currentDarkTheme = LocalDarkTheme.current
+    key(currentDarkTheme) {
+        CenterAlignedTopAppBar(
+            modifier = modifier,
+            title = {
+                Text(text = title)
+            },
+            navigationIcon = {
+                IconButton(onClick = onBackClick) {
+                    Icon(MubbleTheme.Icons.ArrowBack, contentDescription = "Back")
+                }
             }
-        }
-    )
+        )
+    }
 }
 
 @Composable

@@ -2,7 +2,6 @@ package com.aidsyla.mubble.feature.profile.components
 
 import android.app.Activity
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -40,6 +39,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.core.view.WindowCompat
+import com.aidsyla.mubble.app.LocalDarkTheme
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,7 +86,7 @@ fun ProfileTopAppBar(
     val view = LocalView.current
     val window = (view.context as? Activity)?.window ?: return
 
-    val isLightMode = !isSystemInDarkTheme()
+    val isLightMode = !LocalDarkTheme.current
     val statusBarIconColorChangeThreshold = 0.3f
     val useDarkStatusBarIcons = remember(targetAlpha, isLightMode) {
         if (targetAlpha >= statusBarIconColorChangeThreshold) isLightMode else false
