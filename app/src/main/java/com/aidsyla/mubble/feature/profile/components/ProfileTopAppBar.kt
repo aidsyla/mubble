@@ -1,6 +1,7 @@
 package com.aidsyla.mubble.feature.profile.components
 
 import android.app.Activity
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,9 +41,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.core.view.WindowCompat
 import com.aidsyla.mubble.app.LocalDarkTheme
+import com.aidsyla.mubble.common.navigation.LocalNavAnimatedVisibilityScope
+import com.aidsyla.mubble.common.navigation.LocalSharedTransitionScope
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun ProfileTopAppBar(
     modifier: Modifier = Modifier,
@@ -55,6 +58,11 @@ fun ProfileTopAppBar(
     onEditClick: () -> Unit,
     onBackClick: () -> Unit,
 ) {
+    val sharedTransitionScope = LocalSharedTransitionScope.current
+        ?: throw IllegalStateException("No SharedElementScope found")
+    val animatedContentScope = LocalNavAnimatedVisibilityScope.current
+        ?: throw IllegalStateException("No AnimatedVisibility found")
+
     val surface = MaterialTheme.colorScheme.surface
     val onSurface = MaterialTheme.colorScheme.onSurface
     val onSurfaceVariant = MaterialTheme.colorScheme.onSurfaceVariant
@@ -109,124 +117,132 @@ fun ProfileTopAppBar(
             .background(color = topAppBarBackgroundColor)
             .windowInsetsPadding(TopAppBarDefaults.windowInsets)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(TopAppBarDefaults.TopAppBarExpandedHeight)
-                .padding(horizontal = 4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            if (!isCurrentUser)
-                IconButton(
-                    onClick = onBackClick,
-                    colors = IconButtonDefaults.iconButtonColors(
-                        contentColor = iconColor
-                    )
-                ) {
-                    Icon(
-                        painter = MubbleTheme.Icons.ArrowBack,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .offset(x = 1.dp, y = 1.dp)
-                            .alpha(shadowAlpha)
-                            .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
-                        tint = shadowColor,
-                    )
-                    Icon(
-                        painter = MubbleTheme.Icons.ArrowBack,
-                        contentDescription = "Back",
-                    )
-                }
-            else {
-                IconButton(
-                    onClick = {},
-                    enabled = false
-                ) {}
-                IconButton(
-                    onClick = {},
-                    enabled = false
-                ) {}
-            }
-
-
-
-            if (targetAlpha > 0f) {
-                Text(
-                    text = "Alex Smith",
+        with(sharedTransitionScope) {
+            with(animatedContentScope) {
+                Row(
                     modifier = Modifier
-                        .weight(1f)
-                        .alpha(targetAlpha),
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.titleLarge,
-                    color = onSurface
-                )
-            } else {
-                Spacer(modifier = Modifier.weight(1f))
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if (isCurrentUser) {
-                    IconButton(
-                        onClick = onEditClick,
-                        colors = IconButtonDefaults.iconButtonColors(
-                            contentColor = iconVariantColor
+                        .fillMaxWidth()
+                        .height(TopAppBarDefaults.TopAppBarExpandedHeight)
+                        .renderInSharedTransitionScopeOverlay(
+                            zIndexInOverlay = 1f
                         )
-                    ) {
-                        Icon(
-                            painter = MubbleTheme.Icons.Edit,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .offset(x = 1.dp, y = 1.dp)
-                                .alpha(shadowAlpha)
-                                .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
-                            tint = shadowColor,
-                        )
-                        Icon(
-                            painter = MubbleTheme.Icons.Edit,
-                            contentDescription = "Edit",
-                        )
+                        .animateEnterExit()
+                        .padding(horizontal = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (!isCurrentUser)
+                        IconButton(
+                            onClick = onBackClick,
+                            colors = IconButtonDefaults.iconButtonColors(
+                                contentColor = iconColor
+                            )
+                        ) {
+                            Icon(
+                                painter = MubbleTheme.Icons.ArrowBack,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .offset(x = 1.dp, y = 1.dp)
+                                    .alpha(shadowAlpha)
+                                    .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
+                                tint = shadowColor,
+                            )
+                            Icon(
+                                painter = MubbleTheme.Icons.ArrowBack,
+                                contentDescription = "Back",
+                            )
+                        }
+                    else {
+                        IconButton(
+                            onClick = {},
+                            enabled = false
+                        ) {}
+                        IconButton(
+                            onClick = {},
+                            enabled = false
+                        ) {}
                     }
-                    IconButton(
-                        onClick = onNavigateToSettings,
-                        colors = IconButtonDefaults.iconButtonColors(
-                            contentColor = iconVariantColor
-                        )
-                    ) {
-                        Icon(
-                            imageVector = MubbleTheme.Icons.Settings,
-                            contentDescription = null,
+
+
+
+                    if (targetAlpha > 0f) {
+                        Text(
+                            text = "Alex Smith",
                             modifier = Modifier
-                                .offset(x = 1.dp, y = 1.dp)
-                                .alpha(shadowAlpha)
-                                .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
-                            tint = shadowColor,
+                                .weight(1f)
+                                .alpha(targetAlpha),
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.titleLarge,
+                            color = onSurface
                         )
-                        Icon(
-                            imageVector = MubbleTheme.Icons.Settings,
-                            contentDescription = "Settings",
-                        )
+                    } else {
+                        Spacer(modifier = Modifier.weight(1f))
                     }
-                } else {
-                    IconButton(
-                        onClick = onMoreClick,
-                        colors = IconButtonDefaults.iconButtonColors(
-                            contentColor = iconVariantColor
-                        )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            painter = MubbleTheme.Icons.MoreHorizontal,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .offset(x = 1.dp, y = 1.dp)
-                                .alpha(shadowAlpha)
-                                .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
-                            tint = shadowColor,
-                        )
-                        Icon(
-                            painter = MubbleTheme.Icons.MoreHorizontal,
-                            contentDescription = "More",
-                        )
+                        if (isCurrentUser) {
+                            IconButton(
+                                onClick = onEditClick,
+                                colors = IconButtonDefaults.iconButtonColors(
+                                    contentColor = iconVariantColor
+                                )
+                            ) {
+                                Icon(
+                                    painter = MubbleTheme.Icons.Edit,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .offset(x = 1.dp, y = 1.dp)
+                                        .alpha(shadowAlpha)
+                                        .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
+                                    tint = shadowColor,
+                                )
+                                Icon(
+                                    painter = MubbleTheme.Icons.Edit,
+                                    contentDescription = "Edit",
+                                )
+                            }
+                            IconButton(
+                                onClick = onNavigateToSettings,
+                                colors = IconButtonDefaults.iconButtonColors(
+                                    contentColor = iconVariantColor
+                                )
+                            ) {
+                                Icon(
+                                    imageVector = MubbleTheme.Icons.Settings,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .offset(x = 1.dp, y = 1.dp)
+                                        .alpha(shadowAlpha)
+                                        .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
+                                    tint = shadowColor,
+                                )
+                                Icon(
+                                    imageVector = MubbleTheme.Icons.Settings,
+                                    contentDescription = "Settings",
+                                )
+                            }
+                        } else {
+                            IconButton(
+                                onClick = onMoreClick,
+                                colors = IconButtonDefaults.iconButtonColors(
+                                    contentColor = iconVariantColor
+                                )
+                            ) {
+                                Icon(
+                                    painter = MubbleTheme.Icons.MoreHorizontal,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .offset(x = 1.dp, y = 1.dp)
+                                        .alpha(shadowAlpha)
+                                        .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
+                                    tint = shadowColor,
+                                )
+                                Icon(
+                                    painter = MubbleTheme.Icons.MoreHorizontal,
+                                    contentDescription = "More",
+                                )
+                            }
+                        }
                     }
                 }
             }

@@ -1,9 +1,11 @@
 package com.aidsyla.mubble.feature.profile.components
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -54,14 +56,20 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.aidsyla.mubble.common.navigation.LocalNavAnimatedVisibilityScope
+import com.aidsyla.mubble.common.navigation.LocalSharedTransitionScope
 import com.aidsyla.mubble.data.User
 import com.aidsyla.mubble.data.UserRepo
 import com.aidsyla.mubble.ui.theme.MubbleTheme
+import kotlin.Boolean
 
 @Composable
 fun ProfileHeader(
     modifier: Modifier = Modifier,
     user: User,
+    hasAvatarOrBannerBeenClicked: Boolean,
+    onHasBeenClickedChange: (Boolean) -> Unit,
+    onMediaClick: (Int, FullScreenMediaType) -> Unit,
 ) {
     ProfileHeader(
         modifier = modifier,
@@ -71,11 +79,14 @@ fun ProfileHeader(
         username = user.username,
         description = user.description,
         followingCount = user.followingCount,
-        followerCount = user.followerCount
+        followerCount = user.followerCount,
+        hasAvatarOrBannerBeenClicked = hasAvatarOrBannerBeenClicked,
+        onHasBeenClickedChange = onHasBeenClickedChange,
+        onMediaClick = onMediaClick
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 private fun ProfileHeader(
     modifier: Modifier = Modifier,
@@ -86,36 +97,68 @@ private fun ProfileHeader(
     description: String?,
     followingCount: Int,
     followerCount: Int,
+    hasAvatarOrBannerBeenClicked: Boolean,
+    onHasBeenClickedChange: (Boolean) -> Unit,
+    onMediaClick: (Int, FullScreenMediaType) -> Unit,
 ) {
     val profilePictureSize = getScreenWidth().div(4)
     val offsetAmount = profilePictureSize * 0.5f
+
+    val sharedTransitionScope = LocalSharedTransitionScope.current
+        ?: throw IllegalStateException("No SharedElementScope found")
+    val animatedContentScope = LocalNavAnimatedVisibilityScope.current
+        ?: throw IllegalStateException("No AnimatedVisibility found")
 
     Column(
         modifier = modifier.fillMaxSize()
     ) {
         Box {
-            Box(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .zIndex(1f)
-                    .fillMaxWidth()
-                    .windowInsetsTopHeight(WindowInsets.statusBars.add(WindowInsets(top = TopAppBarDefaults.TopAppBarExpandedHeight)))
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(
-                                Color.Black.copy(alpha = 0.3f), Color.Transparent
-                            ),
-                        )
+            with(sharedTransitionScope) {
+                with(animatedContentScope) {
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .zIndex(1f)
+                            .fillMaxWidth()
+                            .windowInsetsTopHeight(WindowInsets.statusBars.add(WindowInsets(top = TopAppBarDefaults.TopAppBarExpandedHeight)))
+                            .renderInSharedTransitionScopeOverlay(
+                                zIndexInOverlay = 1f
+                            )
+                            .animateEnterExit()
+                            .background(
+                                Brush.verticalGradient(
+                                    colors = listOf(
+                                        Color.Black.copy(alpha = 0.3f), Color.Transparent
+                                    ),
+                                )
+                            )
+
                     )
-            )
-            Image(
-                painter = painterResource(bannerResId),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(2.25f),
-                contentScale = ContentScale.FillWidth
-            )
+                }
+            }
+            with(sharedTransitionScope) {
+                Image(
+                    painter = painterResource(bannerResId),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(2.25f)
+                        .clickable {
+                            onHasBeenClickedChange(true)
+                            onMediaClick(bannerResId, FullScreenMediaType.BANNER)
+                        }
+                        .sharedElement(
+                            rememberSharedContentState(
+                                key = FullScreenMediaSharedElementKey(
+                                    imgId = bannerResId,
+                                    fullScreenMediaType = FullScreenMediaType.BANNER
+                                )
+                            ),
+                            animatedVisibilityScope = animatedContentScope
+                        ),
+                    contentScale = ContentScale.FillWidth
+                )
+            }
 
             Row(
                 modifier = Modifier
@@ -127,22 +170,51 @@ private fun ProfileHeader(
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(profilePictureSize)
-                        .clip(shape = CircleShape)
-                        .background(color = MaterialTheme.colorScheme.surface)
-                        .padding(2.dp)
-                ) {
-                    Image(
-                        painter = painterResource(profilePictureResId),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(CircleShape),
-                        contentScale = ContentScale.Crop
-                    )
+                with(sharedTransitionScope) {
+                    with(animatedContentScope) {
+                        Image(
+                            painter = painterResource(profilePictureResId),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(profilePictureSize)
+                                .clip(CircleShape)
+                                .clickable {
+                                    onHasBeenClickedChange(true)
+                                    onMediaClick(
+                                        profilePictureResId,
+                                        FullScreenMediaType.AVATAR
+                                    )
+                                }
+                                .then(
+                                    if (hasAvatarOrBannerBeenClicked)
+                                        Modifier
+                                            .renderInSharedTransitionScopeOverlay(
+                                                zIndexInOverlay = 1f
+                                            )
+                                            .animateEnterExit()
+                                    else Modifier
+                                )
+                                .sharedElement(
+                                    rememberSharedContentState(
+                                        key = FullScreenMediaSharedElementKey(
+                                            imgId = profilePictureResId,
+                                            fullScreenMediaType = FullScreenMediaType.AVATAR
+                                        )
+                                    ),
+                                    animatedVisibilityScope = animatedContentScope
+                                )
+                                .clip(CircleShape)
+                                .border(
+                                    width = 2.dp,
+                                    color = MaterialTheme.colorScheme.surface,
+                                    shape = CircleShape
+                                )
+                                .padding(2.dp),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
                 }
+
                 FollowerCount(
                     modifier = Modifier.fillMaxHeight(0.5f),
                     followingCount = followingCount,
@@ -275,14 +347,15 @@ fun ProfileDetails(
     }
 }
 
-@Preview(
-    showBackground = true, showSystemUi = true
-)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun ProfileHeaderPreview() {
     MubbleTheme {
         ProfileHeader(
-            user = UserRepo.user1
+            user = UserRepo.user1,
+            hasAvatarOrBannerBeenClicked = false,
+            onHasBeenClickedChange = {},
+            onMediaClick = { _, _ -> }
         )
     }
 }

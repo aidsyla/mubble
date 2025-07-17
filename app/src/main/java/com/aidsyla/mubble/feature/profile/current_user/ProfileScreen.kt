@@ -8,6 +8,9 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -16,6 +19,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
 import com.aidsyla.mubble.feature.explore.model.BubbleFeedItem
 import com.aidsyla.mubble.feature.explore.model.ImagePostFeedItem
+import com.aidsyla.mubble.feature.profile.components.FullScreenMediaType
 import com.aidsyla.mubble.feature.profile.components.MubbleProfileTabPager
 import com.aidsyla.mubble.feature.profile.components.ProfileHeader
 import com.aidsyla.mubble.feature.profile.components.bubbleList
@@ -27,8 +31,11 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel(),
     onNavigateToSettings: () -> Unit,
     onPostClick: (postId: String, origin: PostOrigin) -> Unit,
+    onMediaClick: (Int, FullScreenMediaType) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    var isClicked by rememberSaveable { mutableStateOf(false) }
 
     when (val state = uiState) {
         ProfileScreenUiState.Loading -> {
@@ -41,13 +48,19 @@ fun ProfileScreen(
                 isCurrentUser = true,
                 header = {
                     ProfileHeader(
-                        user = state.user
+                        user = state.user,
+                        hasAvatarOrBannerBeenClicked = isClicked,
+                        onHasBeenClickedChange = { isClicked = it },
+                        onMediaClick = onMediaClick
                     )
                 },
                 firstPage = {
                     ProfilePostGrid(
                         items = state.posts,
-                        onPostClick = onPostClick
+                        onPostClick = { p1, p2 ->
+                            isClicked = false
+                            onPostClick(p1, p2)
+                        }
                     )
                 },
                 secondPage = {
