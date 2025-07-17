@@ -60,12 +60,17 @@ class AppState(
             restoreState = true
         }
 
+        val videoScreenNavOptions = navOptions {
+            launchSingleTop = true
+            restoreState = true
+        }
+
         when (topLevelDestination) {
             HOME -> navController.navigateToHome(topLevelNavOptions)
             EXPLORE -> navController.navigateToExplore(topLevelNavOptions)
-            VIDEOS -> navController.navigateToVideos(topLevelNavOptions)
+            VIDEOS -> navController.navigateToVideos(videoScreenNavOptions)
             CHATS -> navController.navigateToChatList(topLevelNavOptions)
-            PROFILE -> navController.navigateToProfile(navOptions = topLevelNavOptions)
+            PROFILE -> navController.navigateToProfile(topLevelNavOptions)
         }
     }
 
