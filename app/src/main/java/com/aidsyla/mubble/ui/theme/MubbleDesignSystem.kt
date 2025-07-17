@@ -76,6 +76,7 @@ object MubbleTheme {
         val Save @Composable get() = painterResource(id = R.drawable.bookmark)
 
         val ArrowBack @Composable get() = painterResource(id = R.drawable.arrow_back)
+        val Close @Composable get() = painterResource(id = R.drawable.close)
         val Search @Composable get() = painterResource(id = R.drawable.search)
         val EditFilled @Composable get() = painterResource(id = R.drawable.edit_filled)
         val Edit @Composable get() = painterResource(id = R.drawable.edit)
