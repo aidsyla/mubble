@@ -61,8 +61,8 @@ fun AppScreen(
         bottomBar = {
             AnimatedVisibility(
                 visibleState = navBarVisibilityState,
-                enter = fadeIn(animationSpec = tween(700)),
-                exit = fadeOut(animationSpec = tween(700))
+                enter = fadeIn(animationSpec = tween(300)),
+                exit = fadeOut(animationSpec = tween(300))
             ) {
                 Box {
                     NavigationBar(
