@@ -51,7 +51,7 @@ const val STICKY_HEADER_INDEX = 1
 fun MubbleProfileTabPager(
     modifier: Modifier = Modifier,
     isCurrentUser: Boolean,
-    header: @Composable (() -> Unit)? = null,
+    header: @Composable () -> Unit,
     firstPage: @Composable () -> Unit,
     secondPage: @Composable () -> Unit,
     onNavigateToSettings: () -> Unit = {},
@@ -118,10 +118,9 @@ fun MubbleProfileTabPager(
             state = lazyListState,
             modifier = modifier.fillMaxSize(),
         ) {
-            if (header != null)
-                item {
-                    header()
-                }
+            item {
+                header()
+            }
             item(key = STICKY_HEADER) {
                 Surface(
                     modifier = Modifier.zIndex(1f),
