@@ -1,6 +1,11 @@
 package com.aidsyla.mubble.feature.postdetails
 
+import androidx.compose.animation.EnterExitState
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.animateDp
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -50,6 +57,14 @@ fun PostDetailsScreen(
     val animatedContentScope = LocalNavAnimatedVisibilityScope.current
         ?: throw IllegalStateException("No AnimatedVisibility found")
 
+    val roundedCornerAnimation by animatedContentScope.transition.animateDp {
+        when (it) {
+            EnterExitState.PreEnter -> 0.dp
+            EnterExitState.Visible -> 12.dp
+            EnterExitState.PostExit -> 12.dp
+        }
+    }
+
     with(sharedTransitionScope) {
         when (val state = uiState) {
             PostDetailsUiState.Loading -> {
@@ -67,6 +82,14 @@ fun PostDetailsScreen(
                                     type = PostSharedElementType.Bounds
                                 )
                             ),
+                            resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds(contentScale = ContentScale.Crop),
+                            clipInOverlayDuringTransition = OverlayClip(
+                                RoundedCornerShape(
+                                    roundedCornerAnimation
+                                )
+                            ),
+                            enter = EnterTransition.None,
+                            exit = ExitTransition.None,
                             animatedVisibilityScope = animatedContentScope
                         ),
                     topBar = {
@@ -169,16 +192,18 @@ fun PostDetailsScreen(
                         )
                     }
                 ) {
-                    Box(modifier = Modifier
-                        .fillMaxSize()
-                        .padding(it)) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(it)
+                    ) {
                         BasePostLayout(
                             modifier = Modifier,
                             item = state.postItem,
                             origin = origin,
                             useCard = false,
                             isInPostDetails = true,
-                            onUserClick = {},
+                            onUserClick = { },
                             onMoreClick = viewModel::onMoreClick,
                             onPostClick = { }
                         )
