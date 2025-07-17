@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.aidsyla.mubble.common.navigation.LocalNavAnimatedVisibilityScope
 import com.aidsyla.mubble.common.navigation.PostDetailsRoute
+import com.aidsyla.mubble.common.navigation.lifecycleIsResumed
 import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
 
 fun NavController.navigateToPostDetails(
@@ -29,7 +30,7 @@ fun NavGraphBuilder.postDetailsScreen(
             PostDetailsScreen(
                 origin = it.toRoute<PostDetailsRoute>().origin,
                 onUserClick = onUserClick,
-                onBackClick = onBackClick
+                onBackClick = { if (it.lifecycleIsResumed()) onBackClick() },
             )
         }
     }

@@ -8,6 +8,7 @@ import androidx.navigation.toRoute
 import com.aidsyla.mubble.common.navigation.ChatDetailsRoute
 import com.aidsyla.mubble.common.navigation.ChatListRoute
 import com.aidsyla.mubble.common.navigation.ChatRoute
+import com.aidsyla.mubble.common.navigation.lifecycleIsResumed
 
 fun NavController.navigateToChatList(navOptions: NavOptions) =
     navigate(route = ChatListRoute, navOptions)
@@ -48,7 +49,7 @@ fun NavGraphBuilder.chatScreen(
 ) {
     composable<ChatRoute> {
         ChatScreen(
-            onBackClick = onBackClick,
+            onBackClick = { if (it.lifecycleIsResumed()) onBackClick() },
             onProfileClick = onProfileClick,
             onMoreClick = onMoreClick
         )
@@ -59,8 +60,10 @@ fun NavGraphBuilder.chatDetailsScreen(
     onBackClick: () -> Unit,
     onProfileClick: (String) -> Unit
 ) {
-    composable<ChatDetailsRoute> { backStackEntry ->
-        val args: ChatDetailsRoute = backStackEntry.toRoute()
-        ChatDetailsScreen(onBackClick = onBackClick, onProfileClick = onProfileClick, otherUserId = args.otherUserId)
+    composable<ChatDetailsRoute> {
+        val args: ChatDetailsRoute = it.toRoute()
+        ChatDetailsScreen(
+            onBackClick = { if (it.lifecycleIsResumed()) onBackClick() },
+            onProfileClick = onProfileClick, otherUserId = args.otherUserId)
     }
 }

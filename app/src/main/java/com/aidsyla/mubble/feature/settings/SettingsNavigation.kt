@@ -8,6 +8,7 @@ import com.aidsyla.mubble.common.navigation.SettingsDevicePermissionsRoute
 import com.aidsyla.mubble.common.navigation.SettingsManageAccountRoute
 import com.aidsyla.mubble.common.navigation.SettingsNotificationsRoute
 import com.aidsyla.mubble.common.navigation.SettingsStartRoute
+import com.aidsyla.mubble.common.navigation.lifecycleIsResumed
 
 fun NavController.navigateToSettings(navOptions: NavOptions? = null) {
     this.navigate(SettingsStartRoute, navOptions)
@@ -26,7 +27,7 @@ fun NavGraphBuilder.settingsStartScreen(
             onNavigateToDevicePermissions = onNavigateToDevicePermissions,
             onNavigateToManageAccount = onNavigateToManageAccount,
             onLogoutClick = onLogoutClick,
-            onBackClick = onBackClick
+            onBackClick = { if (it.lifecycleIsResumed()) onBackClick() },
         )
     }
 }
@@ -40,7 +41,7 @@ fun NavGraphBuilder.settingsNotificationsScreen(
 ) {
     composable<SettingsNotificationsRoute> {
         SettingsNotificationsScreen(
-            onBackClick = onBackClick
+            onBackClick = { if (it.lifecycleIsResumed()) onBackClick() },
         )
     }
 }
@@ -54,7 +55,7 @@ fun NavGraphBuilder.settingsDevicePermissionsScreen(
 ) {
     composable<SettingsDevicePermissionsRoute> {
         SettingsDevicePermissionsScreen(
-            onBackClick = onBackClick
+            onBackClick = { if (it.lifecycleIsResumed()) onBackClick() },
         )
     }
 }
@@ -68,7 +69,7 @@ fun NavGraphBuilder.settingsManageAccountScreen(
 ) {
     composable<SettingsManageAccountRoute> {
         SettingsManageAccountScreen(
-            onBackClick = onBackClick
+            onBackClick = { if (it.lifecycleIsResumed()) onBackClick() },
         )
     }
 }
