@@ -64,3 +64,22 @@ internal fun PlaybackSpeedButton(modifier: Modifier = Modifier, player: Player) 
         }
     }
 }
+
+@androidx.annotation.OptIn(UnstableApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+internal fun PlaybackSpeedButton(modifier: Modifier = Modifier) {
+    VideoControlIconButton(
+        modifier = modifier,
+        onClick = {}
+    ) {
+        Icon(
+            modifier = Modifier.size(
+                IconButtonDefaults.extraSmallIconSize
+            ),
+            painter = MubbleTheme.Icons.Speed1x,
+            contentDescription = null,
+            tint = Color.White
+        )
+    }
+}

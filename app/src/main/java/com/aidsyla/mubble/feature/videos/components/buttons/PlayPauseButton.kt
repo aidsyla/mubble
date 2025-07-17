@@ -16,6 +16,26 @@ import com.aidsyla.mubble.ui.theme.MubbleTheme
 @androidx.annotation.OptIn(UnstableApi::class)
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
+internal fun PlayPauseButton(modifier: Modifier = Modifier) {
+    VideoControlIconToggleButton(
+        modifier = modifier,
+        checked = false,
+        onCheckedChange = {}
+    ) {
+        Icon(
+            modifier = Modifier.size(
+                IconButtonDefaults.extraSmallIconSize
+            ),
+            painter = MubbleTheme.Icons.Pause,
+            contentDescription = null,
+            tint = Color.White
+        )
+    }
+}
+
+@androidx.annotation.OptIn(UnstableApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
 internal fun PlayPauseButton(modifier: Modifier = Modifier, player: Player) {
     val playPauseButtonState = rememberPlayPauseButtonState(player)
     VideoControlIconToggleButton(

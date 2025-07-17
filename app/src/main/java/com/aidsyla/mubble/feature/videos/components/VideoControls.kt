@@ -27,7 +27,7 @@ import com.aidsyla.mubble.ui.theme.MubbleTheme
 @Composable
 internal fun VideoControls(
     modifier: Modifier = Modifier,
-    player: Player,
+    player: Player?,
     onBackClick: () -> Unit,
 ) {
     Row(
@@ -51,9 +51,15 @@ internal fun VideoControls(
             )
         }
         Row {
-            VolumeButton(player = player)
-            PlayPauseButton(player = player)
-            PlaybackSpeedButton(player = player)
+            if (player == null) {
+                VolumeButton()
+                PlayPauseButton()
+                PlaybackSpeedButton()
+            } else {
+                VolumeButton(player = player)
+                PlayPauseButton(player = player)
+                PlaybackSpeedButton(player = player)
+            }
         }
         Box(
             modifier = Modifier.size(

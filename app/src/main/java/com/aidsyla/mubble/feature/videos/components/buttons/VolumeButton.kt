@@ -20,6 +20,25 @@ import com.aidsyla.mubble.ui.theme.MubbleTheme
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
+internal fun VolumeButton(modifier: Modifier = Modifier) {
+    VideoControlIconToggleButton(
+        modifier = modifier,
+        checked = false,
+        onCheckedChange = {},
+    ) {
+        Icon(
+            modifier = Modifier.size(
+                IconButtonDefaults.extraSmallIconSize
+            ),
+            painter = MubbleTheme.Icons.VolumeUp,
+            contentDescription = null,
+            tint = Color.White
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
 internal fun VolumeButton(modifier: Modifier = Modifier, player: Player) {
     val volumeButtonState = rememberVolumeButtonState(player)
     VideoControlIconToggleButton(

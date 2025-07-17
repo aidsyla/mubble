@@ -276,12 +276,10 @@ fun VideoContent(
                         isCaptionExpanded = isCaptionExpanded,
                         onCaptionExpandChange = { isCaptionExpanded = it }
                     )
-                    player?.let {
-                        VideoControls(
-                            onBackClick = onBackClick,
-                            player = it
-                        )
-                    }
+                    VideoControls(
+                        onBackClick = onBackClick,
+                        player = player
+                    )
                 }
             }
             AnimatedVisibility(
