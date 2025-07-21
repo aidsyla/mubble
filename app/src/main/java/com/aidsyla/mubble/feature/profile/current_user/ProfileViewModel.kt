@@ -40,7 +40,7 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    private fun getCurrentUser(): User = UserRepo.user1
+    private fun getCurrentUser(): User = UserRepo.dummyUsers.component1()
 }
 
 sealed interface ProfileScreenUiState {

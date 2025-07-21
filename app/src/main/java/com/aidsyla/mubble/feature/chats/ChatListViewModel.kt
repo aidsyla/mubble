@@ -23,7 +23,7 @@ class ChatListViewModel @Inject constructor(
     val editUiState: StateFlow<Edit> = _editUiState.asStateFlow()
 
     init {
-        val chatPreviews = getChatPreviewsForUser(UserRepo.user1.id)
+        val chatPreviews = getChatPreviewsForUser(UserRepo.dummyUsers.component1().id)
         _uiState.value = ChatListUiState.Success(chatPreviews = chatPreviews)
     }
 

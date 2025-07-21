@@ -35,7 +35,7 @@ class ChatViewModel @Inject constructor(
 
     private fun loadChat() {
         viewModelScope.launch {
-            val currentUserId = UserRepo.user1.id
+            val currentUserId = UserRepo.dummyUsers.component1().id
             val otherUser = userRepo.getUser(otherUserId)
             val messages = chatRepo.getMessagesForChat(chatId)
 
