@@ -12,7 +12,7 @@ import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
 import com.aidsyla.mubble.feature.profile.components.FullScreenMediaType
 import com.aidsyla.mubble.feature.profile.components.MubbleProfileTabPager
 import com.aidsyla.mubble.feature.profile.components.ProfileHeader
-import com.aidsyla.mubble.feature.profile.current_user.ProfileBubbleList
+import com.aidsyla.mubble.feature.profile.current_user.ProfileBubbleGrid
 import com.aidsyla.mubble.feature.profile.current_user.ProfilePostGrid
 
 @Composable
@@ -54,7 +54,7 @@ fun OtherUserProfileScreen(
                     )
                 },
                 secondPage = {
-                    ProfileBubbleList(
+                    ProfileBubbleGrid(
                         items = state.bubbles,
                         onPostClick = onPostClick
                     )

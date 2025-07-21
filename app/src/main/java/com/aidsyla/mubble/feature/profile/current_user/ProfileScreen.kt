@@ -3,9 +3,10 @@ package com.aidsyla.mubble.feature.profile.current_user
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,12 +18,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
+import com.aidsyla.mubble.feature.explore.exploreBubblesFeed
 import com.aidsyla.mubble.feature.explore.model.BubbleFeedItem
 import com.aidsyla.mubble.feature.explore.model.ImagePostFeedItem
 import com.aidsyla.mubble.feature.profile.components.FullScreenMediaType
 import com.aidsyla.mubble.feature.profile.components.MubbleProfileTabPager
 import com.aidsyla.mubble.feature.profile.components.ProfileHeader
-import com.aidsyla.mubble.feature.profile.components.bubbleList
 import com.aidsyla.mubble.feature.profile.components.postGrid
 import com.aidsyla.mubble.ui.LocalBottomBarPadding
 
@@ -33,7 +34,7 @@ fun ProfileScreen(
     onPostClick: (postId: String, origin: PostOrigin) -> Unit,
     onMediaClick: (Int, FullScreenMediaType) -> Unit,
     onFollowersClick: () -> Unit,
-    onFollowingClick: () -> Unit
+    onFollowingClick: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -68,7 +69,7 @@ fun ProfileScreen(
                     )
                 },
                 secondPage = {
-                    ProfileBubbleList(
+                    ProfileBubbleGrid(
                         items = state.bubbles,
                         onPostClick = onPostClick
                     )
@@ -83,7 +84,7 @@ fun ProfileScreen(
 fun ProfilePostGrid(
     modifier: Modifier = Modifier,
     items: List<ImagePostFeedItem>,
-    onPostClick: (postId: String, origin: PostOrigin) -> Unit
+    onPostClick: (postId: String, origin: PostOrigin) -> Unit,
 ) {
     val bottomPadding = LocalBottomBarPadding.current
     LazyVerticalGrid(
@@ -106,25 +107,26 @@ fun ProfilePostGrid(
 }
 
 @Composable
-fun ProfileBubbleList(
+fun ProfileBubbleGrid(
     modifier: Modifier = Modifier,
     items: List<BubbleFeedItem>,
-    onPostClick: (postId: String, origin: PostOrigin) -> Unit
+    onPostClick: (postId: String, origin: PostOrigin) -> Unit,
 ) {
     val bottomPadding = LocalBottomBarPadding.current
-    LazyColumn(
-        modifier = modifier.fillMaxSize(),
+    LazyVerticalStaggeredGrid(
+        columns = StaggeredGridCells.Fixed(2),
         contentPadding = PaddingValues(
             top = 4.dp,
             start = 8.dp,
             end = 8.dp,
             bottom = bottomPadding + 8.dp
         ),
-        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)
+        verticalItemSpacing = 8.dp,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier.fillMaxSize()
     ) {
-        bubbleList(
-            items = items,
-            onPostClick = onPostClick
+        exploreBubblesFeed(
+            items = items, onProfileClick = {}, onPostClick = onPostClick
         )
     }
 }
