@@ -1,4 +1,4 @@
-package com.aidsyla.mubble.common.components.circle
+package com.aidsyla.mubble.feature.circle
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.BorderStroke
@@ -74,7 +74,7 @@ fun CircleItem(
         modifier = modifier
             .clip(MaterialTheme.shapes.medium)
             .aspectRatio(1.45f)
-            .border(width = 1.dp, color = MaterialTheme.colorScheme.outlineVariant, shape = MaterialTheme.shapes.medium)
+            .border(width = 1.dp, color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.75f), shape = MaterialTheme.shapes.medium)
     ) {
         Image(
             painter = painterResource(circle.bannerResId),

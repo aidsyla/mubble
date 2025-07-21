@@ -44,7 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aidsyla.mubble.common.components.CircleImage
-import com.aidsyla.mubble.common.components.circle.CircleItem
+import com.aidsyla.mubble.feature.circle.CircleItem
 import com.aidsyla.mubble.common.components.layout.MubbleGridTabPager
 import com.aidsyla.mubble.common.components.layout.MubbleTabRow
 import com.aidsyla.mubble.common.navigation.LocalNavAnimatedVisibilityScope

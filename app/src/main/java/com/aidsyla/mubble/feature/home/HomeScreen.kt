@@ -32,8 +32,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.aidsyla.mubble.common.components.circle.AllButton
-import com.aidsyla.mubble.common.components.circle.CircleItem
+import com.aidsyla.mubble.feature.circle.AllButton
+import com.aidsyla.mubble.feature.circle.CircleItem
 import com.aidsyla.mubble.common.components.layout.MubbleListTabPager
 import com.aidsyla.mubble.common.components.layout.MubbleTabRow
 import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
