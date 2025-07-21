@@ -24,9 +24,13 @@ import com.aidsyla.mubble.feature.explore.exploreScreen
 import com.aidsyla.mubble.feature.home.homeScreen
 import com.aidsyla.mubble.feature.postdetails.navigateToPostDetails
 import com.aidsyla.mubble.feature.postdetails.postDetailsScreen
+import com.aidsyla.mubble.feature.profile.followScreen
 import com.aidsyla.mubble.feature.profile.fullScreenMediaViewer
+import com.aidsyla.mubble.feature.profile.navigateToFollowScreen
 import com.aidsyla.mubble.feature.profile.navigateToFullScreenMediaViewer
+import com.aidsyla.mubble.feature.profile.navigateToOtherFollowScreen
 import com.aidsyla.mubble.feature.profile.navigateToOtherProfile
+import com.aidsyla.mubble.feature.profile.otherFollowScreen
 import com.aidsyla.mubble.feature.profile.otherUserProfileScreen
 import com.aidsyla.mubble.feature.profile.profileScreen
 import com.aidsyla.mubble.feature.settings.navigateToSettings
@@ -38,6 +42,7 @@ import com.aidsyla.mubble.feature.settings.settingsManageAccountScreen
 import com.aidsyla.mubble.feature.settings.settingsNotificationsScreen
 import com.aidsyla.mubble.feature.settings.settingsStartScreen
 import com.aidsyla.mubble.feature.videos.videosScreen
+import com.aidsyla.mubble.model.FollowType
 import com.aidsyla.mubble.ui.AppState
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -49,8 +54,7 @@ val LocalNavAnimatedVisibilityScope = compositionLocalOf<AnimatedVisibilityScope
  *
  * This is used to de-duplicate navigation events.
  */
-fun NavBackStackEntry.lifecycleIsResumed() =
-    this.lifecycle.currentState == Lifecycle.State.RESUMED
+fun NavBackStackEntry.lifecycleIsResumed() = this.lifecycle.currentState == Lifecycle.State.RESUMED
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -69,16 +73,32 @@ fun AppNavHost(
                 startDestination = startDestination,
                 modifier = Modifier,
                 enterTransition = {
-                    fadeIn(animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing))
+                    fadeIn(
+                        animationSpec = tween(
+                            durationMillis = 300, easing = FastOutSlowInEasing
+                        )
+                    )
                 },
                 exitTransition = {
-                    fadeOut(animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing))
+                    fadeOut(
+                        animationSpec = tween(
+                            durationMillis = 300, easing = FastOutSlowInEasing
+                        )
+                    )
                 },
                 popEnterTransition = {
-                    fadeIn(animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing))
+                    fadeIn(
+                        animationSpec = tween(
+                            durationMillis = 300, easing = FastOutSlowInEasing
+                        )
+                    )
                 },
                 popExitTransition = {
-                    fadeOut(animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing))
+                    fadeOut(
+                        animationSpec = tween(
+                            durationMillis = 300, easing = FastOutSlowInEasing
+                        )
+                    )
                 },
             ) {
                 homeScreen(onUserClick = { userId ->
@@ -94,6 +114,9 @@ fun AppNavHost(
                             postId, origin
                         )
                     })
+                videosScreen(
+                    onBackClick = navController::popBackStack,
+                )
                 chatListScreen(
                     onChatClick = { chatId, otherUserId ->
                         navController.navigateToChat(chatId = chatId, otherUserId = otherUserId)
@@ -104,9 +127,7 @@ fun AppNavHost(
                     onMoreClick = { navController.navigateToChatDetails(it) })
                 chatDetailsScreen(
                     onBackClick = navController::popBackStack, onProfileClick = {})
-                videosScreen(
-                    onBackClick = navController::popBackStack,
-                )
+
                 profileScreen(
                     onNavigateToSettings = navController::navigateToSettings,
                     onPostClick = { postId, origin ->
@@ -116,15 +137,11 @@ fun AppNavHost(
                     },
                     onMediaClick = { imageId, type ->
                         navController.navigateToFullScreenMediaViewer(
-                            imageId = imageId,
-                            type = type
+                            imageId = imageId, type = type
                         )
                     },
-                )
-
-                fullScreenMediaViewer(
-                    onBackClick = navController::popBackStack
-                )
+                    onFollowersClick = { navController.navigateToFollowScreen(type = FollowType.FOLLOWERS) },
+                    onFollowingClick = { navController.navigateToFollowScreen(type = FollowType.FOLLOWING) })
 
                 otherUserProfileScreen(
                     onBackClick = navController::popBackStack,
@@ -135,15 +152,31 @@ fun AppNavHost(
                     },
                     onMediaClick = { imageId, type ->
                         navController.navigateToFullScreenMediaViewer(
-                            imageId = imageId,
-                            type = type
+                            imageId = imageId, type = type
                         )
                     },
+                    onFollowersClick = { navController.navigateToOtherFollowScreen(type = FollowType.FOLLOWERS) },
+                    onFollowingClick = { navController.navigateToOtherFollowScreen(type = FollowType.FOLLOWING) })
+
+                fullScreenMediaViewer(
+                    onBackClick = navController::popBackStack
                 )
 
                 postDetailsScreen(onUserClick = { userId ->
                     navController.navigateToOtherProfile(userId)
                 }, onBackClick = { navController.popBackStack() })
+
+                followScreen(
+                    onUserClick = { userId ->
+                        navController.navigateToOtherProfile(userId)
+                    }, onBackClick = navController::popBackStack
+                )
+
+                otherFollowScreen(
+                    onUserClick = { userId ->
+                        navController.navigateToOtherProfile(userId)
+                    }, onBackClick = navController::popBackStack
+                )
 
                 settingsStartScreen(
                     onNavigateToNotifications = navController::navigateToSettingsNotifications,

@@ -61,7 +61,6 @@ import com.aidsyla.mubble.common.navigation.LocalSharedTransitionScope
 import com.aidsyla.mubble.data.User
 import com.aidsyla.mubble.data.UserRepo
 import com.aidsyla.mubble.ui.theme.MubbleTheme
-import kotlin.Boolean
 
 @Composable
 fun ProfileHeader(
@@ -70,6 +69,8 @@ fun ProfileHeader(
     hasAvatarOrBannerBeenClicked: Boolean,
     onHasBeenClickedChange: (Boolean) -> Unit,
     onMediaClick: (Int, FullScreenMediaType) -> Unit,
+    onFollowersClick: () -> Unit,
+    onFollowingClick: () -> Unit
 ) {
     ProfileHeader(
         modifier = modifier,
@@ -82,7 +83,9 @@ fun ProfileHeader(
         followerCount = user.followerCount,
         hasAvatarOrBannerBeenClicked = hasAvatarOrBannerBeenClicked,
         onHasBeenClickedChange = onHasBeenClickedChange,
-        onMediaClick = onMediaClick
+        onMediaClick = onMediaClick,
+        onFollowersClick = onFollowersClick,
+        onFollowingClick = onFollowingClick
     )
 }
 
@@ -100,6 +103,8 @@ private fun ProfileHeader(
     hasAvatarOrBannerBeenClicked: Boolean,
     onHasBeenClickedChange: (Boolean) -> Unit,
     onMediaClick: (Int, FullScreenMediaType) -> Unit,
+    onFollowersClick: () -> Unit,
+    onFollowingClick: () -> Unit
 ) {
     val profilePictureSize = getScreenWidth().div(4)
     val offsetAmount = profilePictureSize * 0.5f
@@ -218,7 +223,9 @@ private fun ProfileHeader(
                 FollowerCount(
                     modifier = Modifier.fillMaxHeight(0.5f),
                     followingCount = followingCount,
-                    followerCount = followerCount
+                    followerCount = followerCount,
+                    onFollowersClick = onFollowersClick,
+                    onFollowingClick = onFollowingClick
                 )
             }
         }
@@ -235,8 +242,10 @@ private fun ProfileHeader(
 @Composable
 fun FollowerCount(
     modifier: Modifier = Modifier,
-    followingCount: Int,
     followerCount: Int,
+    followingCount: Int,
+    onFollowersClick: () -> Unit,
+    onFollowingClick: () -> Unit
 ) {
     Box(
         modifier = modifier
@@ -246,29 +255,42 @@ fun FollowerCount(
             modifier = Modifier
                 .clip(shape = MaterialTheme.shapes.medium)
                 .background(color = MaterialTheme.colorScheme.surfaceContainer)
-                .heightIn(min = 48.dp, max = 60.dp)
-                .padding(vertical = 4.dp, horizontal = 4.dp),
+                .heightIn(min = 48.dp, max = 60.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                "$followingCount Following",
-                modifier = Modifier.weight(1f),
-                textAlign = TextAlign.Center,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1,
-                style = MaterialTheme.typography.labelMedium
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable { onFollowersClick() }
+                    .weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    "$followerCount Followers",
+                    textAlign = TextAlign.Center,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
+                    style = MaterialTheme.typography.labelMedium
+                )
+            }
             VerticalDivider(
                 modifier = Modifier.padding(vertical = 4.dp)
             )
-            Text(
-                "$followerCount Followers",
-                modifier = Modifier.weight(1f),
-                textAlign = TextAlign.Center,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1,
-                style = MaterialTheme.typography.labelMedium
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable { onFollowingClick() }
+                    .weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    "$followingCount Following",
+                    textAlign = TextAlign.Center,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
+                    style = MaterialTheme.typography.labelMedium
+                )
+            }
         }
     }
 }
@@ -352,10 +374,12 @@ fun ProfileDetails(
 private fun ProfileHeaderPreview() {
     MubbleTheme {
         ProfileHeader(
-            user = UserRepo.user1,
+            user = UserRepo.dummyUsers.component1(),
             hasAvatarOrBannerBeenClicked = false,
             onHasBeenClickedChange = {},
-            onMediaClick = { _, _ -> }
+            onMediaClick = { _, _ -> },
+            onFollowersClick = {  },
+            onFollowingClick = {  }
         )
     }
 }

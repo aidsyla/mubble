@@ -25,6 +25,7 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.aidsyla.mubble.common.navigation.AppNavHost
+import com.aidsyla.mubble.common.navigation.FollowScreenRoute
 import com.aidsyla.mubble.common.navigation.HomeRoute
 import com.aidsyla.mubble.common.navigation.SettingsDevicePermissionsRoute
 import com.aidsyla.mubble.common.navigation.SettingsManageAccountRoute
@@ -39,14 +40,15 @@ val LocalBottomBarPadding = compositionLocalOf { 0.dp }
 fun AppScreen(
 ) {
     val appState = rememberAppState()
-
     val currentDestination = appState.currentDestination
     val currentTopLevelDestination = appState.currentTopLevelDestination
 
     val isVideoScreen = currentDestination.isRouteInHierarchy(TopLevelDestination.VIDEOS.route)
 
     val showNavBar =
-        (currentTopLevelDestination != null || currentDestination.isRouteInSettingsHierarchy()) &&
+        (currentTopLevelDestination != null || currentDestination.isRouteInSettingsHierarchy() || currentDestination.isRouteInHierarchy(
+            FollowScreenRoute::class
+        )) &&
                 !isVideoScreen
 
     val navBarVisibilityState = remember {
@@ -72,7 +74,9 @@ fun AppScreen(
                             val selected = when (destination) {
                                 TopLevelDestination.PROFILE -> {
                                     currentDestination.isRouteInHierarchy(TopLevelDestination.PROFILE.route) ||
-                                            currentDestination.isRouteInSettingsHierarchy()
+                                            currentDestination.isRouteInSettingsHierarchy() || currentDestination.isRouteInHierarchy(
+                                        FollowScreenRoute::class
+                                    )
                                 }
 
                                 else -> {
@@ -82,7 +86,10 @@ fun AppScreen(
                             NavigationBarItem(
                                 selected = selected,
                                 onClick = {
-                                    if (destination == TopLevelDestination.PROFILE && currentDestination.isRouteInSettingsHierarchy()) {
+                                    if (destination == TopLevelDestination.PROFILE && (currentDestination.isRouteInSettingsHierarchy() || currentDestination.isRouteInHierarchy(
+                                            FollowScreenRoute::class
+                                        ))
+                                    ) {
                                         appState.navigateToProfileFromSettings()
                                     } else {
                                         appState.navigateToTopLevelDestination(destination)

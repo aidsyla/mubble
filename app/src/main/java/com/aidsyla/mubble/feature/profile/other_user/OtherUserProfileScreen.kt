@@ -20,7 +20,9 @@ fun OtherUserProfileScreen(
     viewModel: OtherUserProfileViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
     onPostClick: (postId: String, origin: PostOrigin) -> Unit,
-    onMediaClick: (Int, FullScreenMediaType) -> Unit
+    onMediaClick: (Int, FullScreenMediaType) -> Unit,
+    onFollowersClick: () -> Unit,
+    onFollowingClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -40,7 +42,9 @@ fun OtherUserProfileScreen(
                         user = state.user,
                         hasAvatarOrBannerBeenClicked = isClicked,
                         onHasBeenClickedChange = { isClicked = it },
-                        onMediaClick = onMediaClick
+                        onMediaClick = onMediaClick,
+                        onFollowersClick = onFollowersClick,
+                        onFollowingClick = onFollowingClick
                     )
                 },
                 firstPage = {
