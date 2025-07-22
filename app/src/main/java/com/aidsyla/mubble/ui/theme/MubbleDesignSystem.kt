@@ -68,6 +68,8 @@ object MubbleTheme {
         val CollapseContent @Composable get() = painterResource(id = R.drawable.collapse_content)
 
         val MoreHorizontal @Composable get() = painterResource(id = R.drawable.more_horiz)
+        val Sort @Composable get() = painterResource(id = R.drawable.sort)
+        val Check @Composable get() = painterResource(id = R.drawable.check)
 
         val Favorite @Composable get() = painterResource(id = R.drawable.favorite)
         val FavoriteFilled @Composable get() = painterResource(id = R.drawable.favorite_filled)
