@@ -32,11 +32,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.aidsyla.mubble.feature.circle.AllButton
-import com.aidsyla.mubble.feature.circle.CircleItem
 import com.aidsyla.mubble.common.components.layout.MubbleListTabPager
 import com.aidsyla.mubble.common.components.layout.MubbleTabRow
 import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
+import com.aidsyla.mubble.feature.circle.AllButton
+import com.aidsyla.mubble.feature.circle.CircleItem
 import com.aidsyla.mubble.feature.circle.model.CircleRepo
 import com.aidsyla.mubble.ui.LocalBottomBarPadding
 import com.aidsyla.mubble.ui.theme.MubbleTheme
@@ -48,6 +48,7 @@ val LocalPagerState = compositionLocalOf<PagerState?> { null }
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
+    onCircleClick: (String, PostOrigin) -> Unit,
     onUserClick: (String) -> Unit,
     onPostClick: (postId: String, origin: PostOrigin) -> Unit,
 ) {
@@ -110,6 +111,7 @@ fun HomeScreen(
                 HomeMyCirclesScreen(
                     uiState = uiState,
                     listState = it,
+                    onCircleClick = onCircleClick,
                     onUserClick = onUserClick,
                     onMoreClick = viewModel::onMoreClick,
                     onPostClick = { index, postId, origin ->
@@ -170,9 +172,10 @@ fun HomeMyCirclesScreen(
     modifier: Modifier = Modifier,
     uiState: PostListUiState,
     listState: LazyListState,
+    onCircleClick: (String, PostOrigin) -> Unit,
     onUserClick: (String) -> Unit,
     onMoreClick: (postId: String) -> Unit,
-    onPostClick: (index: Int, postId: String, origin: PostOrigin) -> Unit
+    onPostClick: (index: Int, postId: String, origin: PostOrigin) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -191,9 +194,16 @@ fun HomeMyCirclesScreen(
                 }
                 items(CircleRepo.dummyCircles) {
                     CircleItem(
+                        origin = PostOrigin.HomeMyCircles,
                         circle = it,
                         showIcon = false,
-                        modifier = Modifier.fillParentMaxWidth(0.5f)
+                        modifier = Modifier.fillParentMaxWidth(0.5f),
+                        onCircleClick = { circleId ->
+                            onCircleClick(
+                                circleId,
+                                PostOrigin.HomeMyCircles
+                            )
+                        }
                     )
                 }
             }

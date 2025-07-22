@@ -64,6 +64,7 @@ import com.aidsyla.mubble.ui.theme.MubbleTheme
 fun ExploreScreen(
     viewModel: ExploreViewModel = hiltViewModel(),
     onPostClick: (postId: String, origin: PostOrigin) -> Unit,
+    onCircleClick: (String, PostOrigin) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val tabTitles = remember { listOf("Circles", "Media", "Bubbles") }
@@ -75,7 +76,8 @@ fun ExploreScreen(
         pagerState = pagerState,
         firstPage = {
             ExploreCircleGrid(
-                items = CircleRepo.dummyCircles
+                items = CircleRepo.dummyCircles,
+                onCircleClick = onCircleClick
             )
         },
         secondPage = {
@@ -112,6 +114,7 @@ fun ExploreScreen(
 fun ExploreCircleGrid(
     modifier: Modifier = Modifier,
     items: List<Circle>,
+    onCircleClick: (String, PostOrigin) -> Unit,
 ) {
     LazyVerticalGrid(
         modifier = modifier,
@@ -121,7 +124,15 @@ fun ExploreCircleGrid(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(items) {
-            CircleItem(circle = it, showIcon = true, modifier = Modifier.fillMaxWidth())
+            CircleItem(
+                origin = PostOrigin.ExploreCircles,
+                circle = it,
+                showIcon = true,
+                modifier = Modifier.fillMaxWidth(),
+                onCircleClick = { circleId ->
+                    onCircleClick(circleId, PostOrigin.ExploreCircles)
+                }
+            )
         }
     }
 }
@@ -278,7 +289,9 @@ private fun ExploreHeader(
                 modifier = Modifier.sharedElement(
                     rememberSharedContentState(
                         key = PostSharedElementKey(
-                            postId = id, origin = origin, type = PostSharedElementType.ProfileAvatar
+                            postId = id,
+                            origin = origin,
+                            type = PostSharedElementType.ProfileAvatar
                         )
                     ), animatedVisibilityScope = animatedContentScope
                 ), painter = painterResource(avatarResId), size = 24.dp,
@@ -288,7 +301,9 @@ private fun ExploreHeader(
                 modifier = Modifier.sharedBounds(
                     rememberSharedContentState(
                         key = PostSharedElementKey(
-                            postId = id, origin = origin, type = PostSharedElementType.DisplayName
+                            postId = id,
+                            origin = origin,
+                            type = PostSharedElementType.DisplayName
                         )
                     ), animatedVisibilityScope = animatedContentScope
                 ), text = username, style = MaterialTheme.typography.labelMedium.copy(

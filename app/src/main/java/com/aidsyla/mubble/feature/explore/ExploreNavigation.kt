@@ -13,11 +13,13 @@ fun NavController.navigateToExplore(navOptions: NavOptions) = navigate(route = E
 
 fun NavGraphBuilder.exploreScreen(
     onPostClick: (postId: String, origin: PostOrigin) -> Unit,
+    onCircleClick: (String, PostOrigin) -> Unit,
 ) {
     composable<ExploreRoute> {
         CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this) {
             ExploreScreen(
-                onPostClick = onPostClick
+                onPostClick = onPostClick,
+                onCircleClick = onCircleClick
             )
         }
     }

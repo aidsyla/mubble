@@ -2,8 +2,10 @@ package com.aidsyla.mubble.feature.circle.model
 
 import androidx.annotation.DrawableRes
 import com.aidsyla.mubble.R
+import java.util.UUID
 
 data class Circle(
+    val id: String = UUID.randomUUID().toString(),
     val name: String,
     val memberCount: Int,
     @param:DrawableRes

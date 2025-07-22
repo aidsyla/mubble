@@ -20,6 +20,8 @@ import com.aidsyla.mubble.feature.chats.chatListScreen
 import com.aidsyla.mubble.feature.chats.chatScreen
 import com.aidsyla.mubble.feature.chats.navigateToChat
 import com.aidsyla.mubble.feature.chats.navigateToChatDetails
+import com.aidsyla.mubble.feature.circle.circleScreen
+import com.aidsyla.mubble.feature.circle.navigateToCircle
 import com.aidsyla.mubble.feature.explore.exploreScreen
 import com.aidsyla.mubble.feature.home.homeScreen
 import com.aidsyla.mubble.feature.postdetails.navigateToPostDetails
@@ -101,17 +103,28 @@ fun AppNavHost(
                     )
                 },
             ) {
-                homeScreen(onUserClick = { userId ->
-                    navController.navigateToOtherProfile(userId)
-                }, onPostClick = { postId, origin ->
-                    navController.navigateToPostDetails(
-                        postId, origin
-                    )
-                })
+                homeScreen(
+                    onCircleClick = { circleId, origin ->
+                        navController.navigateToCircle(
+                            circleId = circleId, origin = origin
+                        )
+                    },
+                    onUserClick = { userId ->
+                        navController.navigateToOtherProfile(userId)
+                    }, onPostClick = { postId, origin ->
+                        navController.navigateToPostDetails(
+                            postId, origin
+                        )
+                    })
                 exploreScreen(
                     onPostClick = { postId, origin ->
                         navController.navigateToPostDetails(
                             postId, origin
+                        )
+                    },
+                    onCircleClick = { circleId, origin ->
+                        navController.navigateToCircle(
+                            circleId = circleId, origin = origin
                         )
                     })
                 videosScreen(
@@ -176,6 +189,23 @@ fun AppNavHost(
                     onUserClick = { userId ->
                         navController.navigateToOtherProfile(userId)
                     }, onBackClick = navController::popBackStack
+                )
+
+                circleScreen(
+                    onUserClick = { userId ->
+                        navController.navigateToOtherProfile(userId)
+                    },
+                    onPostClick = { postId, origin ->
+                        navController.navigateToPostDetails(
+                            postId, origin
+                        )
+                    },
+                    onMediaClick = { imageId, type ->
+                        navController.navigateToFullScreenMediaViewer(
+                            imageId = imageId, type = type
+                        )
+                    },
+                    onBackClick = navController::popBackStack
                 )
 
                 settingsStartScreen(

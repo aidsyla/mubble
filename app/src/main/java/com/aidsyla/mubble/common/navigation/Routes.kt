@@ -14,6 +14,8 @@ import kotlinx.serialization.Serializable
 @Serializable object ProfileRoute
 @Serializable data class OtherProfileRoute(val userId: String? = null)
 
+@Serializable data class CircleRoute(val circleId: String, val origin: PostOrigin)
+
 @Serializable data class PostDetailsRoute(val postId: String, val origin: PostOrigin)
 @Serializable data class UserProfileRoute(val userId: String)
 @Serializable data class UserPostsRoute(val userId: String)

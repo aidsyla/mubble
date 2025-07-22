@@ -14,6 +14,7 @@ fun NavController.navigateToHome(navOptions: NavOptions) {
 }
 
 fun NavGraphBuilder.homeScreen(
+    onCircleClick: (String, PostOrigin) -> Unit,
     onUserClick: (String) -> Unit,
     onPostClick: (postId: String, origin: PostOrigin) -> Unit,
 ) {
@@ -22,6 +23,7 @@ fun NavGraphBuilder.homeScreen(
             LocalNavAnimatedVisibilityScope provides this
         ) {
             HomeScreen(
+                onCircleClick = onCircleClick,
                 onUserClick = onUserClick,
                 onPostClick = onPostClick
             )
