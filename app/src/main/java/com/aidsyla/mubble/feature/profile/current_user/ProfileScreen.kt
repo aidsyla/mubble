@@ -48,6 +48,7 @@ fun ProfileScreen(
         is ProfileScreenUiState.Success -> {
             MubbleProfileTabPager(
                 modifier = Modifier,
+                title = state.user.displayName,
                 isCurrentUser = true,
                 header = {
                     ProfileHeader(

@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.aidsyla.mubble.common.components.ScrollReactingTopAppBar
 import com.aidsyla.mubble.common.components.TabButtons
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 import kotlinx.coroutines.launch
@@ -50,6 +51,7 @@ const val STICKY_HEADER_INDEX = 1
 @Composable
 fun MubbleProfileTabPager(
     modifier: Modifier = Modifier,
+    title: String,
     isCurrentUser: Boolean,
     header: @Composable () -> Unit,
     firstPage: @Composable () -> Unit,
@@ -101,8 +103,9 @@ fun MubbleProfileTabPager(
     Scaffold(
         modifier = Modifier,
         topBar = {
-            ProfileTopAppBar(
+            ScrollReactingTopAppBar(
                 modifier = Modifier,
+                title = title,
                 isCurrentUser = isCurrentUser,
                 lazyListState = lazyListState,
                 offsetAmount = offsetAmount,

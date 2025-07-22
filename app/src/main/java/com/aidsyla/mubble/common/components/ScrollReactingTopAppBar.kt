@@ -1,4 +1,4 @@
-package com.aidsyla.mubble.feature.profile.components
+package com.aidsyla.mubble.common.components
 
 import android.app.Activity
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -43,12 +43,15 @@ import androidx.core.view.WindowCompat
 import com.aidsyla.mubble.app.LocalDarkTheme
 import com.aidsyla.mubble.common.navigation.LocalNavAnimatedVisibilityScope
 import com.aidsyla.mubble.common.navigation.LocalSharedTransitionScope
+import com.aidsyla.mubble.feature.profile.components.STICKY_HEADER
+import com.aidsyla.mubble.feature.profile.components.STICKY_HEADER_INDEX
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
-fun ProfileTopAppBar(
+fun ScrollReactingTopAppBar(
     modifier: Modifier = Modifier,
+    title: String,
     isCurrentUser: Boolean,
     transitionLength: Dp = 200.dp,
     lazyListState: LazyListState,
@@ -162,11 +165,9 @@ fun ProfileTopAppBar(
                         ) {}
                     }
 
-
-
                     if (targetAlpha > 0f) {
                         Text(
-                            text = "Alex Smith",
+                            text = title,
                             modifier = Modifier
                                 .weight(1f)
                                 .alpha(targetAlpha),
