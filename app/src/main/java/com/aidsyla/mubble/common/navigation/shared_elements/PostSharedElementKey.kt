@@ -10,6 +10,7 @@ enum class PostOrigin {
     None,
     HomeFollowing,
     HomeMyCircles,
+    ExploreCircles,
     ExploreMedia,
     ExploreBubbles,
     ProfileMedia,
