@@ -71,6 +71,8 @@ object MubbleTheme {
         val Sort @Composable get() = painterResource(id = R.drawable.sort)
         val Check @Composable get() = painterResource(id = R.drawable.check)
 
+        val Reply @Composable get() = painterResource(id = R.drawable.reply)
+
         val Favorite @Composable get() = painterResource(id = R.drawable.favorite)
         val FavoriteFilled @Composable get() = painterResource(id = R.drawable.favorite_filled)
         val Comment @Composable get() = painterResource(id = R.drawable.comment)
