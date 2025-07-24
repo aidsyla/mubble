@@ -1,4 +1,4 @@
-package com.aidsyla.mubble.feature.explore.model
+package com.aidsyla.mubble.data
 
 import androidx.annotation.DrawableRes
 import java.util.UUID

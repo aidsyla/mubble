@@ -86,10 +86,10 @@ import com.aidsyla.mubble.common.navigation.LocalSharedTransitionScope
 import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
 import com.aidsyla.mubble.common.navigation.shared_elements.PostSharedElementKey
 import com.aidsyla.mubble.common.navigation.shared_elements.PostSharedElementType
-import com.aidsyla.mubble.feature.explore.model.BubbleFeedItem
-import com.aidsyla.mubble.feature.explore.model.FeedItem
-import com.aidsyla.mubble.feature.explore.model.ImagePostFeedItem
-import com.aidsyla.mubble.feature.home.data.DummyPostRepository
+import com.aidsyla.mubble.data.BubbleFeedItem
+import com.aidsyla.mubble.data.FeedItem
+import com.aidsyla.mubble.data.ImagePostFeedItem
+import com.aidsyla.mubble.data.DummyPostRepository
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch

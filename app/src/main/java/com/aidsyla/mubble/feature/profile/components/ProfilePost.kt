@@ -25,7 +25,7 @@ import com.aidsyla.mubble.common.navigation.LocalSharedTransitionScope
 import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
 import com.aidsyla.mubble.common.navigation.shared_elements.PostSharedElementKey
 import com.aidsyla.mubble.common.navigation.shared_elements.PostSharedElementType
-import com.aidsyla.mubble.feature.explore.model.ImagePostFeedItem
+import com.aidsyla.mubble.data.ImagePostFeedItem
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable

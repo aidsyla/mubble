@@ -3,8 +3,8 @@ package com.aidsyla.mubble.feature.explore
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridScope
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
-import com.aidsyla.mubble.feature.explore.model.BubbleFeedItem
-import com.aidsyla.mubble.feature.explore.model.ImagePostFeedItem
+import com.aidsyla.mubble.data.BubbleFeedItem
+import com.aidsyla.mubble.data.ImagePostFeedItem
 
 fun LazyStaggeredGridScope.explorePostsFeed(
     items: List<ImagePostFeedItem>,

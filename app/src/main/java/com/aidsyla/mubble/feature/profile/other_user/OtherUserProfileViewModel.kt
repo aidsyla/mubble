@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aidsyla.mubble.data.User
 import com.aidsyla.mubble.data.UserRepo
-import com.aidsyla.mubble.feature.explore.model.BubbleFeedItem
-import com.aidsyla.mubble.feature.explore.model.ImagePostFeedItem
-import com.aidsyla.mubble.feature.home.data.DummyPostRepository
+import com.aidsyla.mubble.data.BubbleFeedItem
+import com.aidsyla.mubble.data.ImagePostFeedItem
+import com.aidsyla.mubble.data.DummyPostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

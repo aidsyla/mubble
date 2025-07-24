@@ -3,8 +3,8 @@ package com.aidsyla.mubble.feature.postdetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aidsyla.mubble.feature.explore.model.FeedItem
-import com.aidsyla.mubble.feature.home.data.DummyPostRepository
+import com.aidsyla.mubble.data.FeedItem
+import com.aidsyla.mubble.data.DummyPostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PostDetailsViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val postId: String = savedStateHandle.get<String>("postId") ?: ""
 

@@ -7,8 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.aidsyla.mubble.common.components.post.BasePostLayout
 import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
-import com.aidsyla.mubble.feature.explore.model.BubbleFeedItem
-import com.aidsyla.mubble.feature.explore.model.ImagePostFeedItem
+import com.aidsyla.mubble.data.BubbleFeedItem
+import com.aidsyla.mubble.data.ImagePostFeedItem
 
 fun LazyListScope.postFeed(
     uiState: PostListUiState,

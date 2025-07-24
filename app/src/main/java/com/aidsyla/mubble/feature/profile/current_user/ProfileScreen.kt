@@ -19,8 +19,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
 import com.aidsyla.mubble.feature.explore.exploreBubblesFeed
-import com.aidsyla.mubble.feature.explore.model.BubbleFeedItem
-import com.aidsyla.mubble.feature.explore.model.ImagePostFeedItem
+import com.aidsyla.mubble.data.BubbleFeedItem
+import com.aidsyla.mubble.data.ImagePostFeedItem
 import com.aidsyla.mubble.feature.profile.components.FullScreenMediaType
 import com.aidsyla.mubble.feature.profile.components.MubbleProfileTabPager
 import com.aidsyla.mubble.feature.profile.components.ProfileHeader

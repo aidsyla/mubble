@@ -7,8 +7,8 @@ import androidx.navigation.toRoute
 import com.aidsyla.mubble.common.navigation.CircleRoute
 import com.aidsyla.mubble.feature.circle.model.Circle
 import com.aidsyla.mubble.feature.circle.model.CircleRepo
-import com.aidsyla.mubble.feature.explore.model.FeedItem
-import com.aidsyla.mubble.feature.home.data.DummyPostRepository
+import com.aidsyla.mubble.data.FeedItem
+import com.aidsyla.mubble.data.DummyPostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -47,7 +47,7 @@ import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
 import com.aidsyla.mubble.common.navigation.shared_elements.PostSharedElementKey
 import com.aidsyla.mubble.common.navigation.shared_elements.PostSharedElementType
 import com.aidsyla.mubble.feature.circle.model.Circle
-import com.aidsyla.mubble.feature.explore.model.FeedItem
+import com.aidsyla.mubble.data.FeedItem
 import com.aidsyla.mubble.feature.profile.components.FullScreenMediaType
 import com.aidsyla.mubble.feature.profile.components.STICKY_HEADER
 import com.aidsyla.mubble.common.components.ScrollReactingTopAppBar
