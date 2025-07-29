@@ -51,7 +51,7 @@ fun CommentItem(
 }
 
 @Composable
-fun CommentItem(
+private fun CommentItem(
     modifier: Modifier = Modifier,
     @DrawableRes userAvatarResId: Int,
     username: String,
