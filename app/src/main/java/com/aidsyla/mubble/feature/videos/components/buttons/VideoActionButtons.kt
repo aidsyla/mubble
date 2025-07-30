@@ -2,6 +2,7 @@ package com.aidsyla.mubble.feature.videos.components.buttons
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,7 +13,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -23,6 +26,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.aidsyla.mubble.ui.theme.MubbleTheme
+import com.aidsyla.mubble.util.ScaleIndicationNodeFactory
 
 @Composable
 internal fun VideoActionButtons(
@@ -67,10 +71,14 @@ private fun ActionButton(
     count: String,
     onClick: () -> Unit
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
     Column(
         modifier = modifier
             .requiredSize(48.dp)
-            .clickable {
+            .clickable(
+                interactionSource = interactionSource,
+                indication = ScaleIndicationNodeFactory
+            ) {
                 onClick()
             }
             .background(color = Color.Transparent),
@@ -97,6 +105,7 @@ private fun ActionButton(
                 tint = Color.White
             )
         }
+        ripple()
         Text(
             text = count,
             overflow = TextOverflow.Ellipsis,
