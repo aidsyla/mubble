@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
@@ -39,6 +40,7 @@ import com.aidsyla.mubble.common.components.layout.rememberIsAtTop
 import com.aidsyla.mubble.common.components.post.CommentItem
 import com.aidsyla.mubble.data.DummyCommentRepository
 import com.aidsyla.mubble.feature.postdetails.CommentBottomBar
+import com.aidsyla.mubble.ui.theme.MubbleTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,7 +74,10 @@ fun CommentsBottomSheet(
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp, vertical = 8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically)
+                        verticalArrangement = Arrangement.spacedBy(
+                            4.dp,
+                            Alignment.CenterVertically
+                        )
                     ) {
                         Surface(
                             modifier =
@@ -92,6 +97,15 @@ fun CommentsBottomSheet(
                         }
 
                     }
+                    Icon(
+                        modifier = Modifier
+                            .padding(end = 16.dp)
+                            .size(20.dp)
+                            .align(Alignment.CenterEnd),
+                        painter = MubbleTheme.Icons.Close,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                     AnimatedVisibility(
                         modifier = Modifier.align(Alignment.BottomCenter),
                         enter = fadeIn(animationSpec = tween(durationMillis = 300)),
@@ -105,6 +119,7 @@ fun CommentsBottomSheet(
                     }
                 }
             },
+            sheetGesturesEnabled = false,
             onDismissRequest = { onOpenChange(false) },
             sheetState = bottomSheetState,
         ) {
@@ -161,7 +176,6 @@ fun CommentsBottomSheet(
                     )
                 }
             }
-
         }
     }
 }
