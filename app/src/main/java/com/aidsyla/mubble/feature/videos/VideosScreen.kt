@@ -37,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -56,6 +57,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.Player
 import androidx.media3.common.Player.REPEAT_MODE_ONE
 import androidx.media3.common.util.UnstableApi
+import com.aidsyla.mubble.feature.videos.components.CommentsBottomSheet
 import com.aidsyla.mubble.feature.videos.components.LoadingPulse
 import com.aidsyla.mubble.feature.videos.components.VideoControls
 import com.aidsyla.mubble.feature.videos.components.VideoPostDetails
@@ -74,13 +76,15 @@ import com.aidsyla.mubble.ui.theme.surfaceDark
 fun VideosScreen(
     modifier: Modifier = Modifier,
     viewModel: VideoViewModel = hiltViewModel(),
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var uiVisible by remember { mutableStateOf(true) }
     val topAppBarAlpha by animateFloatAsState(
         targetValue = if (uiVisible) 1f else 0f
     )
+
+    var openBottomSheet by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -142,6 +146,7 @@ fun VideosScreen(
                             pagerState = pagerState,
                             pageIndex = pageIndex,
                             uiVisibilityChanged = { uiVisible = it },
+                            onCommentClick = { openBottomSheet = !openBottomSheet },
                             onBackClick = onBackClick
                         )
                     }
@@ -149,6 +154,11 @@ fun VideosScreen(
             }
         }
     }
+
+    CommentsBottomSheet(
+        openBottomSheet = openBottomSheet,
+        onOpenChange = { openBottomSheet = it }
+    )
 }
 
 @androidx.annotation.OptIn(UnstableApi::class)
@@ -160,6 +170,7 @@ fun VideoContent(
     pageIndex: Int,
     pagerState: PagerState,
     uiVisibilityChanged: (Boolean) -> Unit,
+    onCommentClick: () -> Unit,
     onBackClick: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -271,7 +282,12 @@ fun VideoContent(
                     modifier = Modifier,
                     horizontalAlignment = Alignment.End
                 ) {
-                    VideoActionButtons()
+                    VideoActionButtons(
+                        onLikeClick = {},
+                        onCommentClick = onCommentClick,
+                        onSendClick = {},
+                        onSaveClick = {}
+                    )
                     VideoPostDetails(
                         isCaptionExpanded = isCaptionExpanded,
                         onCaptionExpandChange = { isCaptionExpanded = it }

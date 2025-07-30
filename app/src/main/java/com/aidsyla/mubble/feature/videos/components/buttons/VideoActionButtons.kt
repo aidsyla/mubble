@@ -1,6 +1,7 @@
 package com.aidsyla.mubble.feature.videos.components.buttons
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,7 +25,13 @@ import androidx.compose.ui.unit.dp
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 
 @Composable
-internal fun VideoActionButtons(modifier: Modifier = Modifier) {
+internal fun VideoActionButtons(
+    modifier: Modifier = Modifier,
+    onLikeClick: () -> Unit,
+    onCommentClick: () -> Unit,
+    onSendClick: () -> Unit,
+    onSaveClick: () -> Unit,
+) {
     Column(
         modifier = modifier.padding(end = 0.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -32,19 +39,23 @@ internal fun VideoActionButtons(modifier: Modifier = Modifier) {
     ) {
         ActionButton(
             painter = MubbleTheme.Icons.Favorite,
-            count = "5 312"
+            count = "5 312",
+            onClick = onLikeClick
         )
         ActionButton(
             painter = MubbleTheme.Icons.Comment,
-            count = "588"
+            count = "588",
+            onClick = onCommentClick
         )
         ActionButton(
             painter = MubbleTheme.Icons.Send,
-            count = "42"
+            count = "42",
+            onClick = onSendClick
         )
         ActionButton(
             painter = MubbleTheme.Icons.Save,
-            count = "54"
+            count = "54",
+            onClick = onSaveClick
         )
     }
 }
@@ -54,10 +65,14 @@ private fun ActionButton(
     modifier: Modifier = Modifier,
     painter: Painter,
     count: String,
+    onClick: () -> Unit
 ) {
     Column(
         modifier = modifier
             .requiredSize(48.dp)
+            .clickable {
+                onClick()
+            }
             .background(color = Color.Transparent),
         verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally
