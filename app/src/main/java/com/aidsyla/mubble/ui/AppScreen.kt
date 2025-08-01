@@ -7,8 +7,8 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
+import com.aidsyla.mubble.common.components.SubtleHorizontalDivider
 import com.aidsyla.mubble.common.navigation.AppNavHost
 import com.aidsyla.mubble.common.navigation.FollowScreenRoute
 import com.aidsyla.mubble.common.navigation.HomeRoute
@@ -68,7 +69,8 @@ fun AppScreen(
             ) {
                 Box {
                     NavigationBar(
-                        modifier = Modifier.height(80.dp)
+                        modifier = Modifier.height(80.dp),
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
                     ) {
                         appState.topLevelDestinations.forEach { destination ->
                             val selected = when (destination) {
@@ -106,7 +108,7 @@ fun AppScreen(
                             )
                         }
                     }
-                    HorizontalDivider(
+                    SubtleHorizontalDivider(
                         modifier = Modifier.align(Alignment.TopCenter),
                     )
                 }
