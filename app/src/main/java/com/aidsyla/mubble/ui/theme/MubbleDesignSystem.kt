@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import com.aidsyla.mubble.R
+import com.aidsyla.mubble.util.linearGradient
 import androidx.compose.material.icons.Icons as MaterialIcons
 
 object MubbleTheme {
@@ -47,15 +48,13 @@ object MubbleTheme {
         val ChatSelected = R.drawable.chat_filled
         val Chat = R.drawable.chat
 
-        val ActivitySelected = R.drawable.notifications_filled
-        val Activity = R.drawable.notifications
-
         val ProfileSelected = R.drawable.account_circle_filled
         val Profile = R.drawable.account_circle
     }
 
     object Icons {
         val MubbleIcon @Composable get() = painterResource(id = R.drawable.mubble_icon)
+        val Heart @Composable get() = painterResource(id = R.drawable.heart_with_gradient)
 
         val Pause @Composable get() = painterResource(id = R.drawable.pause)
         val Resume @Composable get() = painterResource(id = R.drawable.resume)
@@ -70,6 +69,7 @@ object MubbleTheme {
         val MoreHorizontal @Composable get() = painterResource(id = R.drawable.more_horiz)
         val Sort @Composable get() = painterResource(id = R.drawable.sort)
         val Check @Composable get() = painterResource(id = R.drawable.check)
+        val Add @Composable get() = painterResource(id = R.drawable.add)
 
         val Reply @Composable get() = painterResource(id = R.drawable.reply)
 
@@ -106,10 +106,9 @@ object MubbleTheme {
 
         val DevicePermissions @Composable get() = painterResource(id = R.drawable.perm_device_information)
 
-
-        val PhotoLibrary @Composable get() = painterResource(id = R.drawable.photo_library)
-        val Camera @Composable get() = painterResource(id = R.drawable.photo_camera)
-
+        val Camera @Composable get() = painterResource(id = R.drawable.camera_new)
+        val CameraOutlined @Composable get() = painterResource(id = R.drawable.camera_outlined)
+        val Gallery @Composable get() = painterResource(id = R.drawable.gallery)
 
         val ManageAccount @Composable get() = painterResource(id = R.drawable.person)
         val AccountVisibility @Composable get() = painterResource(id = R.drawable.visibility)
@@ -186,6 +185,14 @@ object MubbleTheme {
                 0.50f to Color(0x0F000000),
                 0.70f to Color(0x00000000)
             )
+        )
+
+        val appGradient = Brush.linearGradient(
+            colors = listOf(
+               Color(0x3400B6B6),
+               Color(0x34006797)
+            ),
+            angleInDegrees = 45f
         )
     }
 }
