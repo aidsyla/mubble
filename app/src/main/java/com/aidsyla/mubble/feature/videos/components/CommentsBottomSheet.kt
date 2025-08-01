@@ -17,9 +17,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -33,9 +31,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.aidsyla.mubble.common.components.SubtleHorizontalDivider
 import com.aidsyla.mubble.common.components.layout.rememberIsAtTop
 import com.aidsyla.mubble.common.components.post.CommentItem
 import com.aidsyla.mubble.data.DummyCommentRepository
@@ -112,10 +110,7 @@ fun CommentsBottomSheet(
                         exit = fadeOut(animationSpec = tween(durationMillis = 300)),
                         visible = !isAtTop
                     ) {
-                        HorizontalDivider(
-                            color = DividerDefaults.color.copy(alpha = 0.5f),
-                            thickness = 0.5.dp
-                        )
+                        SubtleHorizontalDivider()
                     }
                 }
             },
@@ -164,17 +159,7 @@ fun CommentsBottomSheet(
                         }
                     }
                 }
-                Box(modifier = Modifier.align(Alignment.BottomCenter)) {
-                    CommentBottomBar(
-                        modifier = Modifier,
-                        color = Color.Transparent
-                    )
-                    HorizontalDivider(
-                        modifier = Modifier.align(Alignment.TopCenter),
-                        color = DividerDefaults.color.copy(alpha = 0.5f),
-                        thickness = 0.5.dp
-                    )
-                }
+                CommentBottomBar(modifier = Modifier.align(Alignment.BottomCenter))
             }
         }
     }

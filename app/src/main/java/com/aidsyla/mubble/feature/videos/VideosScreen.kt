@@ -3,6 +3,9 @@ package com.aidsyla.mubble.feature.videos
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.EaseInOutCubic
+import androidx.compose.animation.core.EaseOutQuad
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -10,6 +13,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,7 +38,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -46,6 +52,8 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -57,7 +65,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.Player
 import androidx.media3.common.Player.REPEAT_MODE_ONE
 import androidx.media3.common.util.UnstableApi
+import com.aidsyla.mubble.feature.videos.components.AnimatingHeart
 import com.aidsyla.mubble.feature.videos.components.CommentsBottomSheet
+import com.aidsyla.mubble.feature.videos.components.Like
 import com.aidsyla.mubble.feature.videos.components.LoadingPulse
 import com.aidsyla.mubble.feature.videos.components.VideoControls
 import com.aidsyla.mubble.feature.videos.components.VideoPostDetails
@@ -69,6 +79,7 @@ import com.aidsyla.mubble.feature.videos.utils.formatMsToMinutesSeconds
 import com.aidsyla.mubble.feature.videos.utils.initializePlayerForVideo
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 import com.aidsyla.mubble.ui.theme.surfaceDark
+import java.util.UUID
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -226,9 +237,39 @@ fun VideoContent(
         }
     }
 
+    var isLiked by remember { mutableStateOf(false) }
+    var showLike by remember { mutableStateOf(false) }
+    val sizeAnim = remember { Animatable(0f) }
+    val likes = remember { mutableStateListOf<Like>() }
+
+    LaunchedEffect(showLike) {
+        if (showLike) {
+            sizeAnim.snapTo(0f)
+            sizeAnim.animateTo(
+                targetValue = 5f,
+                animationSpec = tween(durationMillis = 300, easing = EaseOutQuad)
+            )
+            sizeAnim.animateTo(
+                targetValue = 0f,
+                animationSpec = tween(durationMillis = 300, easing = EaseInOutCubic)
+            )
+            showLike = false
+        } else {
+            sizeAnim.animateTo(0f, animationSpec = tween(200))
+        }
+    }
+
     Box(
         modifier = modifier
             .fillMaxSize()
+            .pointerInput(Unit) {
+                this.detectTapGestures(
+                    onDoubleTap = {
+                        isLiked = true
+                        likes.add(Like(id = UUID.randomUUID(), offset = it))
+                    }
+                )
+            }
     ) {
         Box(
             modifier = Modifier
@@ -273,30 +314,37 @@ fun VideoContent(
                 },
             contentAlignment = Alignment.BottomCenter
         ) {
-            AnimatedVisibility(
-                visibleState = uiVisibilityState,
-                enter = fadeIn(),
-                exit = fadeOut()
+            Column(
+                modifier = Modifier
+                    .alpha(gradientAlpha)
+                    .then(
+                        if (!shouldUiBeVisible) Modifier
+                            .pointerInput(Unit) {
+                                awaitPointerEventScope {
+                                    while (true) {
+                                        val event = awaitPointerEvent(PointerEventPass.Initial)
+                                        event.changes.forEach { it.consume() }
+                                    }
+                                }
+                            } else Modifier),
+                horizontalAlignment = Alignment.End
             ) {
-                Column(
-                    modifier = Modifier,
-                    horizontalAlignment = Alignment.End
-                ) {
-                    VideoActionButtons(
-                        onLikeClick = {},
-                        onCommentClick = onCommentClick,
-                        onSendClick = {},
-                        onSaveClick = {}
-                    )
-                    VideoPostDetails(
-                        isCaptionExpanded = isCaptionExpanded,
-                        onCaptionExpandChange = { isCaptionExpanded = it }
-                    )
-                    VideoControls(
-                        onBackClick = onBackClick,
-                        player = player
-                    )
-                }
+                VideoActionButtons(
+                    isPostLiked = isLiked,
+                    onLikeChange = { isLiked = it },
+                    onLikeClick = { isLiked = !isLiked },
+                    onCommentClick = onCommentClick,
+                    onSendClick = {},
+                    onSaveClick = {}
+                )
+                VideoPostDetails(
+                    isCaptionExpanded = isCaptionExpanded,
+                    onCaptionExpandChange = { isCaptionExpanded = it }
+                )
+                VideoControls(
+                    onBackClick = onBackClick,
+                    player = player
+                )
             }
             AnimatedVisibility(
                 modifier = Modifier
@@ -385,6 +433,17 @@ fun VideoContent(
                         color = Color.White
                     )
                 }
+            }
+        }
+
+        likes.forEach { like ->
+            key(like.id) {
+                AnimatingHeart(
+                    offset = like.offset,
+                    onAnimationFinished = {
+                        likes.remove(like)
+                    }
+                )
             }
         }
     }
