@@ -185,7 +185,7 @@ fun SettingsDevicePermissionsScreen(
                 SettingItem(
                     modifier = Modifier.padding(end = 8.dp),
                     description = "Photos",
-                    icon = MubbleTheme.Icons.PhotoLibrary
+                    icon = MubbleTheme.Icons.Gallery
                 ) {
                     Text("Not allowed", style = MaterialTheme.typography.labelSmall)
                 }
@@ -194,7 +194,7 @@ fun SettingsDevicePermissionsScreen(
                 SettingItem(
                     modifier = Modifier.padding(end = 8.dp),
                     description = "Camera",
-                    icon = MubbleTheme.Icons.Camera
+                    icon = MubbleTheme.Icons.CameraOutlined
                 ) {
                     Text("Allowed", style = MaterialTheme.typography.labelSmall)
                 }
