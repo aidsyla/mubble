@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,9 +14,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridS
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -29,11 +26,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
+import com.aidsyla.mubble.common.components.SubtleHorizontalDivider
 import com.aidsyla.mubble.common.navigation.LocalNavAnimatedVisibilityScope
 import com.aidsyla.mubble.common.navigation.LocalSharedTransitionScope
 
@@ -89,9 +88,7 @@ fun MubbleListTabPager(
                             .animateEnterExit(),
                         color = animatedAppBarColor
                     ) {
-                        Box(
-                            contentAlignment = Alignment.BottomCenter
-                        ) {
+                        Box {
                             CenterAlignedTopAppBar(
                                 colors = TopAppBarDefaults.topAppBarColors(
                                     containerColor = Color.Transparent,
@@ -105,8 +102,8 @@ fun MubbleListTabPager(
                                 actions = actions,
                                 scrollBehavior = scrollBehavior
                             )
-                            HorizontalDivider(
-                                color = DividerDefaults.color.copy(alpha = dividerAlpha)
+                            SubtleHorizontalDivider(
+                                modifier = Modifier.align(Alignment.BottomCenter).alpha(dividerAlpha),
                             )
                         }
                     }
@@ -184,7 +181,7 @@ fun MubbleGridTabPager(
             Surface(
                 color = animatedAppBarColor
             ) {
-                Column {
+                Box {
                     CenterAlignedTopAppBar(
                         colors = TopAppBarDefaults.topAppBarColors(
                             containerColor = Color.Transparent,
@@ -198,8 +195,8 @@ fun MubbleGridTabPager(
                         actions = actions,
                         scrollBehavior = scrollBehavior
                     )
-                    HorizontalDivider(
-                        color = DividerDefaults.color.copy(alpha = dividerAlpha)
+                    SubtleHorizontalDivider(
+                        modifier = Modifier.align(Alignment.BottomCenter).alpha(dividerAlpha),
                     )
                 }
             }
