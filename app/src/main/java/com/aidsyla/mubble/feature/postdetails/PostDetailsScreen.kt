@@ -27,9 +27,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -55,6 +53,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aidsyla.mubble.R
 import com.aidsyla.mubble.common.components.CircleImage
+import com.aidsyla.mubble.common.components.SubtleHorizontalDivider
 import com.aidsyla.mubble.common.components.layout.rememberIsAtTop
 import com.aidsyla.mubble.common.components.post.BasePostLayout
 import com.aidsyla.mubble.common.components.post.CommentItem
@@ -146,6 +145,7 @@ fun PostDetailsScreen(
                                                     animatedVisibilityScope = animatedContentScope,
                                                 ),
                                                 painter = painterResource(state.postItem.userAvatarResId),
+                                                borderWidth = 0.1.dp,
                                                 contentDescription = "avatar"
                                             )
                                         }
@@ -222,7 +222,7 @@ fun PostDetailsScreen(
                                 }
                             )
                             if (!isAtTop)
-                                HorizontalDivider(modifier = Modifier.align(Alignment.BottomCenter))
+                                SubtleHorizontalDivider(modifier = Modifier.align(Alignment.BottomCenter))
                         }
                     },
                     bottomBar = {
@@ -257,11 +257,12 @@ fun PostDetailsScreen(
                             )
                         }
                         item {
-                            HorizontalDivider(
-                                color = DividerDefaults.color.copy(alpha = 0.5f),
-                                thickness = 0.5.dp
+                            Text(
+                                modifier = Modifier.padding(horizontal = 16.dp),
+                                text = "Comments",
+                                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.SemiBold)
                             )
-                            Spacer(modifier = Modifier.height(8.dp))
+                            Spacer(modifier = Modifier.height(4.dp))
                         }
                         items(commentsForPost) { comment ->
                             CommentItem(
@@ -304,40 +305,44 @@ fun PostDetailsScreen(
 @Composable
 fun CommentBottomBar(
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.surfaceContainer
+    color: Color = MaterialTheme.colorScheme.surfaceContainerLow,
 ) {
-    Surface(
-        modifier = modifier,
-        color = color,
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 12.dp)
-                .navigationBarsPadding(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically
+    Box(modifier = modifier) {
+        Surface(
+            color = color
         ) {
-            CircleImage(
-                painter = painterResource(R.drawable.profile_14),
-                size = 40.dp,
-                borderWidth = 0.3.dp
-            )
-            Box(
+            Row(
                 modifier = Modifier
-                    .weight(1f)
-                    .height(40.dp)
-                    .clip(shape = RoundedCornerShape(100))
-                    .background(color = MaterialTheme.colorScheme.surfaceContainerHighest),
-                contentAlignment = Alignment.CenterStart
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                    .navigationBarsPadding(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    modifier = Modifier.padding(start = 12.dp, end = 4.dp),
-                    text = "Add a comment..",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                CircleImage(
+                    painter = painterResource(R.drawable.profile_14),
+                    size = 40.dp,
+                    borderWidth = 0.3.dp
                 )
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(40.dp)
+                        .clip(shape = RoundedCornerShape(100))
+                        .background(color = MaterialTheme.colorScheme.surfaceContainerHighest),
+                    contentAlignment = Alignment.CenterStart
+                ) {
+                    Text(
+                        modifier = Modifier.padding(start = 12.dp, end = 4.dp),
+                        text = "Add a comment..",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
         }
+        SubtleHorizontalDivider(
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
     }
 }
 
