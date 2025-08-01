@@ -8,9 +8,11 @@ import androidx.compose.animation.core.EaseInOutCubic
 import androidx.compose.animation.core.EaseOutQuad
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.VectorConverter
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.awaitEachGesture
@@ -19,6 +21,7 @@ import androidx.compose.foundation.gestures.calculateCentroid
 import androidx.compose.foundation.gestures.calculateCentroidSize
 import androidx.compose.foundation.gestures.calculatePan
 import androidx.compose.foundation.gestures.calculateZoom
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -51,6 +54,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -70,6 +74,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -87,10 +92,12 @@ import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
 import com.aidsyla.mubble.common.navigation.shared_elements.PostSharedElementKey
 import com.aidsyla.mubble.common.navigation.shared_elements.PostSharedElementType
 import com.aidsyla.mubble.data.BubbleFeedItem
+import com.aidsyla.mubble.data.DummyPostRepository
 import com.aidsyla.mubble.data.FeedItem
 import com.aidsyla.mubble.data.ImagePostFeedItem
-import com.aidsyla.mubble.data.DummyPostRepository
 import com.aidsyla.mubble.ui.theme.MubbleTheme
+import com.aidsyla.mubble.util.ScaleIndicationNodeFactory
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -166,7 +173,6 @@ fun BasePostLayout(
                         isInPostDetails = isInPostDetails
                     )
                 }
-
                 PostActions(
                     likeCount = item.likeCount,
                     commentCount = item.commentCount,
@@ -205,23 +211,28 @@ fun BasePostLayout(
         }
     }
 
+    val mutableInteractionSource = remember { MutableInteractionSource() }
     if (useCard)
-        CompositionLocalProvider(LocalRippleConfiguration provides null) {
             Card(
                 modifier = modifier
-                    .clip(shape = MaterialTheme.shapes.large)
                     .combinedClickable(
+                        interactionSource = mutableInteractionSource,
+                        indication = ScaleIndicationNodeFactory,
                         onClick = { onPostClick(item.id) },
                         onDoubleClick = { isLiked = !isLiked }
+                    )
+                    .border(
+                        width = 0.1.dp,
+                        color = MaterialTheme.colorScheme.outlineVariant,
+                        shape = MaterialTheme.shapes.large
                     ),
                 shape = MaterialTheme.shapes.large,
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                )
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer
+                ),
             ) {
                 content()
             }
-        }
     else
         Column(modifier = modifier) {
             content()
@@ -629,59 +640,109 @@ fun ZoomablePostMedia(
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun BouncingHeartIcon(
-    isFilled: Boolean,
-    onFilledChange: (Boolean) -> Unit,
+    isPostLiked: Boolean,
+    onLikeChange: (Boolean) -> Unit,
     count: Int,
+    onClick: () -> Unit,
 ) {
     val sizeAnim = remember { Animatable(0f) }
+    val offsetAnim = remember { Animatable(Offset.Zero, Offset.VectorConverter) }
+    val interactionSource = remember { MutableInteractionSource() }
 
-    LaunchedEffect(isFilled) {
-        if (isFilled) {
+    val alpha by animateFloatAsState(
+        targetValue = if (sizeAnim.value != 0f) 0f else 1f
+    )
+
+    LaunchedEffect(isPostLiked) {
+        if (isPostLiked) {
             sizeAnim.snapTo(0f)
-            sizeAnim.animateTo(
-                targetValue = 40f,
-                animationSpec = tween(durationMillis = 100, easing = EaseOutQuad)
-            )
-            sizeAnim.animateTo(
-                targetValue = 26f,
-                animationSpec = tween(durationMillis = 150, easing = EaseInOutCubic)
-            )
+            coroutineScope {
+                launch {
+                    sizeAnim.animateTo(
+                        targetValue = 2.1f,
+                        animationSpec = tween(durationMillis = 250, easing = EaseOutQuad)
+                    )
+                }
+                launch {
+                    offsetAnim.animateTo(
+                        targetValue = Offset(x = 0f, y = -100f), animationSpec = tween(250)
+                    )
+                }
+            }
+
+            coroutineScope {
+                launch {
+                    sizeAnim.animateTo(
+                        targetValue = 1f,
+                        animationSpec = tween(durationMillis = 200, easing = EaseInOutCubic)
+                    )
+                }
+                launch {
+                    offsetAnim.animateTo(
+                        targetValue = Offset.Zero, animationSpec = tween(250)
+                    )
+                }
+            }
+
         } else {
-            sizeAnim.animateTo(0f, animationSpec = tween(200))
+            coroutineScope {
+                launch {
+                    sizeAnim.animateTo(0f, animationSpec = tween(250))
+                }
+                launch {
+                    offsetAnim.animateTo(
+                        targetValue = Offset.Zero, animationSpec = tween(250)
+                    )
+                }
+            }
         }
     }
     CompositionLocalProvider(value = LocalRippleConfiguration provides null) {
         Row(
             modifier = Modifier
                 .height(48.dp)
-                .clickable { onFilledChange(!isFilled) },
+                .clickable(
+                    interactionSource = interactionSource, indication = ScaleIndicationNodeFactory
+                ) {
+                    onClick()
+                    onLikeChange(!isPostLiked)
+                },
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(7.dp)
         ) {
-            Box(
-                modifier = Modifier.size(40.dp),
-                contentAlignment = Alignment.Center
-            ) {
+            Box {
                 Icon(
-                    modifier = Modifier.size(26.dp),
+                    modifier = Modifier
+                        .size(26.dp)
+                        .alpha(alpha),
                     painter = MubbleTheme.Icons.Favorite,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurface
                 )
                 if (sizeAnim.value > 0f) {
                     Icon(
-                        modifier = Modifier.size(sizeAnim.value.dp),
-                        painter = MubbleTheme.Icons.FavoriteFilled,
+                        modifier = Modifier
+                            .size(26.dp)
+                            .graphicsLayer {
+                                translationX = offsetAnim.value.x
+                                translationY = offsetAnim.value.y
+                                scaleX = sizeAnim.value
+                                scaleY = sizeAnim.value
+                            },
+                        painter = MubbleTheme.Icons.Heart,
                         contentDescription = null,
-                        tint = Color.Red
+                        tint = Color.Unspecified
                     )
                 }
             }
-            if (count > 0) {
-                Text(
-                    count.toString(),
-                    style = MaterialTheme.typography.labelMediumEmphasized
+            Text(
+                text = count.toString(),
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+                style = MaterialTheme.typography.labelMedium.copy(
+                    fontWeight = FontWeight.Medium,
                 )
-            }
+            )
         }
     }
 }
@@ -698,14 +759,15 @@ fun PostActions(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(start = 8.dp, end = 16.dp),
+            .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         BouncingHeartIcon(
             count = likeCount,
-            isFilled = isLiked,
-            onFilledChange = onFilledChange
+            isPostLiked = isLiked,
+            onLikeChange = onFilledChange,
+            onClick = {}
         )
         ActionItem(
             painter = MubbleTheme.Icons.Comment,
