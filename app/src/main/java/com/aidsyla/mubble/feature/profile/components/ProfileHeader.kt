@@ -27,16 +27,21 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.VerticalDivider
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -65,15 +70,17 @@ import com.aidsyla.mubble.ui.theme.MubbleTheme
 @Composable
 fun ProfileHeader(
     modifier: Modifier = Modifier,
+    isCurrentUser: Boolean,
     user: User,
     hasAvatarOrBannerBeenClicked: Boolean,
     onHasBeenClickedChange: (Boolean) -> Unit,
     onMediaClick: (Int, FullScreenMediaType) -> Unit,
     onFollowersClick: () -> Unit,
-    onFollowingClick: () -> Unit
+    onFollowingClick: () -> Unit,
 ) {
     ProfileHeader(
         modifier = modifier,
+        isCurrentUser = isCurrentUser,
         profilePictureResId = user.profilePictureResId,
         bannerResId = user.bannerResId,
         displayName = user.displayName,
@@ -93,6 +100,7 @@ fun ProfileHeader(
 @Composable
 private fun ProfileHeader(
     modifier: Modifier = Modifier,
+    isCurrentUser: Boolean,
     @DrawableRes profilePictureResId: Int,
     @DrawableRes bannerResId: Int,
     displayName: String,
@@ -104,7 +112,7 @@ private fun ProfileHeader(
     onHasBeenClickedChange: (Boolean) -> Unit,
     onMediaClick: (Int, FullScreenMediaType) -> Unit,
     onFollowersClick: () -> Unit,
-    onFollowingClick: () -> Unit
+    onFollowingClick: () -> Unit,
 ) {
     val profilePictureSize = getScreenWidth().div(4)
     val offsetAmount = profilePictureSize * 0.5f
@@ -158,11 +166,9 @@ private fun ProfileHeader(
                                     imgId = bannerResId,
                                     fullScreenMediaType = FullScreenMediaType.BANNER
                                 )
-                            ),
-                            animatedVisibilityScope = animatedContentScope
+                            ), animatedVisibilityScope = animatedContentScope
                         ),
-                    contentScale = ContentScale.FillWidth
-                )
+                    contentScale = ContentScale.FillWidth)
             }
 
             Row(
@@ -186,17 +192,15 @@ private fun ProfileHeader(
                                 .clickable {
                                     onHasBeenClickedChange(true)
                                     onMediaClick(
-                                        profilePictureResId,
-                                        FullScreenMediaType.AVATAR
+                                        profilePictureResId, FullScreenMediaType.AVATAR
                                     )
                                 }
                                 .then(
-                                    if (hasAvatarOrBannerBeenClicked)
-                                        Modifier
-                                            .renderInSharedTransitionScopeOverlay(
-                                                zIndexInOverlay = 1f
-                                            )
-                                            .animateEnterExit()
+                                    if (hasAvatarOrBannerBeenClicked) Modifier
+                                        .renderInSharedTransitionScopeOverlay(
+                                            zIndexInOverlay = 1f
+                                        )
+                                        .animateEnterExit()
                                     else Modifier
                                 )
                                 .sharedElement(
@@ -205,8 +209,7 @@ private fun ProfileHeader(
                                             imgId = profilePictureResId,
                                             fullScreenMediaType = FullScreenMediaType.AVATAR
                                         )
-                                    ),
-                                    animatedVisibilityScope = animatedContentScope
+                                    ), animatedVisibilityScope = animatedContentScope
                                 )
                                 .clip(CircleShape)
                                 .border(
@@ -215,8 +218,7 @@ private fun ProfileHeader(
                                     shape = CircleShape
                                 )
                                 .padding(2.dp),
-                            contentScale = ContentScale.Crop
-                        )
+                            contentScale = ContentScale.Crop)
                     }
                 }
 
@@ -233,7 +235,8 @@ private fun ProfileHeader(
         ProfileDetails(
             displayName = displayName,
             username = username,
-            description = description
+            description = description,
+            isCurrentUser = isCurrentUser
         )
         Spacer(modifier = Modifier.height(2.dp))
     }
@@ -245,26 +248,23 @@ fun FollowerCount(
     followerCount: Int,
     followingCount: Int,
     onFollowersClick: () -> Unit,
-    onFollowingClick: () -> Unit
+    onFollowingClick: () -> Unit,
 ) {
     Box(
-        modifier = modifier
-            .padding(vertical = 8.dp)
+        modifier = modifier.padding(vertical = 8.dp)
     ) {
         Row(
             modifier = Modifier
                 .clip(shape = MaterialTheme.shapes.medium)
                 .background(color = MaterialTheme.colorScheme.surfaceContainer)
-                .heightIn(min = 48.dp, max = 60.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .heightIn(min = 48.dp, max = 60.dp), verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .clickable { onFollowersClick() }
                     .weight(1f),
-                contentAlignment = Alignment.Center
-            ) {
+                contentAlignment = Alignment.Center) {
                 Text(
                     "$followerCount Followers",
                     textAlign = TextAlign.Center,
@@ -281,8 +281,7 @@ fun FollowerCount(
                     .fillMaxSize()
                     .clickable { onFollowingClick() }
                     .weight(1f),
-                contentAlignment = Alignment.Center
-            ) {
+                contentAlignment = Alignment.Center) {
                 Text(
                     "$followingCount Following",
                     textAlign = TextAlign.Center,
@@ -302,6 +301,7 @@ fun ProfileDetails(
     displayName: String,
     username: String,
     description: String?,
+    isCurrentUser: Boolean,
 ) {
     var isDescriptionExpanded by remember { mutableStateOf(false) }
     Column(
@@ -325,32 +325,7 @@ fun ProfileDetails(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            Spacer(modifier = Modifier.weight(1f))
-            IconButton(
-                onClick = {},
-                modifier = Modifier.size(
-                    IconButtonDefaults.smallContainerSize(
-                        IconButtonDefaults.IconButtonWidthOption.Wide
-                    )
-                ),
-                colors = IconButtonDefaults.filledIconButtonColors(),
-                shapes = IconButtonDefaults.shapes()
-            ) {
-                Icon(painter = MubbleTheme.Icons.PersonAdd, contentDescription = null)
-            }
-            Spacer(modifier = Modifier.width(12.dp))
-            IconButton(
-                onClick = {},
-                modifier = Modifier.size(
-                    IconButtonDefaults.smallContainerSize(
-                        IconButtonDefaults.IconButtonWidthOption.Wide
-                    )
-                ),
-                colors = IconButtonDefaults.filledIconButtonColors(),
-                shapes = IconButtonDefaults.shapes()
-            ) {
-                Icon(painter = MubbleTheme.Icons.Message, contentDescription = null)
-            }
+//            Spacer(modifier = Modifier.weight(1f))
         }
         Spacer(modifier = Modifier.height(4.dp))
         description?.let {
@@ -366,6 +341,56 @@ fun ProfileDetails(
                 )
             }
         }
+        if (!isCurrentUser) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Row {
+                Button(
+                    onClick = {},
+                    modifier = Modifier
+                        .weight(1f),
+                    shapes = ButtonDefaults.shapes(),
+                ) {
+                    Icon(
+                        painter = MubbleTheme.Icons.PersonAdd,
+                        contentDescription = null,
+                    )
+                    Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
+                    Text(text = "Add")
+                }
+                Spacer(modifier = Modifier.width(12.dp))
+                FilledTonalButton(
+                    onClick = {},
+                    modifier = Modifier.weight(1f),
+                    shapes = ButtonDefaults.shapes(),
+                ) {
+                    Icon(painter = MubbleTheme.Icons.Message, contentDescription = null)
+                    Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
+                    Text(text = "Message")
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun ExtraSmallButton(modifier: Modifier = Modifier) {
+    Button(
+        onClick = {},
+        modifier = Modifier
+            .height(ButtonDefaults.ExtraSmallContainerHeight),
+        shapes = ButtonDefaults.shapes(),
+        contentPadding = ButtonDefaults.ExtraSmallContentPadding
+    ) {
+        Icon(
+            painter = MubbleTheme.Icons.PersonAdd,
+            contentDescription = null,
+            modifier = Modifier.size(
+                ButtonDefaults.ExtraSmallIconSize
+            )
+        )
+        Spacer(modifier = Modifier.width(ButtonDefaults.ExtraSmallIconSpacing))
+        Text(text = "Add", style = ButtonDefaults.textStyleFor(ButtonDefaults.ExtraSmallContainerHeight))
     }
 }
 
@@ -375,11 +400,11 @@ private fun ProfileHeaderPreview() {
     MubbleTheme {
         ProfileHeader(
             user = UserRepo.dummyUsers.component1(),
+            isCurrentUser = true,
             hasAvatarOrBannerBeenClicked = false,
             onHasBeenClickedChange = {},
             onMediaClick = { _, _ -> },
-            onFollowersClick = {  },
-            onFollowingClick = {  }
-        )
+            onFollowersClick = { },
+            onFollowingClick = { })
     }
 }

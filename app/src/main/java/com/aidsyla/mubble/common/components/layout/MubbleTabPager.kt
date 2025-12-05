@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.pager.HorizontalPager
@@ -278,6 +279,15 @@ private fun rememberCollapsingTopBarScreenState(
 
 @Composable
 fun LazyListState.rememberIsAtTop(): Boolean {
+    return remember {
+        derivedStateOf {
+            firstVisibleItemIndex == 0 && firstVisibleItemScrollOffset == 0
+        }
+    }.value
+}
+
+@Composable
+fun LazyGridState.rememberIsAtTop(): Boolean {
     return remember {
         derivedStateOf {
             firstVisibleItemIndex == 0 && firstVisibleItemScrollOffset == 0

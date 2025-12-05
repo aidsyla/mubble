@@ -2,6 +2,8 @@ package com.aidsyla.mubble.common.components
 
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.pager.PagerState
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
@@ -13,11 +15,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.Measurable
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
+import com.aidsyla.mubble.ui.theme.MubbleTheme
 import kotlinx.coroutines.launch
 
 enum class IndicatorVariant {
@@ -27,6 +32,7 @@ enum class IndicatorVariant {
 @Composable
 fun Tab(
     modifier: Modifier = Modifier,
+    indicatorVariant: IndicatorVariant = IndicatorVariant.SECONDARY,
     pagerState: PagerState,
     tabs: List<String>,
 ) {
@@ -38,7 +44,7 @@ fun Tab(
         selectedTabIndex = currentScreen,
         indicator = {
             AnimatedIndicator(
-                indicatorVariant = IndicatorVariant.SECONDARY, pagerState = pagerState
+                indicatorVariant = indicatorVariant, pagerState = pagerState
             )
         },
     ) {
@@ -54,6 +60,46 @@ fun Tab(
                 },
                 text = { Text(title) },
                 selectedContentColor = MaterialTheme.colorScheme.primary,
+                unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+@Composable
+fun Tab(
+    modifier: Modifier = Modifier,
+    indicatorVariant: IndicatorVariant = IndicatorVariant.SECONDARY,
+    pagerState: PagerState,
+) {
+    val coroutineScope = rememberCoroutineScope()
+    val currentScreen = pagerState.currentPage
+
+    val selectedIcons = MubbleTheme.ProfileTabs.iconsSelected
+    val unselectedIcons = MubbleTheme.ProfileTabs.icons
+
+    PrimaryTabRow(
+        modifier = modifier,
+        selectedTabIndex = currentScreen,
+        indicator = {
+            AnimatedIndicator(
+                indicatorVariant = indicatorVariant, pagerState = pagerState
+            )
+        },
+        divider = { HorizontalDivider(thickness = 0.5.dp) }
+    ) {
+        selectedIcons.forEachIndexed { index, icon ->
+            Tab(
+                selected = currentScreen == index,
+                onClick = {
+                    coroutineScope.launch {
+                        pagerState.animateScrollToPage(
+                            page = index, animationSpec = tween(durationMillis = 300)
+                        )
+                    }
+                },
+                icon = { Icon(painter = if (currentScreen == index) selectedIcons[index] else unselectedIcons[index], contentDescription = null) },
+                selectedContentColor = MaterialTheme.colorScheme.secondary,
                 unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
@@ -143,7 +189,9 @@ fun TabIndicatorScope.AnimatedIndicator(
             PrimaryIndicator(
 //                shape = RoundedCornerShape(topStart = 3.dp, topEnd = 3.dp),
                 width = dynamicWidth,
-                modifier = indicatorModifier
+                modifier = indicatorModifier,
+                height = 2.dp,
+                color = MaterialTheme.colorScheme.secondary
             )
         }
 
@@ -151,6 +199,7 @@ fun TabIndicatorScope.AnimatedIndicator(
             SecondaryIndicator(
                 modifier = indicatorModifier,
                 height = 2.dp,
+                color = MaterialTheme.colorScheme.secondary
             )
         }
     }

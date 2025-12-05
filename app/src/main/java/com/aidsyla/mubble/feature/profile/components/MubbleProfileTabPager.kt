@@ -38,7 +38,9 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.aidsyla.mubble.common.components.IndicatorVariant
 import com.aidsyla.mubble.common.components.ScrollReactingTopAppBar
+import com.aidsyla.mubble.common.components.Tab
 import com.aidsyla.mubble.common.components.TabButtons
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 import kotlinx.coroutines.launch
@@ -88,7 +90,7 @@ fun MubbleProfileTabPager(
     val statusBars = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     val offsetAmount = TopAppBarDefaults.TopAppBarExpandedHeight + statusBars
 
-    val tabRowHeight = 52.dp - 1.dp
+    val tabRowHeight = 52.dp - 4.dp
     val pagerHeight = getScreenHeight() - offsetAmount - tabRowHeight
 
     val isHeaderDocked by rememberIsHeaderSticky(
@@ -130,22 +132,9 @@ fun MubbleProfileTabPager(
                     color = MaterialTheme.colorScheme.surface
                 ) {
                     Column {
-                        TabButtons(
-                            modifier = Modifier
-                                .padding(horizontal = 8.dp)
-                                .padding(bottom = 3.dp),
-                            spaceBetween = 8.dp,
-                            selectedIcons = selectedIcons,
-                            unselectedIcons = unselectedIcons,
-                            selectedIndex = currentScreen,
-                            onTabSelected = { index ->
-                                coroutineScope.launch {
-                                    pagerState.animateScrollToPage(index)
-                                }
-                            }
-                        )
-                        HorizontalDivider(
-                            color = DividerDefaults.color.copy(alpha = dividerAlpha)
+                        Tab(
+                            indicatorVariant = IndicatorVariant.PRIMARY,
+                            pagerState = pagerState
                         )
                     }
                 }

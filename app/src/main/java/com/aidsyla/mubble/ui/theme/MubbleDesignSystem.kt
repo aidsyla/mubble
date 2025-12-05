@@ -43,7 +43,8 @@ object MubbleTheme {
         val Explore = R.drawable.globe
 
         val VideosSelected = R.drawable.slow_motion_video
-        val Videos = VideosSelected
+        val VideosNew = R.drawable.videos_new
+        val Videos = VideosNew
 
         val ChatSelected = R.drawable.chat_filled
         val Chat = R.drawable.chat
@@ -77,6 +78,7 @@ object MubbleTheme {
         val FavoriteFilled @Composable get() = painterResource(id = R.drawable.favorite_filled)
         val Comment @Composable get() = painterResource(id = R.drawable.comment)
         val Send @Composable get() = painterResource(id = R.drawable.send)
+        val SendNew @Composable get() = painterResource(id = R.drawable.send_new)
         val Save @Composable get() = painterResource(id = R.drawable.bookmark)
 
         val ArrowBack @Composable get() = painterResource(id = R.drawable.arrow_back)

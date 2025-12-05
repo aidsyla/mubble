@@ -53,6 +53,7 @@ fun ProfileScreen(
                 header = {
                     ProfileHeader(
                         user = state.user,
+                        isCurrentUser = true,
                         hasAvatarOrBannerBeenClicked = isClicked,
                         onHasBeenClickedChange = { isClicked = it },
                         onMediaClick = onMediaClick,

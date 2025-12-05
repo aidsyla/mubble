@@ -39,18 +39,17 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -86,6 +85,7 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
 import com.aidsyla.mubble.R
 import com.aidsyla.mubble.common.components.CircleImage
+import com.aidsyla.mubble.common.components.SharePostBottomSheet
 import com.aidsyla.mubble.common.navigation.LocalNavAnimatedVisibilityScope
 import com.aidsyla.mubble.common.navigation.LocalSharedTransitionScope
 import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
@@ -96,7 +96,9 @@ import com.aidsyla.mubble.data.DummyPostRepository
 import com.aidsyla.mubble.data.FeedItem
 import com.aidsyla.mubble.data.ImagePostFeedItem
 import com.aidsyla.mubble.ui.theme.MubbleTheme
+import com.aidsyla.mubble.util.IndicationType
 import com.aidsyla.mubble.util.ScaleIndicationNodeFactory
+import com.aidsyla.mubble.util.clickableWithScaleIndication
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
@@ -119,6 +121,8 @@ fun BasePostLayout(
         ?: throw IllegalStateException("No SharedElementScope found")
     val animatedContentScope = LocalNavAnimatedVisibilityScope.current
         ?: throw IllegalStateException("No AnimatedVisibility found")
+
+    var openSheet by rememberSaveable { mutableStateOf(false) }
 
     var isLiked by remember { mutableStateOf(false) }
     val content: @Composable () -> Unit = {
@@ -178,7 +182,10 @@ fun BasePostLayout(
                     commentCount = item.commentCount,
                     shareCount = item.shareCount,
                     isLiked = isLiked,
-                    onFilledChange = { isLiked = it }
+                    onFilledChange = { isLiked = it },
+                    onShareClick = {
+                        openSheet = true
+                    }
                 )
             }
 
@@ -205,7 +212,8 @@ fun BasePostLayout(
                     commentCount = item.commentCount,
                     shareCount = item.shareCount,
                     isLiked = isLiked,
-                    onFilledChange = { isLiked = it }
+                    onFilledChange = { isLiked = it },
+                    onShareClick = {}
                 )
             }
         }
@@ -213,30 +221,35 @@ fun BasePostLayout(
 
     val mutableInteractionSource = remember { MutableInteractionSource() }
     if (useCard)
-            Card(
-                modifier = modifier
-                    .combinedClickable(
-                        interactionSource = mutableInteractionSource,
-                        indication = ScaleIndicationNodeFactory,
-                        onClick = { onPostClick(item.id) },
-                        onDoubleClick = { isLiked = !isLiked }
-                    )
-                    .border(
-                        width = 0.1.dp,
-                        color = MaterialTheme.colorScheme.outlineVariant,
-                        shape = MaterialTheme.shapes.large
-                    ),
-                shape = MaterialTheme.shapes.large,
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer
+        Card(
+            modifier = modifier
+                .combinedClickable(
+                    interactionSource = mutableInteractionSource,
+                    indication = ScaleIndicationNodeFactory(IndicationType.CARDS),
+                    onClick = { onPostClick(item.id) },
+                    onDoubleClick = { isLiked = !isLiked }
+                )
+                .border(
+                    width = 0.1.dp,
+                    color = MaterialTheme.colorScheme.outlineVariant,
+                    shape = MaterialTheme.shapes.large
                 ),
-            ) {
-                content()
-            }
+            shape = MaterialTheme.shapes.large,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainer
+            ),
+        ) {
+            content()
+        }
     else
         Column(modifier = modifier) {
             content()
         }
+
+    SharePostBottomSheet(
+        openSheet = openSheet,
+        onOpenChange = { openSheet = it }
+    )
 }
 
 @Composable
@@ -647,7 +660,6 @@ fun BouncingHeartIcon(
 ) {
     val sizeAnim = remember { Animatable(0f) }
     val offsetAnim = remember { Animatable(Offset.Zero, Offset.VectorConverter) }
-    val interactionSource = remember { MutableInteractionSource() }
 
     val alpha by animateFloatAsState(
         targetValue = if (sizeAnim.value != 0f) 0f else 1f
@@ -697,53 +709,49 @@ fun BouncingHeartIcon(
             }
         }
     }
-    CompositionLocalProvider(value = LocalRippleConfiguration provides null) {
-        Row(
-            modifier = Modifier
-                .height(48.dp)
-                .clickable(
-                    interactionSource = interactionSource, indication = ScaleIndicationNodeFactory
-                ) {
-                    onClick()
-                    onLikeChange(!isPostLiked)
-                },
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(7.dp)
-        ) {
-            Box {
+    Row(
+        modifier = Modifier
+            .height(48.dp)
+            .clickableWithScaleIndication {
+                onClick()
+                onLikeChange(!isPostLiked)
+            },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(7.dp)
+    ) {
+        Box {
+            Icon(
+                modifier = Modifier
+                    .size(26.dp)
+                    .alpha(alpha),
+                painter = MubbleTheme.Icons.Favorite,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface
+            )
+            if (sizeAnim.value > 0f) {
                 Icon(
                     modifier = Modifier
                         .size(26.dp)
-                        .alpha(alpha),
-                    painter = MubbleTheme.Icons.Favorite,
+                        .graphicsLayer {
+                            translationX = offsetAnim.value.x
+                            translationY = offsetAnim.value.y
+                            scaleX = sizeAnim.value
+                            scaleY = sizeAnim.value
+                        },
+                    painter = MubbleTheme.Icons.Heart,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
+                    tint = Color.Unspecified
                 )
-                if (sizeAnim.value > 0f) {
-                    Icon(
-                        modifier = Modifier
-                            .size(26.dp)
-                            .graphicsLayer {
-                                translationX = offsetAnim.value.x
-                                translationY = offsetAnim.value.y
-                                scaleX = sizeAnim.value
-                                scaleY = sizeAnim.value
-                            },
-                        painter = MubbleTheme.Icons.Heart,
-                        contentDescription = null,
-                        tint = Color.Unspecified
-                    )
-                }
             }
-            Text(
-                text = count.toString(),
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1,
-                style = MaterialTheme.typography.labelMedium.copy(
-                    fontWeight = FontWeight.Medium,
-                )
-            )
         }
+        Text(
+            text = count.toString(),
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1,
+            style = MaterialTheme.typography.labelMedium.copy(
+                fontWeight = FontWeight.Medium,
+            )
+        )
     }
 }
 
@@ -755,6 +763,7 @@ fun PostActions(
     likeCount: Int,
     commentCount: Int,
     shareCount: Int,
+    onShareClick: () -> Unit,
 ) {
     Row(
         modifier = modifier
@@ -771,10 +780,14 @@ fun PostActions(
         )
         ActionItem(
             painter = MubbleTheme.Icons.Comment,
-            count = commentCount
+            count = commentCount,
+            onClick = {}
         )
         Spacer(modifier = Modifier.weight(1f))
-        ActionItem(painter = MubbleTheme.Icons.Send, count = shareCount)
+        ActionItem(
+            painter = MubbleTheme.Icons.SendNew, count = shareCount,
+            onClick = onShareClick
+        )
     }
 }
 
@@ -784,11 +797,13 @@ fun ActionItem(
     modifier: Modifier = Modifier,
     painter: Painter,
     count: Int,
+    onClick: () -> Unit,
 ) {
     Row(
         modifier = modifier
             .height(48.dp)
-            .wrapContentWidth(),
+            .wrapContentWidth()
+            .clickableWithScaleIndication { onClick() },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(7.dp)
     ) {

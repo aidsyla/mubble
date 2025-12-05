@@ -41,6 +41,7 @@ fun OtherUserProfileScreen(
                 header = {
                     ProfileHeader(
                         user = state.user,
+                        isCurrentUser = false,
                         hasAvatarOrBannerBeenClicked = isClicked,
                         onHasBeenClickedChange = { isClicked = it },
                         onMediaClick = onMediaClick,

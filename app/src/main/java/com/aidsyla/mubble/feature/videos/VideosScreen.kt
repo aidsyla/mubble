@@ -1,6 +1,7 @@
 package com.aidsyla.mubble.feature.videos
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
@@ -36,6 +37,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -55,16 +57,20 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.media3.common.Player
 import androidx.media3.common.Player.REPEAT_MODE_ONE
 import androidx.media3.common.util.UnstableApi
+import com.aidsyla.mubble.app.LocalDarkTheme
+import com.aidsyla.mubble.common.components.SharePostBottomSheet
 import com.aidsyla.mubble.feature.videos.components.AnimatingHeart
 import com.aidsyla.mubble.feature.videos.components.CommentsBottomSheet
 import com.aidsyla.mubble.feature.videos.components.Like
@@ -95,7 +101,22 @@ fun VideosScreen(
         targetValue = if (uiVisible) 1f else 0f
     )
 
-    var openBottomSheet by rememberSaveable { mutableStateOf(false) }
+    val view = LocalView.current
+    val window = (view.context as? Activity)?.window ?: return
+
+    val isLightMode = !LocalDarkTheme.current
+
+    val insetsController = remember(window, view) {
+        WindowCompat.getInsetsController(window, view)
+    }
+
+    DisposableEffect(insetsController) {
+        insetsController.isAppearanceLightStatusBars = false
+
+        onDispose {
+            insetsController.isAppearanceLightStatusBars = isLightMode
+        }
+    }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -157,7 +178,6 @@ fun VideosScreen(
                             pagerState = pagerState,
                             pageIndex = pageIndex,
                             uiVisibilityChanged = { uiVisible = it },
-                            onCommentClick = { openBottomSheet = !openBottomSheet },
                             onBackClick = onBackClick
                         )
                     }
@@ -165,11 +185,6 @@ fun VideosScreen(
             }
         }
     }
-
-    CommentsBottomSheet(
-        openBottomSheet = openBottomSheet,
-        onOpenChange = { openBottomSheet = it }
-    )
 }
 
 @androidx.annotation.OptIn(UnstableApi::class)
@@ -181,9 +196,11 @@ fun VideoContent(
     pageIndex: Int,
     pagerState: PagerState,
     uiVisibilityChanged: (Boolean) -> Unit,
-    onCommentClick: () -> Unit,
     onBackClick: () -> Unit,
 ) {
+    var openCommentSheet by rememberSaveable { mutableStateOf(false) }
+    var openSharePostSheet by rememberSaveable { mutableStateOf(false) }
+
     val context = LocalContext.current
     var player by remember { mutableStateOf<Player?>(null) }
 
@@ -333,8 +350,8 @@ fun VideoContent(
                     isPostLiked = isLiked,
                     onLikeChange = { isLiked = it },
                     onLikeClick = { isLiked = !isLiked },
-                    onCommentClick = onCommentClick,
-                    onSendClick = {},
+                    onCommentClick = { openCommentSheet = !openCommentSheet },
+                    onSendClick = { openSharePostSheet = !openSharePostSheet },
                     onSaveClick = {}
                 )
                 VideoPostDetails(
@@ -446,6 +463,16 @@ fun VideoContent(
                 )
             }
         }
+
+        CommentsBottomSheet(
+            openBottomSheet = openCommentSheet,
+            onOpenChange = { openCommentSheet = it }
+        )
+
+        SharePostBottomSheet(
+            openSheet = openSharePostSheet,
+            onOpenChange = { openSharePostSheet = it }
+        )
     }
 }
 

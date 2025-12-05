@@ -3,6 +3,7 @@ package com.aidsyla.mubble.common.components
 import android.app.Activity
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -154,30 +155,15 @@ fun ScrollReactingTopAppBar(
                                 contentDescription = "Back",
                             )
                         }
-                    else {
-                        IconButton(
-                            onClick = {},
-                            enabled = false
-                        ) {}
-                        IconButton(
-                            onClick = {},
-                            enabled = false
-                        ) {}
-                    }
-
-                    if (targetAlpha > 0f) {
-                        Text(
-                            text = title,
-                            modifier = Modifier
-                                .weight(1f)
-                                .alpha(targetAlpha),
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.titleLarge,
-                            color = onSurface
-                        )
-                    } else {
-                        Spacer(modifier = Modifier.weight(1f))
-                    }
+                    Text(
+                        text = title,
+                        modifier = Modifier
+                            .padding(start = 12.dp)
+                            .alpha(targetAlpha),
+                        style = MaterialTheme.typography.titleLarge,
+                        color = onSurface
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -200,6 +186,26 @@ fun ScrollReactingTopAppBar(
                                 Icon(
                                     painter = MubbleTheme.Icons.Edit,
                                     contentDescription = "Edit",
+                                )
+                            }
+                            IconButton(
+                                onClick = {},
+                                colors = IconButtonDefaults.iconButtonColors(
+                                    contentColor = iconVariantColor
+                                )
+                            ) {
+                                Icon(
+                                    painter = MubbleTheme.Icons.Save,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .offset(x = 1.dp, y = 1.dp)
+                                        .alpha(shadowAlpha)
+                                        .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
+                                    tint = shadowColor,
+                                )
+                                Icon(
+                                    painter = MubbleTheme.Icons.Save,
+                                    contentDescription = "Saved",
                                 )
                             }
                             IconButton(

@@ -7,8 +7,6 @@ import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,7 +35,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.aidsyla.mubble.ui.theme.MubbleTheme
-import com.aidsyla.mubble.util.ScaleIndicationNodeFactory
+import com.aidsyla.mubble.util.clickableWithScaleIndication
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
@@ -67,7 +65,7 @@ internal fun VideoActionButtons(
             painter = MubbleTheme.Icons.Comment, count = "588", onClick = onCommentClick
         )
         ActionButton(
-            painter = MubbleTheme.Icons.Send, count = "42", onClick = onSendClick
+            painter = MubbleTheme.Icons.SendNew, count = "42", onClick = onSendClick
         )
         ActionButton(
             painter = MubbleTheme.Icons.Save, count = "54", onClick = onSaveClick
@@ -82,13 +80,10 @@ private fun ActionButton(
     count: String,
     onClick: () -> Unit,
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
     Column(
         modifier = modifier
             .requiredSize(48.dp)
-            .clickable(
-                interactionSource = interactionSource, indication = ScaleIndicationNodeFactory
-            ) {
+            .clickableWithScaleIndication {
                 onClick()
             }
             .background(color = Color.Transparent),
@@ -138,7 +133,6 @@ fun BouncingHeartIcon(
 ) {
     val sizeAnim = remember { Animatable(0f) }
     val offsetAnim = remember { Animatable(Offset.Zero, Offset.VectorConverter) }
-    val interactionSource = remember { MutableInteractionSource() }
 
     val alpha by animateFloatAsState(
         targetValue = if (sizeAnim.value != 0f) 0f else 1f
@@ -192,9 +186,7 @@ fun BouncingHeartIcon(
     Column(
         modifier = Modifier
             .requiredSize(48.dp)
-            .clickable(
-                interactionSource = interactionSource, indication = ScaleIndicationNodeFactory
-            ) {
+            .clickableWithScaleIndication {
                 onClick()
                 onLikeChange(!isPostLiked)
             }
@@ -221,7 +213,7 @@ fun BouncingHeartIcon(
                     modifier = Modifier.size(26.dp),
                     painter = MubbleTheme.Icons.Favorite,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
+                    tint = Color.White,
                 )
             }
 
