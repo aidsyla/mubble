@@ -33,15 +33,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.VerticalDivider
-import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -92,7 +88,7 @@ fun ProfileHeader(
         onHasBeenClickedChange = onHasBeenClickedChange,
         onMediaClick = onMediaClick,
         onFollowersClick = onFollowersClick,
-        onFollowingClick = onFollowingClick
+        onFollowingClick = onFollowingClick,
     )
 }
 
@@ -117,35 +113,39 @@ private fun ProfileHeader(
     val profilePictureSize = getScreenWidth().div(4)
     val offsetAmount = profilePictureSize * 0.5f
 
-    val sharedTransitionScope = LocalSharedTransitionScope.current
-        ?: throw IllegalStateException("No SharedElementScope found")
-    val animatedContentScope = LocalNavAnimatedVisibilityScope.current
-        ?: throw IllegalStateException("No AnimatedVisibility found")
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current
+            ?: throw IllegalStateException("No SharedElementScope found")
+    val animatedContentScope =
+        LocalNavAnimatedVisibilityScope.current
+            ?: throw IllegalStateException("No AnimatedVisibility found")
 
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         Box {
             with(sharedTransitionScope) {
                 with(animatedContentScope) {
                     Box(
-                        modifier = Modifier
-                            .align(Alignment.TopCenter)
-                            .zIndex(1f)
-                            .fillMaxWidth()
-                            .windowInsetsTopHeight(WindowInsets.statusBars.add(WindowInsets(top = TopAppBarDefaults.TopAppBarExpandedHeight)))
-                            .renderInSharedTransitionScopeOverlay(
-                                zIndexInOverlay = 1f
-                            )
-                            .animateEnterExit()
-                            .background(
-                                Brush.verticalGradient(
-                                    colors = listOf(
-                                        Color.Black.copy(alpha = 0.3f), Color.Transparent
+                        modifier =
+                            Modifier
+                                .align(Alignment.TopCenter)
+                                .zIndex(1f)
+                                .fillMaxWidth()
+                                .windowInsetsTopHeight(
+                                    WindowInsets.statusBars.add(WindowInsets(top = TopAppBarDefaults.TopAppBarExpandedHeight)),
+                                ).renderInSharedTransitionScopeOverlay(
+                                    zIndexInOverlay = 1f,
+                                ).animateEnterExit()
+                                .background(
+                                    Brush.verticalGradient(
+                                        colors =
+                                            listOf(
+                                                Color.Black.copy(alpha = 0.3f),
+                                                Color.Transparent,
+                                            ),
                                     ),
-                                )
-                            )
-
+                                ),
                     )
                 }
             }
@@ -153,72 +153,79 @@ private fun ProfileHeader(
                 Image(
                     painter = painterResource(bannerResId),
                     contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(2.25f)
-                        .clickable {
-                            onHasBeenClickedChange(true)
-                            onMediaClick(bannerResId, FullScreenMediaType.BANNER)
-                        }
-                        .sharedElement(
-                            rememberSharedContentState(
-                                key = FullScreenMediaSharedElementKey(
-                                    imgId = bannerResId,
-                                    fullScreenMediaType = FullScreenMediaType.BANNER
-                                )
-                            ), animatedVisibilityScope = animatedContentScope
-                        ),
-                    contentScale = ContentScale.FillWidth)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(2.25f)
+                            .clickable {
+                                onHasBeenClickedChange(true)
+                                onMediaClick(bannerResId, FullScreenMediaType.BANNER)
+                            }.sharedElement(
+                                rememberSharedContentState(
+                                    key =
+                                        FullScreenMediaSharedElementKey(
+                                            imgId = bannerResId,
+                                            fullScreenMediaType = FullScreenMediaType.BANNER,
+                                        ),
+                                ),
+                                animatedVisibilityScope = animatedContentScope,
+                            ),
+                    contentScale = ContentScale.FillWidth,
+                )
             }
 
             Row(
-                modifier = Modifier
-                    .height(profilePictureSize)
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter)
-                    .padding(horizontal = 16.dp)
-                    .offset(y = offsetAmount),
+                modifier =
+                    Modifier
+                        .height(profilePictureSize)
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter)
+                        .padding(horizontal = 16.dp)
+                        .offset(y = offsetAmount),
                 verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 with(sharedTransitionScope) {
                     with(animatedContentScope) {
                         Image(
                             painter = painterResource(profilePictureResId),
                             contentDescription = null,
-                            modifier = Modifier
-                                .size(profilePictureSize)
-                                .clip(CircleShape)
-                                .clickable {
-                                    onHasBeenClickedChange(true)
-                                    onMediaClick(
-                                        profilePictureResId, FullScreenMediaType.AVATAR
-                                    )
-                                }
-                                .then(
-                                    if (hasAvatarOrBannerBeenClicked) Modifier
-                                        .renderInSharedTransitionScopeOverlay(
-                                            zIndexInOverlay = 1f
+                            modifier =
+                                Modifier
+                                    .size(profilePictureSize)
+                                    .clip(CircleShape)
+                                    .clickable {
+                                        onHasBeenClickedChange(true)
+                                        onMediaClick(
+                                            profilePictureResId,
+                                            FullScreenMediaType.AVATAR,
                                         )
-                                        .animateEnterExit()
-                                    else Modifier
-                                )
-                                .sharedElement(
-                                    rememberSharedContentState(
-                                        key = FullScreenMediaSharedElementKey(
-                                            imgId = profilePictureResId,
-                                            fullScreenMediaType = FullScreenMediaType.AVATAR
-                                        )
-                                    ), animatedVisibilityScope = animatedContentScope
-                                )
-                                .clip(CircleShape)
-                                .border(
-                                    width = 2.dp,
-                                    color = MaterialTheme.colorScheme.surface,
-                                    shape = CircleShape
-                                )
-                                .padding(2.dp),
-                            contentScale = ContentScale.Crop)
+                                    }.then(
+                                        if (hasAvatarOrBannerBeenClicked) {
+                                            Modifier
+                                                .renderInSharedTransitionScopeOverlay(
+                                                    zIndexInOverlay = 1f,
+                                                ).animateEnterExit()
+                                        } else {
+                                            Modifier
+                                        },
+                                    ).sharedElement(
+                                        rememberSharedContentState(
+                                            key =
+                                                FullScreenMediaSharedElementKey(
+                                                    imgId = profilePictureResId,
+                                                    fullScreenMediaType = FullScreenMediaType.AVATAR,
+                                                ),
+                                        ),
+                                        animatedVisibilityScope = animatedContentScope,
+                                    ).clip(CircleShape)
+                                    .border(
+                                        width = 2.dp,
+                                        color = MaterialTheme.colorScheme.surface,
+                                        shape = CircleShape,
+                                    ).padding(2.dp),
+                            contentScale = ContentScale.Crop,
+                        )
                     }
                 }
 
@@ -227,7 +234,7 @@ private fun ProfileHeader(
                     followingCount = followingCount,
                     followerCount = followerCount,
                     onFollowersClick = onFollowersClick,
-                    onFollowingClick = onFollowingClick
+                    onFollowingClick = onFollowingClick,
                 )
             }
         }
@@ -236,7 +243,7 @@ private fun ProfileHeader(
             displayName = displayName,
             username = username,
             description = description,
-            isCurrentUser = isCurrentUser
+            isCurrentUser = isCurrentUser,
         )
         Spacer(modifier = Modifier.height(2.dp))
     }
@@ -251,43 +258,49 @@ fun FollowerCount(
     onFollowingClick: () -> Unit,
 ) {
     Box(
-        modifier = modifier.padding(vertical = 8.dp)
+        modifier = modifier.padding(vertical = 8.dp),
     ) {
         Row(
-            modifier = Modifier
-                .clip(shape = MaterialTheme.shapes.medium)
-                .background(color = MaterialTheme.colorScheme.surfaceContainer)
-                .heightIn(min = 48.dp, max = 60.dp), verticalAlignment = Alignment.CenterVertically
+            modifier =
+                Modifier
+                    .clip(shape = MaterialTheme.shapes.medium)
+                    .background(color = MaterialTheme.colorScheme.surfaceContainer)
+                    .heightIn(min = 48.dp, max = 60.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clickable { onFollowersClick() }
-                    .weight(1f),
-                contentAlignment = Alignment.Center) {
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .clickable { onFollowersClick() }
+                        .weight(1f),
+                contentAlignment = Alignment.Center,
+            ) {
                 Text(
                     "$followerCount Followers",
                     textAlign = TextAlign.Center,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
-                    style = MaterialTheme.typography.labelMedium
+                    style = MaterialTheme.typography.labelMedium,
                 )
             }
             VerticalDivider(
-                modifier = Modifier.padding(vertical = 4.dp)
+                modifier = Modifier.padding(vertical = 4.dp),
             )
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clickable { onFollowingClick() }
-                    .weight(1f),
-                contentAlignment = Alignment.Center) {
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .clickable { onFollowingClick() }
+                        .weight(1f),
+                contentAlignment = Alignment.Center,
+            ) {
                 Text(
                     "$followingCount Following",
                     textAlign = TextAlign.Center,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
-                    style = MaterialTheme.typography.labelMedium
+                    style = MaterialTheme.typography.labelMedium,
                 )
             }
         }
@@ -305,24 +318,25 @@ fun ProfileDetails(
 ) {
     var isDescriptionExpanded by remember { mutableStateOf(false) }
     Column(
-        modifier = modifier
-            .animateContentSize()
-            .padding(horizontal = 16.dp)
-            .padding(top = 8.dp),
+        modifier =
+            modifier
+                .animateContentSize()
+                .padding(horizontal = 16.dp)
+                .padding(top = 8.dp),
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Column {
                 Text(
                     text = displayName,
                     style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
                 Text(
                     text = "@$username",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
 //            Spacer(modifier = Modifier.weight(1f))
@@ -331,13 +345,14 @@ fun ProfileDetails(
         description?.let {
             CompositionLocalProvider(LocalRippleConfiguration provides null) {
                 Text(
-                    modifier = Modifier.clickable {
-                        isDescriptionExpanded = !isDescriptionExpanded
-                    },
+                    modifier =
+                        Modifier.clickable {
+                            isDescriptionExpanded = !isDescriptionExpanded
+                        },
                     text = it,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = if (isDescriptionExpanded) Int.MAX_VALUE else 2,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
                 )
             }
         }
@@ -346,8 +361,9 @@ fun ProfileDetails(
             Row {
                 Button(
                     onClick = {},
-                    modifier = Modifier
-                        .weight(1f),
+                    modifier =
+                        Modifier
+                            .weight(1f),
                     shapes = ButtonDefaults.shapes(),
                 ) {
                     Icon(
@@ -377,17 +393,19 @@ fun ProfileDetails(
 fun ExtraSmallButton(modifier: Modifier = Modifier) {
     Button(
         onClick = {},
-        modifier = Modifier
-            .height(ButtonDefaults.ExtraSmallContainerHeight),
+        modifier =
+            Modifier
+                .height(ButtonDefaults.ExtraSmallContainerHeight),
         shapes = ButtonDefaults.shapes(),
-        contentPadding = ButtonDefaults.ExtraSmallContentPadding
+        contentPadding = ButtonDefaults.ExtraSmallContentPadding,
     ) {
         Icon(
             painter = MubbleTheme.Icons.PersonAdd,
             contentDescription = null,
-            modifier = Modifier.size(
-                ButtonDefaults.ExtraSmallIconSize
-            )
+            modifier =
+                Modifier.size(
+                    ButtonDefaults.ExtraSmallIconSize,
+                ),
         )
         Spacer(modifier = Modifier.width(ButtonDefaults.ExtraSmallIconSpacing))
         Text(text = "Add", style = ButtonDefaults.textStyleFor(ButtonDefaults.ExtraSmallContainerHeight))
@@ -405,6 +423,7 @@ private fun ProfileHeaderPreview() {
             onHasBeenClickedChange = {},
             onMediaClick = { _, _ -> },
             onFollowersClick = { },
-            onFollowingClick = { })
+            onFollowingClick = { },
+        )
     }
 }

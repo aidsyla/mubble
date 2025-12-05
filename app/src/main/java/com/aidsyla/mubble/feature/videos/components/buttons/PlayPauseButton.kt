@@ -20,15 +20,16 @@ internal fun PlayPauseButton(modifier: Modifier = Modifier) {
     VideoControlIconToggleButton(
         modifier = modifier,
         checked = false,
-        onCheckedChange = {}
+        onCheckedChange = {},
     ) {
         Icon(
-            modifier = Modifier.size(
-                IconButtonDefaults.extraSmallIconSize
-            ),
+            modifier =
+                Modifier.size(
+                    IconButtonDefaults.extraSmallIconSize,
+                ),
             painter = MubbleTheme.Icons.Pause,
             contentDescription = null,
-            tint = Color.White
+            tint = Color.White,
         )
     }
 }
@@ -36,23 +37,27 @@ internal fun PlayPauseButton(modifier: Modifier = Modifier) {
 @androidx.annotation.OptIn(UnstableApi::class)
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun PlayPauseButton(modifier: Modifier = Modifier, player: Player) {
+internal fun PlayPauseButton(
+    modifier: Modifier = Modifier,
+    player: Player,
+) {
     val playPauseButtonState = rememberPlayPauseButtonState(player)
     VideoControlIconToggleButton(
         modifier = modifier,
         checked = playPauseButtonState.showPlay,
-        onCheckedChange = { playPauseButtonState.onClick() }
+        onCheckedChange = { playPauseButtonState.onClick() },
     ) {
         AnimatedContent(
-            targetState = playPauseButtonState.showPlay
+            targetState = playPauseButtonState.showPlay,
         ) {
             Icon(
-                modifier = Modifier.size(
-                    IconButtonDefaults.extraSmallIconSize
-                ),
+                modifier =
+                    Modifier.size(
+                        IconButtonDefaults.extraSmallIconSize,
+                    ),
                 painter = if (it) MubbleTheme.Icons.Resume else MubbleTheme.Icons.Pause,
                 contentDescription = null,
-                tint = Color.White
+                tint = Color.White,
             )
         }
     }

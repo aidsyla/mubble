@@ -22,7 +22,7 @@ fun OtherUserProfileScreen(
     onPostClick: (postId: String, origin: PostOrigin) -> Unit,
     onMediaClick: (Int, FullScreenMediaType) -> Unit,
     onFollowersClick: () -> Unit,
-    onFollowingClick: () -> Unit
+    onFollowingClick: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -30,7 +30,6 @@ fun OtherUserProfileScreen(
 
     when (val state = uiState) {
         OtherUserProfileUiState.Loading -> {
-
         }
 
         is OtherUserProfileUiState.Success -> {
@@ -46,22 +45,22 @@ fun OtherUserProfileScreen(
                         onHasBeenClickedChange = { isClicked = it },
                         onMediaClick = onMediaClick,
                         onFollowersClick = onFollowersClick,
-                        onFollowingClick = onFollowingClick
+                        onFollowingClick = onFollowingClick,
                     )
                 },
                 firstPage = {
                     ProfilePostGrid(
                         items = state.posts,
-                        onPostClick = onPostClick
+                        onPostClick = onPostClick,
                     )
                 },
                 secondPage = {
                     ProfileBubbleGrid(
                         items = state.bubbles,
-                        onPostClick = onPostClick
+                        onPostClick = onPostClick,
                     )
                 },
-                onBackClick = onBackClick
+                onBackClick = onBackClick,
             )
         }
     }

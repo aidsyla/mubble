@@ -25,7 +25,7 @@ fun NavGraphBuilder.postDetailsScreen(
 ) {
     composable<PostDetailsRoute> {
         CompositionLocalProvider(
-            LocalNavAnimatedVisibilityScope provides this
+            LocalNavAnimatedVisibilityScope provides this,
         ) {
             PostDetailsScreen(
                 origin = it.toRoute<PostDetailsRoute>().origin,

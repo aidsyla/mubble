@@ -13,31 +13,34 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor(
-    private val userDataRepository: UserDataRepository,
-) : ViewModel() {
-
-    val settingsUiState: StateFlow<SettingsUiState> =
-        userDataRepository.userData
-            .map { userData ->
-                SettingsUiState.Success(
-                    darkThemeConfig = userData.darkThemeConfig,
+class SettingsViewModel
+    @Inject
+    constructor(
+        private val userDataRepository: UserDataRepository,
+    ) : ViewModel() {
+        val settingsUiState: StateFlow<SettingsUiState> =
+            userDataRepository.userData
+                .map { userData ->
+                    SettingsUiState.Success(
+                        darkThemeConfig = userData.darkThemeConfig,
+                    )
+                }.stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(5_000),
+                    initialValue = SettingsUiState.Loading,
                 )
-            }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = SettingsUiState.Loading,
-            )
 
-    fun updateDarkThemeConfig(darkThemeConfig: DarkThemeConfig) {
-        viewModelScope.launch {
-            userDataRepository.setDarkThemeConfig(darkThemeConfig)
+        fun updateDarkThemeConfig(darkThemeConfig: DarkThemeConfig) {
+            viewModelScope.launch {
+                userDataRepository.setDarkThemeConfig(darkThemeConfig)
+            }
         }
     }
-}
 
 sealed interface SettingsUiState {
     data object Loading : SettingsUiState
-    data class Success(val darkThemeConfig: DarkThemeConfig) : SettingsUiState
+
+    data class Success(
+        val darkThemeConfig: DarkThemeConfig,
+    ) : SettingsUiState
 }

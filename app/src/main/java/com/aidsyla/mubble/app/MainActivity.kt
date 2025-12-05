@@ -32,7 +32,6 @@ val LocalDarkTheme: ProvidableCompositionLocal<Boolean> =
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     private val viewModel: SettingsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,25 +47,27 @@ class MainActivity : ComponentActivity() {
                 ) { systemIsDark, uiState ->
                     when (uiState) {
                         SettingsUiState.Loading -> systemIsDark
-                        is SettingsUiState.Success -> when (uiState.darkThemeConfig) {
-                            DarkThemeConfig.FOLLOW_SYSTEM -> systemIsDark
-                            DarkThemeConfig.LIGHT -> false
-                            DarkThemeConfig.DARK -> true
-                        }
+                        is SettingsUiState.Success ->
+                            when (uiState.darkThemeConfig) {
+                                DarkThemeConfig.FOLLOW_SYSTEM -> systemIsDark
+                                DarkThemeConfig.LIGHT -> false
+                                DarkThemeConfig.DARK -> true
+                            }
                     }
-                }
-                    .distinctUntilChanged()
+                }.distinctUntilChanged()
                     .collect { useDarkTheme ->
                         darkTheme = useDarkTheme
                         enableEdgeToEdge(
-                            statusBarStyle = SystemBarStyle.auto(
-                                Color.TRANSPARENT,
-                                Color.TRANSPARENT,
-                            ) { useDarkTheme },
-                            navigationBarStyle = SystemBarStyle.auto(
-                                lightScrim,
-                                darkScrim,
-                            ) { useDarkTheme },
+                            statusBarStyle =
+                                SystemBarStyle.auto(
+                                    Color.TRANSPARENT,
+                                    Color.TRANSPARENT,
+                                ) { useDarkTheme },
+                            navigationBarStyle =
+                                SystemBarStyle.auto(
+                                    lightScrim,
+                                    darkScrim,
+                                ) { useDarkTheme },
                         )
                     }
             }

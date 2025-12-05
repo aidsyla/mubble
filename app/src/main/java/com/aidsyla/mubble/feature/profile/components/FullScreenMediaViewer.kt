@@ -57,7 +57,7 @@ data class FullScreenMediaSharedElementKey(
 
 enum class FullScreenMediaType {
     AVATAR,
-    BANNER
+    BANNER,
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
@@ -68,73 +68,82 @@ fun FullScreenMediaViewer(
     @DrawableRes imageId: Int,
     onBackClick: () -> Unit,
 ) {
-    val sharedTransitionScope = LocalSharedTransitionScope.current
-        ?: throw IllegalStateException("No SharedElementScope found")
-    val animatedContentScope = LocalNavAnimatedVisibilityScope.current
-        ?: throw IllegalStateException("No AnimatedVisibility found")
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current
+            ?: throw IllegalStateException("No SharedElementScope found")
+    val animatedContentScope =
+        LocalNavAnimatedVisibilityScope.current
+            ?: throw IllegalStateException("No AnimatedVisibility found")
     val isDarkMode = LocalDarkTheme.current
 
-    val imageModifier = when (type) {
-        FullScreenMediaType.AVATAR -> Modifier
-            .fillMaxWidth()
-            .aspectRatio(1f)
-            .clickable {}
+    val imageModifier =
+        when (type) {
+            FullScreenMediaType.AVATAR ->
+                Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f)
+                    .clickable {}
 
-        FullScreenMediaType.BANNER -> Modifier
-            .fillMaxWidth()
-            .aspectRatio(2.25f)
-            .clickable {}
-    }
+            FullScreenMediaType.BANNER ->
+                Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(2.25f)
+                    .clickable {}
+        }
 
-    val contentScale = when (type) {
-        FullScreenMediaType.AVATAR -> ContentScale.FillWidth
-        FullScreenMediaType.BANNER -> ContentScale.FillWidth
-    }
+    val contentScale =
+        when (type) {
+            FullScreenMediaType.AVATAR -> ContentScale.FillWidth
+            FullScreenMediaType.BANNER -> ContentScale.FillWidth
+        }
 
     val backgroundColor = if (isDarkMode) Color.Black else Color.White
 
     with(sharedTransitionScope) {
         Box(
-            modifier = modifier
-                .clickable {
-                    onBackClick()
-                }
-                .fillMaxSize()
-                .background(color = backgroundColor),
-            contentAlignment = Alignment.Center
+            modifier =
+                modifier
+                    .clickable {
+                        onBackClick()
+                    }.fillMaxSize()
+                    .background(color = backgroundColor),
+            contentAlignment = Alignment.Center,
         ) {
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .statusBarsPadding()
-                    .height(TopAppBarDefaults.TopAppBarExpandedHeight)
-                    .padding(start = 4.dp)
-                    .align(Alignment.TopStart),
-                contentAlignment = Alignment.CenterStart
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .statusBarsPadding()
+                        .height(TopAppBarDefaults.TopAppBarExpandedHeight)
+                        .padding(start = 4.dp)
+                        .align(Alignment.TopStart),
+                contentAlignment = Alignment.CenterStart,
             ) {
                 IconButton(
-                    onClick = onBackClick
+                    onClick = onBackClick,
                 ) {
                     Icon(
                         painter = MubbleTheme.Icons.Close,
-                        contentDescription = "Close"
+                        contentDescription = "Close",
                     )
                 }
             }
             ZoomableMedia(
-                modifier = imageModifier
-                    .sharedElement(
-                        rememberSharedContentState(
-                            key = FullScreenMediaSharedElementKey(
-                                imgId = imageId,
-                                fullScreenMediaType = type
-                            )
+                modifier =
+                    imageModifier
+                        .sharedElement(
+                            rememberSharedContentState(
+                                key =
+                                    FullScreenMediaSharedElementKey(
+                                        imgId = imageId,
+                                        fullScreenMediaType = type,
+                                    ),
+                            ),
+                            animatedVisibilityScope = animatedContentScope,
                         ),
-                        animatedVisibilityScope = animatedContentScope
-                    ),
                 imageId = imageId,
                 contentScale = contentScale,
-                type = type
+                type = type,
             )
         }
     }
@@ -161,10 +170,12 @@ fun ZoomableMedia(
     val centerOffsetAnimatable = remember { Animatable(Offset.Zero, Offset.VectorConverter) }
 
     centerOffset =
-        if (initialSize == IntSize.Zero) Offset.Zero else {
+        if (initialSize == IntSize.Zero) {
+            Offset.Zero
+        } else {
             Offset(
                 x = (initialSize.width / 2f) * (zoom - 1) - offset.x * zoom,
-                y = (initialSize.height / 2f) * (zoom - 1) - offset.y * zoom
+                y = (initialSize.height / 2f) * (zoom - 1) - offset.y * zoom,
             )
         }
 
@@ -187,29 +198,33 @@ fun ZoomableMedia(
     fun resetToCenter() {
         coroutineScope.launch {
             isAnimatingBack = true
-            val zoomJob = launch {
-                zoomAnimatable.snapTo(zoom)
-                zoomAnimatable.animateTo(
-                    targetValue = 1f,
-                    animationSpec = tween(
-                        durationMillis = 300,
-                        easing = FastOutSlowInEasing
+            val zoomJob =
+                launch {
+                    zoomAnimatable.snapTo(zoom)
+                    zoomAnimatable.animateTo(
+                        targetValue = 1f,
+                        animationSpec =
+                            tween(
+                                durationMillis = 300,
+                                easing = FastOutSlowInEasing,
+                            ),
                     )
-                )
-                zoom = 1f
-            }
+                    zoom = 1f
+                }
 
-            val offsetJob = launch {
-                centerOffsetAnimatable.snapTo(centerOffset)
-                centerOffsetAnimatable.animateTo(
-                    targetValue = Offset.Zero,
-                    animationSpec = tween(
-                        durationMillis = 300,
-                        easing = FastOutSlowInEasing
+            val offsetJob =
+                launch {
+                    centerOffsetAnimatable.snapTo(centerOffset)
+                    centerOffsetAnimatable.animateTo(
+                        targetValue = Offset.Zero,
+                        animationSpec =
+                            tween(
+                                durationMillis = 300,
+                                easing = FastOutSlowInEasing,
+                            ),
                     )
-                )
-                centerOffset = Offset.Zero
-            }
+                    centerOffset = Offset.Zero
+                }
             joinAll(zoomJob, offsetJob)
             offset = Offset.Zero
             isAnimatingBack = false
@@ -223,34 +238,33 @@ fun ZoomableMedia(
             .fillMaxSize()
             .onGloballyPositioned { coordinates ->
                 initialSize = coordinates.size
-            }
-            .then(
-                if (isAnimatingBack)
-                    Modifier else
+            }.then(
+                if (isAnimatingBack) {
+                    Modifier
+                } else {
                     Modifier.pointerInput(Unit) {
                         detectTransformGesturesCustom(
                             onGestureEnd = {
                                 resetToCenter()
-                            }
+                            },
                         ) { centroid, pan, gestureZoom ->
                             val oldZoom = zoom
                             val newZoom = max(zoom * gestureZoom, 0.7f)
 
                             offset = (offset + centroid / oldZoom) -
-                                    (centroid / newZoom + pan / oldZoom)
+                                (centroid / newZoom + pan / oldZoom)
                             zoom = newZoom
                         }
                     }
-            )
-            .graphicsLayer(
+                },
+            ).graphicsLayer(
                 scaleX = zoomAnimatable.value,
                 scaleY = zoomAnimatable.value,
                 translationX = centerOffsetAnimatable.value.x,
                 translationY = centerOffsetAnimatable.value.y,
-            )
-            .then(
-                if (type == FullScreenMediaType.AVATAR) Modifier.clip(shape = CircleShape) else Modifier
+            ).then(
+                if (type == FullScreenMediaType.AVATAR) Modifier.clip(shape = CircleShape) else Modifier,
             ),
-        contentScale = contentScale
+        contentScale = contentScale,
     )
 }

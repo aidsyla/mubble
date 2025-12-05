@@ -50,20 +50,22 @@ fun SettingsStartScreen(
 ) {
     val settingsUiState by viewModel.settingsUiState.collectAsStateWithLifecycle()
 
-    val selectedIndex = when (val state = settingsUiState) {
-        SettingsUiState.Loading -> 0
-        is SettingsUiState.Success -> when (state.darkThemeConfig) {
-            DarkThemeConfig.FOLLOW_SYSTEM -> 0
-            DarkThemeConfig.DARK -> 1
-            DarkThemeConfig.LIGHT -> 2
+    val selectedIndex =
+        when (val state = settingsUiState) {
+            SettingsUiState.Loading -> 0
+            is SettingsUiState.Success ->
+                when (state.darkThemeConfig) {
+                    DarkThemeConfig.FOLLOW_SYSTEM -> 0
+                    DarkThemeConfig.DARK -> 1
+                    DarkThemeConfig.LIGHT -> 2
+                }
         }
-    }
 
     Scaffold(
         modifier = modifier,
         topBar = {
             SettingsTopBar(title = "Settings", onBackClick = onBackClick)
-        }
+        },
     ) {
         ReusableLazyColumn(paddingValues = it) {
             item {
@@ -72,11 +74,12 @@ fun SettingsStartScreen(
                 ) {
                     Row(
                         modifier = Modifier.height(48.dp),
-                        horizontalArrangement = Arrangement.spacedBy(
-                            12.dp,
-                            Alignment.CenterHorizontally
-                        ),
-                        verticalAlignment = Alignment.CenterVertically
+                        horizontalArrangement =
+                            Arrangement.spacedBy(
+                                12.dp,
+                                Alignment.CenterHorizontally,
+                            ),
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(MubbleTheme.Icons.Appearance, null)
                         Text("Appearance", style = MaterialTheme.typography.bodyLarge)
@@ -87,13 +90,14 @@ fun SettingsStartScreen(
                         unselectedIcons = MubbleTheme.AppearanceTabs.icons,
                         selectedIndex = selectedIndex,
                         onTabSelected = { index ->
-                            val newConfig = when (index) {
-                                0 -> DarkThemeConfig.FOLLOW_SYSTEM
-                                1 -> DarkThemeConfig.DARK
-                                else -> DarkThemeConfig.LIGHT
-                            }
+                            val newConfig =
+                                when (index) {
+                                    0 -> DarkThemeConfig.FOLLOW_SYSTEM
+                                    1 -> DarkThemeConfig.DARK
+                                    else -> DarkThemeConfig.LIGHT
+                                }
                             viewModel.updateDarkThemeConfig(newConfig)
-                        }
+                        },
                     )
                 }
             }
@@ -104,28 +108,28 @@ fun SettingsStartScreen(
                 SettingItem(
                     description = "Notifications",
                     icon = MubbleTheme.Icons.Notification,
-                    onClick = onNavigateToNotifications
+                    onClick = onNavigateToNotifications,
                 )
             }
             item {
                 SettingItem(
                     description = "Device Permissions",
                     icon = MubbleTheme.Icons.DevicePermissions,
-                    onClick = onNavigateToDevicePermissions
+                    onClick = onNavigateToDevicePermissions,
                 )
             }
             item {
                 SettingItem(
                     description = "Manage Account",
                     icon = MubbleTheme.Icons.ManageAccount,
-                    onClick = onNavigateToManageAccount
+                    onClick = onNavigateToManageAccount,
                 )
             }
             item {
                 SettingItem(
                     description = "Log out",
                     icon = MubbleTheme.Icons.Logout,
-                    onClick = onLogoutClick
+                    onClick = onLogoutClick,
                 )
             }
         }
@@ -133,23 +137,22 @@ fun SettingsStartScreen(
 }
 
 @Composable
-fun SettingsNotificationsScreen(
-    onBackClick: () -> Unit,
-) {
+fun SettingsNotificationsScreen(onBackClick: () -> Unit) {
     Scaffold(
         topBar = {
             SettingsTopBar(title = "Notifications", onBackClick = onBackClick)
-        }
+        },
     ) {
         ReusableLazyColumn(paddingValues = it) {
             item {
                 Row(
                     modifier = Modifier.padding(start = 16.dp, end = 8.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(
-                        12.dp,
-                        Alignment.CenterHorizontally
-                    )
+                    horizontalArrangement =
+                        Arrangement.spacedBy(
+                            12.dp,
+                            Alignment.CenterHorizontally,
+                        ),
                 ) {
                     Icon(painter = MubbleTheme.Icons.Notification, null)
                     Text("Enable Notifications", style = MaterialTheme.typography.bodyLarge)
@@ -160,10 +163,10 @@ fun SettingsNotificationsScreen(
                             Icon(
                                 Icons.Default.Check,
                                 contentDescription = null,
-                                modifier = Modifier.size(16.dp)
+                                modifier = Modifier.size(16.dp),
                             )
                         },
-                        onCheckedChange = {}
+                        onCheckedChange = {},
                     )
                 }
             }
@@ -172,20 +175,18 @@ fun SettingsNotificationsScreen(
 }
 
 @Composable
-fun SettingsDevicePermissionsScreen(
-    onBackClick: () -> Unit,
-) {
+fun SettingsDevicePermissionsScreen(onBackClick: () -> Unit) {
     Scaffold(
         topBar = {
             SettingsTopBar(title = "Device Permissions", onBackClick = onBackClick)
-        }
+        },
     ) {
         ReusableLazyColumn(paddingValues = it) {
             item {
                 SettingItem(
                     modifier = Modifier.padding(end = 8.dp),
                     description = "Photos",
-                    icon = MubbleTheme.Icons.Gallery
+                    icon = MubbleTheme.Icons.Gallery,
                 ) {
                     Text("Not allowed", style = MaterialTheme.typography.labelSmall)
                 }
@@ -194,7 +195,7 @@ fun SettingsDevicePermissionsScreen(
                 SettingItem(
                     modifier = Modifier.padding(end = 8.dp),
                     description = "Camera",
-                    icon = MubbleTheme.Icons.CameraOutlined
+                    icon = MubbleTheme.Icons.CameraOutlined,
                 ) {
                     Text("Allowed", style = MaterialTheme.typography.labelSmall)
                 }
@@ -214,7 +215,7 @@ fun SettingsManageAccountScreen(
         modifier = modifier,
         topBar = {
             SettingsTopBar(title = "Manage Account", onBackClick = onBackClick)
-        }
+        },
     ) {
         ReusableLazyColumn(paddingValues = it) {
             item {
@@ -225,7 +226,7 @@ fun SettingsManageAccountScreen(
                     selectedIcons = MubbleTheme.AccountVisibility.iconsSelected,
                     unselectedIcons = MubbleTheme.AccountVisibility.icons,
                     selectedIndex = 0,
-                    onTabSelected = {}
+                    onTabSelected = {},
                 )
             }
             item {
@@ -235,7 +236,7 @@ fun SettingsManageAccountScreen(
                 SettingItem(
                     onClick = onClick,
                     description = "Delete Account",
-                    icon = MubbleTheme.Icons.Delete
+                    icon = MubbleTheme.Icons.Delete,
                 )
             }
         }
@@ -260,7 +261,7 @@ fun SettingsTopBar(
                 IconButton(onClick = onBackClick) {
                     Icon(MubbleTheme.Icons.ArrowBack, contentDescription = "Back")
                 }
-            }
+            },
         )
     }
 }
@@ -272,11 +273,12 @@ private fun ReusableLazyColumn(
     content: LazyListScope.() -> Unit,
 ) {
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(paddingValues),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(paddingValues),
         contentPadding = PaddingValues(top = 4.dp),
-        content = content
+        content = content,
     )
 }
 
@@ -296,11 +298,12 @@ private fun TabButtonWithDescription(
     ) {
         Row(
             modifier = Modifier.height(48.dp),
-            horizontalArrangement = Arrangement.spacedBy(
-                12.dp,
-                Alignment.CenterHorizontally
-            ),
-            verticalAlignment = Alignment.CenterVertically
+            horizontalArrangement =
+                Arrangement.spacedBy(
+                    12.dp,
+                    Alignment.CenterHorizontally,
+                ),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(painter = icon, null)
             Text(text = description, style = MaterialTheme.typography.bodyLarge)
@@ -310,7 +313,7 @@ private fun TabButtonWithDescription(
             selectedIcons = selectedIcons,
             unselectedIcons = unselectedIcons,
             selectedIndex = selectedIndex,
-            onTabSelected = onTabSelected
+            onTabSelected = onTabSelected,
         )
     }
 }
@@ -324,12 +327,13 @@ private fun SettingItem(
     trailingContent: @Composable () -> Unit = {},
 ) {
     Row(
-        modifier = modifier
-            .height(48.dp)
-            .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier)
-            .padding(start = 16.dp, end = 4.dp),
+        modifier =
+            modifier
+                .height(48.dp)
+                .then(if (onClick != null) Modifier.clickable { onClick() } else Modifier)
+                .padding(start = 16.dp, end = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
+        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
     ) {
         Icon(painter = icon, contentDescription = null)
         Text(description, style = MaterialTheme.typography.bodyLarge)

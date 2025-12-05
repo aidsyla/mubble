@@ -19,7 +19,7 @@ fun NavGraphBuilder.exploreScreen(
         CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this) {
             ExploreScreen(
                 onPostClick = onPostClick,
-                onCircleClick = onCircleClick
+                onCircleClick = onCircleClick,
             )
         }
     }

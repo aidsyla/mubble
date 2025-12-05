@@ -11,18 +11,21 @@ import javax.inject.Inject
 
 private val DARK_THEME_CONFIG = stringPreferencesKey("dark_theme_config")
 
-class UserPreferencesDataSource @Inject constructor(
-    private val dataStore: DataStore<Preferences>,
-) {
-    val darkThemeConfig: Flow<DarkThemeConfig> = dataStore.data
-        .map { preferences ->
-            val configName = preferences[DARK_THEME_CONFIG] ?: DarkThemeConfig.FOLLOW_SYSTEM.name
-            DarkThemeConfig.valueOf(configName)
-        }
+class UserPreferencesDataSource
+    @Inject
+    constructor(
+        private val dataStore: DataStore<Preferences>,
+    ) {
+        val darkThemeConfig: Flow<DarkThemeConfig> =
+            dataStore.data
+                .map { preferences ->
+                    val configName = preferences[DARK_THEME_CONFIG] ?: DarkThemeConfig.FOLLOW_SYSTEM.name
+                    DarkThemeConfig.valueOf(configName)
+                }
 
-    suspend fun setDarkThemeConfig(darkThemeConfig: DarkThemeConfig) {
-        dataStore.edit { preferences ->
-            preferences[DARK_THEME_CONFIG] = darkThemeConfig.name
+        suspend fun setDarkThemeConfig(darkThemeConfig: DarkThemeConfig) {
+            dataStore.edit { preferences ->
+                preferences[DARK_THEME_CONFIG] = darkThemeConfig.name
+            }
         }
     }
-}

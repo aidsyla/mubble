@@ -50,54 +50,56 @@ fun MubbleTabRow(
     val coroutineScope = rememberCoroutineScope()
     val density = LocalDensity.current
     Column(
-        modifier = modifier
-            .heightIn(min = 48.dp)
-            .padding(horizontal = 8.dp),
+        modifier =
+            modifier
+                .heightIn(min = 48.dp)
+                .padding(horizontal = 8.dp),
         horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Row(
             modifier = Modifier,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             tabTitles.forEachIndexed { index, title ->
                 CompositionLocalProvider(value = LocalRippleConfiguration.provides(value = null)) {
                     Box(
-                        modifier = Modifier
-                            .padding(horizontal = 0.dp, vertical = 12.dp)
-                            .onGloballyPositioned {
-                                val leftDp = with(density) { it.positionInParent().x.toDp() }
-                                val widthDp = with(density) { it.size.width.toDp() }
-                                state.onTabMeasured(index, leftDp, widthDp)
-                            }
-                            .clickable {
-                                coroutineScope.launch {
-                                    pagerState.animateScrollToPage(index)
-                                }
-                            }
+                        modifier =
+                            Modifier
+                                .padding(horizontal = 0.dp, vertical = 12.dp)
+                                .onGloballyPositioned {
+                                    val leftDp = with(density) { it.positionInParent().x.toDp() }
+                                    val widthDp = with(density) { it.size.width.toDp() }
+                                    state.onTabMeasured(index, leftDp, widthDp)
+                                }.clickable {
+                                    coroutineScope.launch {
+                                        pagerState.animateScrollToPage(index)
+                                    }
+                                },
                     ) {
                         val isCurrentPage = pagerState.currentPage == index
                         val color by animateColorAsState(
-                            targetValue = if (isCurrentPage) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                            targetValue = if (isCurrentPage) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         val weight by animateIntAsState(
-                            targetValue = if (isCurrentPage) FontWeight.SemiBold.weight else FontWeight.Medium.weight
+                            targetValue = if (isCurrentPage) FontWeight.SemiBold.weight else FontWeight.Medium.weight,
                         )
                         Text(
                             text = title,
                             color = color,
                             fontWeight = FontWeight(weight),
                             style = MaterialTheme.typography.titleSmall,
-                            modifier = Modifier.align(Alignment.Center)
+                            modifier = Modifier.align(Alignment.Center),
                         )
                     }
                 }
             }
         }
         PrimaryIndicator(
-            modifier = Modifier
-                .offset { IntOffset(x = state.indicatorStartPx, y = 0) },
-            width = with(density) { state.indicatorWidthPx.toDp() }
+            modifier =
+                Modifier
+                    .offset { IntOffset(x = state.indicatorStartPx, y = 0) },
+            width = with(density) { state.indicatorWidthPx.toDp() },
         )
     }
 }
@@ -111,7 +113,11 @@ private class MubbleTabRowState(
     private val tabLefts = mutableStateListOf<Dp>()
     private val tabWidths = mutableStateListOf<Dp>()
 
-    fun onTabMeasured(index: Int, left: Dp, width: Dp) {
+    fun onTabMeasured(
+        index: Int,
+        left: Dp,
+        width: Dp,
+    ) {
         while (tabLefts.size <= index) tabLefts.add(0.dp)
         while (tabWidths.size <= index) tabWidths.add(0.dp)
         tabLefts[index] = left
@@ -141,8 +147,11 @@ private class MubbleTabRowState(
     private val prevCenterDp by derivedStateOf { prevLeftDp + (prevWidthDp / 2f) }
 
     private val fWidth by derivedStateOf {
-        if (pageOffset >= 0f) (pageOffset / 0.5f).coerceIn(0f, 1f)
-        else ((-pageOffset) / 0.5f).coerceIn(0f, 1f)
+        if (pageOffset >= 0f) {
+            (pageOffset / 0.5f).coerceIn(0f, 1f)
+        } else {
+            ((-pageOffset) / 0.5f).coerceIn(0f, 1f)
+        }
     }
 
     private val dynamicWidthDp: Dp by derivedStateOf {
@@ -158,7 +167,7 @@ private class MubbleTabRowState(
                 lerp(
                     start = currentCenter,
                     stop = nextCenterDp,
-                    fraction = pageOffset.coerceIn(0f, 1f)
+                    fraction = pageOffset.coerceIn(0f, 1f),
                 )
             }
 
@@ -167,7 +176,7 @@ private class MubbleTabRowState(
                 lerp(
                     start = prevCenterDp,
                     stop = currentCenter,
-                    fraction = backwardFraction
+                    fraction = backwardFraction,
                 )
             }
 

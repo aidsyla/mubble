@@ -16,7 +16,7 @@ fun LazyStaggeredGridScope.explorePostsFeed(
     ) { item ->
         ExplorePost(
             item = item,
-            onPostClick = onPostClick
+            onPostClick = onPostClick,
         )
     }
 }
@@ -31,7 +31,7 @@ fun LazyStaggeredGridScope.exploreBubblesFeed(
     ) { item ->
         ExploreBubble(
             item = item,
-            onPostClick = onPostClick
+            onPostClick = onPostClick,
         )
     }
 }

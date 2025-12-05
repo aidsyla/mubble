@@ -7,6 +7,7 @@ sealed interface FeedItem {
     val id: String
     val username: String
     val displayName: String
+
     @get:DrawableRes val userAvatarResId: Int
     val postDescription: String?
     val datePosted: String
@@ -27,7 +28,7 @@ data class ImagePostFeedItem(
     override val likeCount: Int,
     override val commentCount: Int,
     override val shareCount: Int,
-    override val circleName: String? = null
+    override val circleName: String? = null,
 ) : FeedItem
 
 data class BubbleFeedItem(
@@ -40,5 +41,5 @@ data class BubbleFeedItem(
     override val likeCount: Int,
     override val commentCount: Int,
     override val shareCount: Int,
-    override val circleName: String? = null
+    override val circleName: String? = null,
 ) : FeedItem

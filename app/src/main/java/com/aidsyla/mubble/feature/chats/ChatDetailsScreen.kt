@@ -48,21 +48,24 @@ fun ChatDetailsScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Column(
-                        modifier = Modifier
-                            .clickable { onProfileClick(otherUserId) }
-                            .fillMaxHeight(),
+                        modifier =
+                            Modifier
+                                .clickable { onProfileClick(otherUserId) }
+                                .fillMaxHeight(),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         Image(
-                            painter = painterResource(
-                                id = otherUser?.profilePictureResId ?: R.drawable.profile_1
-                            ),
+                            painter =
+                                painterResource(
+                                    id = otherUser?.profilePictureResId ?: R.drawable.profile_1,
+                                ),
                             contentDescription = "${otherUser?.displayName ?: "User"} profile picture",
-                            modifier = Modifier
-                                .clip(CircleShape)
-                                .aspectRatio(1f)
-                                .weight(1f),
+                            modifier =
+                                Modifier
+                                    .clip(CircleShape)
+                                    .aspectRatio(1f)
+                                    .weight(1f),
                             contentScale = ContentScale.Crop,
                         )
                         Text(
@@ -77,12 +80,12 @@ fun ChatDetailsScreen(
                     }
                 },
                 expandedHeight = TopAppBarDefaults.MediumAppBarExpandedHeight,
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
             )
         },
     ) {
         ChatDetailsPager(
-            modifier = Modifier.padding(it)
+            modifier = Modifier.padding(it),
         )
     }
 }
@@ -90,10 +93,11 @@ fun ChatDetailsScreen(
 @Composable
 fun ChatDetailsPager(modifier: Modifier = Modifier) {
     val titles = listOf("Media", "Posts", "Bubbles")
-    val tabContent: List<@Composable () -> Unit> = listOf(
+    val tabContent: List<@Composable () -> Unit> =
+        listOf(
 //        { ProfilePostGrid() },
 //        { ProfilePostGrid() },
 //        { ProfileBubbleList() },
-    )
+        )
 //    TabbedPager(modifier = modifier, titles = titles, content = tabContent)
 }

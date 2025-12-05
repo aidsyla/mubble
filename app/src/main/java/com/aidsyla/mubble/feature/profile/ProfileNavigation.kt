@@ -31,9 +31,7 @@ fun NavController.navigateToFullScreenMediaViewer(
     this.navigate(FullScreenMediaViewer(imageId = imageId, type = type), navOptions)
 }
 
-fun NavGraphBuilder.fullScreenMediaViewer(
-    onBackClick: () -> Unit,
-) {
+fun NavGraphBuilder.fullScreenMediaViewer(onBackClick: () -> Unit) {
     composable<FullScreenMediaViewer> { it ->
         val args: FullScreenMediaViewer = it.toRoute()
         val imageId = args.imageId
@@ -41,20 +39,18 @@ fun NavGraphBuilder.fullScreenMediaViewer(
 
         CompositionLocalProvider(
             LocalNavAnimatedVisibilityScope provides this,
-            LocalRippleConfiguration provides null
+            LocalRippleConfiguration provides null,
         ) {
             FullScreenMediaViewer(
                 type = type,
                 imageId = imageId,
-                onBackClick = { if (it.lifecycleIsResumed()) onBackClick() }
+                onBackClick = { if (it.lifecycleIsResumed()) onBackClick() },
             )
         }
     }
 }
 
-fun NavController.navigateToProfile(
-    navOptions: NavOptions? = null,
-) {
+fun NavController.navigateToProfile(navOptions: NavOptions? = null) {
     this.navigate(ProfileRoute, navOptions)
 }
 
@@ -63,16 +59,16 @@ fun NavGraphBuilder.profileScreen(
     onPostClick: (postId: String, origin: PostOrigin) -> Unit,
     onMediaClick: (Int, FullScreenMediaType) -> Unit,
     onFollowersClick: () -> Unit,
-    onFollowingClick: () -> Unit
+    onFollowingClick: () -> Unit,
 ) {
-    composable<ProfileRoute> {backStack ->
+    composable<ProfileRoute> { backStack ->
         CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this) {
             ProfileScreen(
                 onNavigateToSettings = onNavigateToSettings,
                 onPostClick = onPostClick,
                 onMediaClick = { p1, p2 -> if (backStack.lifecycleIsResumed()) onMediaClick(p1, p2) },
                 onFollowersClick = onFollowersClick,
-                onFollowingClick = onFollowingClick
+                onFollowingClick = onFollowingClick,
             )
         }
     }
@@ -90,7 +86,7 @@ fun NavGraphBuilder.otherUserProfileScreen(
     onPostClick: (postId: String, origin: PostOrigin) -> Unit,
     onMediaClick: (Int, FullScreenMediaType) -> Unit,
     onFollowersClick: () -> Unit,
-    onFollowingClick: () -> Unit
+    onFollowingClick: () -> Unit,
 ) {
     composable<OtherProfileRoute> {
         CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this) {
@@ -99,7 +95,7 @@ fun NavGraphBuilder.otherUserProfileScreen(
                 onPostClick = onPostClick,
                 onMediaClick = onMediaClick,
                 onFollowersClick = onFollowersClick,
-                onFollowingClick = onFollowingClick
+                onFollowingClick = onFollowingClick,
             )
         }
     }
@@ -107,7 +103,7 @@ fun NavGraphBuilder.otherUserProfileScreen(
 
 fun NavController.navigateToFollowScreen(
     navOptions: NavOptions? = null,
-    type: FollowType
+    type: FollowType,
 ) {
     this.navigate(FollowScreenRoute(type = type), navOptions)
 }
@@ -125,7 +121,7 @@ fun NavGraphBuilder.followScreen(
                 type = type,
                 onUserClick = onUserClick,
                 onMessageClick = {},
-                onBackClick = onBackClick
+                onBackClick = onBackClick,
             )
         }
     }
@@ -133,7 +129,7 @@ fun NavGraphBuilder.followScreen(
 
 fun NavController.navigateToOtherFollowScreen(
     navOptions: NavOptions? = null,
-    type: FollowType
+    type: FollowType,
 ) {
     this.navigate(OtherFollowScreenRoute(type = type), navOptions)
 }
@@ -151,7 +147,7 @@ fun NavGraphBuilder.otherFollowScreen(
                 type = type,
                 onUserClick = onUserClick,
                 onMessageClick = {},
-                onBackClick = onBackClick
+                onBackClick = onBackClick,
             )
         }
     }

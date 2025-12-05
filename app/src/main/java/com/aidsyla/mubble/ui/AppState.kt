@@ -32,8 +32,9 @@ class AppState(
 
     val currentDestination: NavDestination?
         @Composable get() {
-            val currentEntry = navController.currentBackStackEntryFlow
-                .collectAsState(initial = null)
+            val currentEntry =
+                navController.currentBackStackEntryFlow
+                    .collectAsState(initial = null)
 
             return currentEntry.value?.destination.also { destination ->
                 if (destination != null) {
@@ -52,18 +53,20 @@ class AppState(
     val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.entries
 
     fun navigateToTopLevelDestination(topLevelDestination: TopLevelDestination) {
-        val topLevelNavOptions = navOptions {
-            popUpTo(navController.graph.findStartDestination().id) {
-                saveState = true
+        val topLevelNavOptions =
+            navOptions {
+                popUpTo(navController.graph.findStartDestination().id) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = true
             }
-            launchSingleTop = true
-            restoreState = true
-        }
 
-        val videoScreenNavOptions = navOptions {
-            launchSingleTop = true
-            restoreState = true
-        }
+        val videoScreenNavOptions =
+            navOptions {
+                launchSingleTop = true
+                restoreState = true
+            }
 
         when (topLevelDestination) {
             HOME -> navController.navigateToHome(topLevelNavOptions)
@@ -85,10 +88,7 @@ class AppState(
 }
 
 @Composable
-fun rememberAppState(
-    navController: NavHostController = rememberNavController(),
-): AppState {
-    return remember(navController) {
+fun rememberAppState(navController: NavHostController = rememberNavController()): AppState =
+    remember(navController) {
         AppState(navController)
     }
-}

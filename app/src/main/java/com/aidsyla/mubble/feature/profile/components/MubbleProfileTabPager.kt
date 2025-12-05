@@ -7,16 +7,13 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -41,9 +38,7 @@ import androidx.compose.ui.zIndex
 import com.aidsyla.mubble.common.components.IndicatorVariant
 import com.aidsyla.mubble.common.components.ScrollReactingTopAppBar
 import com.aidsyla.mubble.common.components.Tab
-import com.aidsyla.mubble.common.components.TabButtons
 import com.aidsyla.mubble.ui.theme.MubbleTheme
-import kotlinx.coroutines.launch
 
 const val STICKY_HEADER = "sticky_header"
 const val STICKY_HEADER_INDEX = 1
@@ -73,19 +68,23 @@ fun MubbleProfileTabPager(
     val coroutineScope = rememberCoroutineScope()
     val pagerState = rememberPagerState(pageCount = { selectedIcons.size })
     val currentScreen = pagerState.currentPage
-    val nestedScrollConnection = remember {
-        object : NestedScrollConnection {
-            override fun onPreScroll(
-                available: Offset,
-                source: NestedScrollSource,
-            ): Offset {
-                return if (available.y > 0) Offset.Zero else Offset(
-                    x = 0f,
-                    y = -lazyListState.dispatchRawDelta(-available.y)
-                )
+    val nestedScrollConnection =
+        remember {
+            object : NestedScrollConnection {
+                override fun onPreScroll(
+                    available: Offset,
+                    source: NestedScrollSource,
+                ): Offset =
+                    if (available.y > 0) {
+                        Offset.Zero
+                    } else {
+                        Offset(
+                            x = 0f,
+                            y = -lazyListState.dispatchRawDelta(-available.y),
+                        )
+                    }
             }
         }
-    }
 
     val statusBars = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     val offsetAmount = TopAppBarDefaults.TopAppBarExpandedHeight + statusBars
@@ -96,10 +95,10 @@ fun MubbleProfileTabPager(
     val isHeaderDocked by rememberIsHeaderSticky(
         lazyListState = lazyListState,
         itemKey = STICKY_HEADER,
-        offsetAmount = offsetAmount
+        offsetAmount = offsetAmount,
     )
     val dividerAlpha by animateFloatAsState(
-        targetValue = if (isHeaderDocked) 1f else 0f
+        targetValue = if (isHeaderDocked) 1f else 0f,
     )
 
     Scaffold(
@@ -114,10 +113,10 @@ fun MubbleProfileTabPager(
                 onNavigateToSettings = onNavigateToSettings,
                 onMoreClick = onMoreClick,
                 onEditClick = onEditClick,
-                onBackClick = onBackClick
+                onBackClick = onBackClick,
             )
         },
-        contentWindowInsets = WindowInsets(0, 0, 0, 0)
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
     ) {
         LazyColumn(
             state = lazyListState,
@@ -129,12 +128,12 @@ fun MubbleProfileTabPager(
             item(key = STICKY_HEADER) {
                 Surface(
                     modifier = Modifier.zIndex(1f),
-                    color = MaterialTheme.colorScheme.surface
+                    color = MaterialTheme.colorScheme.surface,
                 ) {
                     Column {
                         Tab(
                             indicatorVariant = IndicatorVariant.PRIMARY,
-                            pagerState = pagerState
+                            pagerState = pagerState,
                         )
                     }
                 }
@@ -143,9 +142,10 @@ fun MubbleProfileTabPager(
                 HorizontalPager(
                     state = pagerState,
                     verticalAlignment = Alignment.Top,
-                    modifier = Modifier
-                        .nestedScroll(nestedScrollConnection)
-                        .height(pagerHeight)
+                    modifier =
+                        Modifier
+                            .nestedScroll(nestedScrollConnection)
+                            .height(pagerHeight),
                 ) { pageIndex ->
                     when (pageIndex) {
                         0 -> firstPage()
@@ -182,13 +182,15 @@ fun rememberIsHeaderSticky(
 }
 
 @Composable
-fun getScreenHeight(): Dp {
-    return with(LocalDensity.current) { LocalWindowInfo.current.containerSize.height.toDp() }
-}
+fun getScreenHeight(): Dp =
+    with(LocalDensity.current) {
+        LocalWindowInfo.current.containerSize.height
+            .toDp()
+    }
 
 @Composable
-fun getScreenWidth(): Dp {
-    return with(LocalDensity.current) { LocalWindowInfo.current.containerSize.width.toDp() }
-}
-
-
+fun getScreenWidth(): Dp =
+    with(LocalDensity.current) {
+        LocalWindowInfo.current.containerSize.width
+            .toDp()
+    }

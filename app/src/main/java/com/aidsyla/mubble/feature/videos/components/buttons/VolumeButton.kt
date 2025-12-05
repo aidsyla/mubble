@@ -27,19 +27,23 @@ internal fun VolumeButton(modifier: Modifier = Modifier) {
         onCheckedChange = {},
     ) {
         Icon(
-            modifier = Modifier.size(
-                IconButtonDefaults.extraSmallIconSize
-            ),
+            modifier =
+                Modifier.size(
+                    IconButtonDefaults.extraSmallIconSize,
+                ),
             painter = MubbleTheme.Icons.VolumeUp,
             contentDescription = null,
-            tint = Color.White
+            tint = Color.White,
         )
     }
 }
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun VolumeButton(modifier: Modifier = Modifier, player: Player) {
+internal fun VolumeButton(
+    modifier: Modifier = Modifier,
+    player: Player,
+) {
     val volumeButtonState = rememberVolumeButtonState(player)
     VideoControlIconToggleButton(
         modifier = modifier,
@@ -47,15 +51,16 @@ internal fun VolumeButton(modifier: Modifier = Modifier, player: Player) {
         onCheckedChange = { volumeButtonState.onClick() },
     ) {
         AnimatedContent(
-            targetState = volumeButtonState.isMuted
+            targetState = volumeButtonState.isMuted,
         ) {
             Icon(
-                modifier = Modifier.size(
-                    IconButtonDefaults.extraSmallIconSize
-                ),
+                modifier =
+                    Modifier.size(
+                        IconButtonDefaults.extraSmallIconSize,
+                    ),
                 painter = if (it) MubbleTheme.Icons.VolumeOff else MubbleTheme.Icons.VolumeUp,
                 contentDescription = null,
-                tint = Color.White
+                tint = Color.White,
             )
         }
     }
@@ -70,7 +75,9 @@ fun rememberVolumeButtonState(player: Player): VolumeButtonState {
     return volumeButtonState
 }
 
-class VolumeButtonState(private val player: Player) {
+class VolumeButtonState(
+    private val player: Player,
+) {
     private var volumeBeforeMute by mutableFloatStateOf(player.volume)
 
     private var isEnabled by mutableStateOf(player.isCommandAvailable(Player.COMMAND_SET_VOLUME))

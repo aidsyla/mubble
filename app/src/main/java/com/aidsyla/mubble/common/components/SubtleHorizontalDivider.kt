@@ -17,6 +17,6 @@ fun SubtleHorizontalDivider(
     HorizontalDivider(
         modifier = modifier,
         thickness = thickness,
-        color = color
+        color = color,
     )
 }

@@ -10,11 +10,11 @@ import com.aidsyla.mubble.data.ChatMessage
 
 fun LazyListScope.chat(
     chatMessages: List<ChatMessage>,
-    currentUserId: String
+    currentUserId: String,
 ) {
     itemsIndexed(
         items = chatMessages,
-        key = { _, message -> message.id }
+        key = { _, message -> message.id },
     ) { index, message ->
         val isOutgoing = message.senderId == currentUserId
         if (index > 0) {

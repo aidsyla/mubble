@@ -18,9 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
-import com.aidsyla.mubble.feature.explore.exploreBubblesFeed
 import com.aidsyla.mubble.data.BubbleFeedItem
 import com.aidsyla.mubble.data.ImagePostFeedItem
+import com.aidsyla.mubble.feature.explore.exploreBubblesFeed
 import com.aidsyla.mubble.feature.profile.components.FullScreenMediaType
 import com.aidsyla.mubble.feature.profile.components.MubbleProfileTabPager
 import com.aidsyla.mubble.feature.profile.components.ProfileHeader
@@ -42,7 +42,6 @@ fun ProfileScreen(
 
     when (val state = uiState) {
         ProfileScreenUiState.Loading -> {
-
         }
 
         is ProfileScreenUiState.Success -> {
@@ -58,7 +57,7 @@ fun ProfileScreen(
                         onHasBeenClickedChange = { isClicked = it },
                         onMediaClick = onMediaClick,
                         onFollowersClick = onFollowersClick,
-                        onFollowingClick = onFollowingClick
+                        onFollowingClick = onFollowingClick,
                     )
                 },
                 firstPage = {
@@ -67,13 +66,13 @@ fun ProfileScreen(
                         onPostClick = { p1, p2 ->
                             isClicked = false
                             onPostClick(p1, p2)
-                        }
+                        },
                     )
                 },
                 secondPage = {
                     ProfileBubbleGrid(
                         items = state.bubbles,
-                        onPostClick = onPostClick
+                        onPostClick = onPostClick,
                     )
                 },
                 onNavigateToSettings = onNavigateToSettings,
@@ -92,18 +91,19 @@ fun ProfilePostGrid(
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(
-            top = 4.dp,
-            start = 8.dp,
-            end = 8.dp,
-            bottom = bottomPadding + 8.dp
-        ),
+        contentPadding =
+            PaddingValues(
+                top = 4.dp,
+                start = 8.dp,
+                end = 8.dp,
+                bottom = bottomPadding + 8.dp,
+            ),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)
+        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
     ) {
         postGrid(
             items = items,
-            onPostClick = onPostClick
+            onPostClick = onPostClick,
         )
     }
 }
@@ -117,18 +117,21 @@ fun ProfileBubbleGrid(
     val bottomPadding = LocalBottomBarPadding.current
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Fixed(2),
-        contentPadding = PaddingValues(
-            top = 4.dp,
-            start = 8.dp,
-            end = 8.dp,
-            bottom = bottomPadding + 8.dp
-        ),
+        contentPadding =
+            PaddingValues(
+                top = 4.dp,
+                start = 8.dp,
+                end = 8.dp,
+                bottom = bottomPadding + 8.dp,
+            ),
         verticalItemSpacing = 8.dp,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         exploreBubblesFeed(
-            items = items, onProfileClick = {}, onPostClick = onPostClick
+            items = items,
+            onProfileClick = {},
+            onPostClick = onPostClick,
         )
     }
 }

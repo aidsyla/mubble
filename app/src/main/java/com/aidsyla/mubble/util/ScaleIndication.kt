@@ -25,27 +25,28 @@ fun Modifier.clickableWithScaleIndication(
     role: Role? = null,
     indicationType: IndicationType = IndicationType.ICONS,
     onClick: () -> Unit,
-): Modifier = composed {
-    val interactionSource = remember { MutableInteractionSource() }
-    this.clickable(
-        interactionSource = interactionSource,
-        indication = ScaleIndicationNodeFactory(indicationType),
-        enabled = enabled,
-        onClickLabel = onClickLabel,
-        role = role,
-        onClick = onClick,
-    )
-}
+): Modifier =
+    composed {
+        val interactionSource = remember { MutableInteractionSource() }
+        this.clickable(
+            interactionSource = interactionSource,
+            indication = ScaleIndicationNodeFactory(indicationType),
+            enabled = enabled,
+            onClickLabel = onClickLabel,
+            role = role,
+            onClick = onClick,
+        )
+    }
 
 enum class IndicationType {
     ICONS,
-    CARDS
+    CARDS,
 }
 
-class ScaleIndicationNodeFactory(val indicationType: IndicationType) : IndicationNodeFactory {
-    override fun create(interactionSource: InteractionSource): DelegatableNode {
-        return ScaleIndicationNode(interactionSource, indicationType)
-    }
+class ScaleIndicationNodeFactory(
+    val indicationType: IndicationType,
+) : IndicationNodeFactory {
+    override fun create(interactionSource: InteractionSource): DelegatableNode = ScaleIndicationNode(interactionSource, indicationType)
 
     override fun hashCode(): Int = -1
 
@@ -55,16 +56,18 @@ class ScaleIndicationNodeFactory(val indicationType: IndicationType) : Indicatio
 private class ScaleIndicationNode(
     private val interactionSource: InteractionSource,
     private val indicationType: IndicationType,
-) : Modifier.Node(), DrawModifierNode {
+) : Modifier.Node(),
+    DrawModifierNode {
     var currentPressPosition: Offset = Offset.Zero
     val animatedScalePercent = Animatable(1f)
 
     private suspend fun animateToPressed(pressPosition: Offset) {
         currentPressPosition = pressPosition
-        val targetValue = when(indicationType) {
-            IndicationType.ICONS -> 0.9f
-            IndicationType.CARDS -> 0.98f
-        }
+        val targetValue =
+            when (indicationType) {
+                IndicationType.ICONS -> 0.9f
+                IndicationType.CARDS -> 0.98f
+            }
         animatedScalePercent.animateTo(targetValue, tween(durationMillis = 300))
     }
 
@@ -87,7 +90,7 @@ private class ScaleIndicationNode(
     override fun ContentDrawScope.draw() {
         scale(
             scale = animatedScalePercent.value,
-            pivot = currentPressPosition
+            pivot = currentPressPosition,
         ) {
             this@draw.drawContent()
         }

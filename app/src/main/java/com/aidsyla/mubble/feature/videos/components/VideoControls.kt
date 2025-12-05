@@ -31,23 +31,25 @@ internal fun VideoControls(
     onBackClick: () -> Unit,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 12.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         VideoControlIconButton(
             modifier = Modifier,
-            onClick = onBackClick
+            onClick = onBackClick,
         ) {
             Icon(
-                modifier = Modifier.size(
-                    IconButtonDefaults.extraSmallIconSize
-                ),
+                modifier =
+                    Modifier.size(
+                        IconButtonDefaults.extraSmallIconSize,
+                    ),
                 painter = MubbleTheme.Icons.ArrowBack,
                 contentDescription = null,
-                tint = Color.White
+                tint = Color.White,
             )
         }
         Row {
@@ -62,11 +64,12 @@ internal fun VideoControls(
             }
         }
         Box(
-            modifier = Modifier.size(
-                IconButtonDefaults.extraSmallContainerSize(
-                    IconButtonDefaults.IconButtonWidthOption.Uniform
-                )
-            )
+            modifier =
+                Modifier.size(
+                    IconButtonDefaults.extraSmallContainerSize(
+                        IconButtonDefaults.IconButtonWidthOption.Uniform,
+                    ),
+                ),
         )
     }
 }

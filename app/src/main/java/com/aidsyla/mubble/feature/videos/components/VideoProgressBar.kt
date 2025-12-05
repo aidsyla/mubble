@@ -37,21 +37,22 @@ internal fun VideoProgressBar(
     var progressBarWidthPx by remember { mutableFloatStateOf(0f) }
 
     DisposableEffect(player) {
-        val listener = object : Player.Listener {
-            override fun onIsPlayingChanged(isPlayingNew: Boolean) {
-                isPlaying = isPlayingNew
-            }
+        val listener =
+            object : Player.Listener {
+                override fun onIsPlayingChanged(isPlayingNew: Boolean) {
+                    isPlaying = isPlayingNew
+                }
 
-            override fun onPositionDiscontinuity(
-                oldPosition: Player.PositionInfo,
-                newPosition: Player.PositionInfo,
-                reason: Int,
-            ) {
-                if (!isScrubbing && player.duration > 0) {
-                    sliderPosition = player.currentPosition / player.duration.toFloat()
+                override fun onPositionDiscontinuity(
+                    oldPosition: Player.PositionInfo,
+                    newPosition: Player.PositionInfo,
+                    reason: Int,
+                ) {
+                    if (!isScrubbing && player.duration > 0) {
+                        sliderPosition = player.currentPosition / player.duration.toFloat()
+                    }
                 }
             }
-        }
         player.addListener(listener)
 
         onDispose {
@@ -63,69 +64,71 @@ internal fun VideoProgressBar(
         LaunchedEffect(Unit) {
             while (true) {
                 val duration = player.duration
-                sliderPosition = if (duration > 0) {
-                    player.currentPosition / duration.toFloat()
-                } else {
-                    0f
-                }
+                sliderPosition =
+                    if (duration > 0) {
+                        player.currentPosition / duration.toFloat()
+                    } else {
+                        0f
+                    }
                 delay(1.seconds / 30)
             }
         }
     }
 
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(48.dp)
-            .onSizeChanged { size ->
-                progressBarWidthPx = size.width.toFloat()
-            }
-            .pointerInput(player, progressBarWidthPx) {
-                detectDragGestures(
-                    onDragStart = { offset ->
-                        isScrubbing = true
-                        val newSliderPos = (offset.x / progressBarWidthPx).coerceIn(0f, 1f)
-                        sliderPosition = newSliderPos
-                        val dragPositionMs = (newSliderPos * player.duration).toLong()
-                        onScrubbingInfoChange(true, dragPositionMs)
-                    },
-                    onDragEnd = {
-                        val targetPositionMs = (sliderPosition * player.duration).toLong()
-                        player.seekTo(targetPositionMs)
-                        isScrubbing = false
-                        onScrubbingInfoChange(
-                            false,
-                            targetPositionMs
-                        )
-                    },
-                    onDragCancel = {
-                        val targetPositionMs = (sliderPosition * player.duration).toLong()
-                        player.seekTo(targetPositionMs)
-                        isScrubbing = false
-                        onScrubbingInfoChange(
-                            false,
-                            targetPositionMs
-                        )
-                    },
-                    onDrag = { change, _ ->
-                        val newSliderPos = (change.position.x / progressBarWidthPx).coerceIn(0f, 1f)
-                        sliderPosition = newSliderPos
-                        val dragPositionMs = (newSliderPos * player.duration).toLong()
-                        onScrubbingInfoChange(true, dragPositionMs)
-                        change.consume()
-                    }
-                )
-            },
-        contentAlignment = Alignment.BottomCenter
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(48.dp)
+                .onSizeChanged { size ->
+                    progressBarWidthPx = size.width.toFloat()
+                }.pointerInput(player, progressBarWidthPx) {
+                    detectDragGestures(
+                        onDragStart = { offset ->
+                            isScrubbing = true
+                            val newSliderPos = (offset.x / progressBarWidthPx).coerceIn(0f, 1f)
+                            sliderPosition = newSliderPos
+                            val dragPositionMs = (newSliderPos * player.duration).toLong()
+                            onScrubbingInfoChange(true, dragPositionMs)
+                        },
+                        onDragEnd = {
+                            val targetPositionMs = (sliderPosition * player.duration).toLong()
+                            player.seekTo(targetPositionMs)
+                            isScrubbing = false
+                            onScrubbingInfoChange(
+                                false,
+                                targetPositionMs,
+                            )
+                        },
+                        onDragCancel = {
+                            val targetPositionMs = (sliderPosition * player.duration).toLong()
+                            player.seekTo(targetPositionMs)
+                            isScrubbing = false
+                            onScrubbingInfoChange(
+                                false,
+                                targetPositionMs,
+                            )
+                        },
+                        onDrag = { change, _ ->
+                            val newSliderPos = (change.position.x / progressBarWidthPx).coerceIn(0f, 1f)
+                            sliderPosition = newSliderPos
+                            val dragPositionMs = (newSliderPos * player.duration).toLong()
+                            onScrubbingInfoChange(true, dragPositionMs)
+                            change.consume()
+                        },
+                    )
+                },
+        contentAlignment = Alignment.BottomCenter,
     ) {
         LinearProgressIndicator(
             progress = { sliderPosition },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(3.dp)
-                .padding(horizontal = 12.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(3.dp)
+                    .padding(horizontal = 12.dp),
             color = primaryDark,
-            trackColor = Color.White
+            trackColor = Color.White,
         )
     }
 }

@@ -18,9 +18,12 @@ import com.aidsyla.mubble.common.components.CircleImage
 import com.aidsyla.mubble.data.UserRepo
 
 @Composable
-fun SearchResults(onResultClick: (String) -> Unit, modifier: Modifier = Modifier) {
+fun SearchResults(
+    onResultClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     LazyColumn(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         items(UserRepo.dummyUsers) {
             val resultText = it.username
@@ -34,10 +37,11 @@ fun SearchResults(onResultClick: (String) -> Unit, modifier: Modifier = Modifier
                     )
                 },
                 colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                modifier = Modifier
-                    .clickable { onResultClick(resultText) }
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                modifier =
+                    Modifier
+                        .clickable { onResultClick(resultText) }
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
             )
         }
     }

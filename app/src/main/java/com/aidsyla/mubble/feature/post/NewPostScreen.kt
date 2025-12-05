@@ -42,57 +42,61 @@ import com.aidsyla.mubble.R
 fun NewPostScreen(modifier: Modifier = Modifier) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp),
     ) {
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Image(
                     painter = painterResource(R.drawable.ic_launcher_background),
                     colorFilter = ColorFilter.tint(Color.Blue),
                     contentDescription = null,
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
+                    modifier =
+                        Modifier
+                            .size(40.dp)
+                            .clip(CircleShape),
                 )
                 Button(
                     onClick = {},
                     modifier = Modifier.height(32.dp),
-                    contentPadding = PaddingValues(8.dp)
+                    contentPadding = PaddingValues(8.dp),
                 ) {
                     Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null)
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("My Profile", style = MaterialTheme.typography.labelMedium)
                 }
                 Card(
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(8.dp),
                 ) {
                     Text("0/300", modifier = Modifier.padding(4.dp))
                 }
             }
             Spacer(modifier = Modifier.height(8.dp))
             Box(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
-                Text("Obviously the Material You design doesn't improve branding, but you already know the point is for cohesion. Obviously the Material You design doesn't improve branding, but you already know the point is for cohesion. Obviously the Material You design doesn't improve branding, but you already know the ")
+                Text(
+                    "Obviously the Material You design doesn't improve branding, but you already know the point is for cohesion. Obviously the Material You design doesn't improve branding, but you already know the point is for cohesion. Obviously the Material You design doesn't improve branding, but you already know the ",
+                )
             }
         }
         Card(
-            shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp)
+            shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp),
         ) {
             IconButton(
-                onClick = {}
+                onClick = {},
             ) {
                 Icon(imageVector = Icons.Default.Call, contentDescription = null)
             }
             IconButton(
-                onClick = {}
+                onClick = {},
             ) {
                 Icon(imageVector = Icons.Default.MailOutline, contentDescription = null)
             }
@@ -107,7 +111,7 @@ fun SendScreen(modifier: Modifier = Modifier) {
         columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(16.dp)
+        contentPadding = PaddingValues(16.dp),
     ) {
         items(4) {
             SendPostToPeople(modifier = Modifier.fillMaxWidth())
@@ -120,26 +124,27 @@ fun SendScreen(modifier: Modifier = Modifier) {
 fun SendPostToPeople(modifier: Modifier = Modifier) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Image(
             painter = painterResource(R.drawable.ic_launcher_background),
             colorFilter = ColorFilter.tint(Color.Blue),
             contentDescription = null,
-            modifier = Modifier
-                .size(60.dp)
-                .clip(CircleShape)
+            modifier =
+                Modifier
+                    .size(60.dp)
+                    .clip(CircleShape),
         )
         Column(
             modifier = modifier,
             verticalArrangement = Arrangement.spacedBy(4.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text("Filan Fisteku", style = MaterialTheme.typography.bodyMedium)
             Button(
                 onClick = {},
                 modifier = Modifier.height(32.dp),
-                contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp)
+                contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
             ) {
                 Text("Send", style = MaterialTheme.typography.labelSmall)
             }

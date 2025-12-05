@@ -35,7 +35,7 @@ fun CommentItem(
     modifier: Modifier = Modifier,
     comment: Comment,
     startPadding: Dp = 12.dp,
-    onViewRepliesClick: (String) -> Unit
+    onViewRepliesClick: (String) -> Unit,
 ) {
     CommentItem(
         modifier = modifier,
@@ -46,7 +46,7 @@ fun CommentItem(
         likeCount = comment.likeCount,
         replyCount = comment.replyCount,
         startPadding = startPadding,
-        onViewRepliesClick = { onViewRepliesClick(comment.userId) }
+        onViewRepliesClick = { onViewRepliesClick(comment.userId) },
     )
 }
 
@@ -60,99 +60,104 @@ private fun CommentItem(
     likeCount: Int,
     replyCount: Int = 0,
     startPadding: Dp = 12.dp,
-    onViewRepliesClick: () -> Unit
+    onViewRepliesClick: () -> Unit,
 ) {
     Column {
         Row(
-            modifier = modifier
-                .padding(start = startPadding, end = 4.dp, top = 8.dp, bottom = 8.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            modifier =
+                modifier
+                    .padding(start = startPadding, end = 4.dp, top = 8.dp, bottom = 8.dp)
+                    .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 CircleImage(
                     painter = painterResource(userAvatarResId),
                     size = 36.dp,
-                    borderWidth = 0.2.dp
+                    borderWidth = 0.2.dp,
                 )
                 Column {
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
                         Text(
                             text = username,
-                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold)
+                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
                         )
                         Text(
                             text = createdAt,
-                            style = MaterialTheme.typography.bodySmall
+                            style = MaterialTheme.typography.bodySmall,
                         )
                     }
                     Text(
                         text = text,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.clickable { }
+                        modifier = Modifier.clickable { },
                     ) {
                         Icon(
                             painter = MubbleTheme.Icons.Reply,
                             modifier = Modifier.size(16.dp),
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                         Text(
                             text = "Reply",
                             style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 }
             }
             Row(
-                modifier = Modifier
-                    .size(48.dp)
-                    .padding()
-                    .clickable { },
+                modifier =
+                    Modifier
+                        .size(48.dp)
+                        .padding()
+                        .clickable { },
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally)
+                horizontalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterHorizontally),
             ) {
                 Icon(
                     painter = MubbleTheme.Icons.Favorite,
                     modifier = Modifier.size(16.dp),
-                    contentDescription = null
+                    contentDescription = null,
                 )
                 Text(
                     text = likeCount.toString(),
-                    style = MaterialTheme.typography.labelMedium
+                    style = MaterialTheme.typography.labelMedium,
                 )
             }
         }
-        if (replyCount > 0)
+        if (replyCount > 0) {
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onViewRepliesClick() }
-                    .padding(vertical = 4.dp), contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .clickable { onViewRepliesClick() }
+                        .padding(vertical = 4.dp),
+                contentAlignment = Alignment.Center,
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     HorizontalDivider(modifier = modifier.width(36.dp))
                     Text(
                         text = "$replyCount Replies",
-                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
                     )
                     HorizontalDivider(modifier = modifier.width(36.dp))
                 }
             }
+        }
     }
 }
 
@@ -163,7 +168,7 @@ private fun CommentItemPreview() {
         Surface {
             CommentItem(
                 comment = DummyCommentRepository.allComments.component1(),
-                onViewRepliesClick = {}
+                onViewRepliesClick = {},
             )
         }
     }

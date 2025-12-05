@@ -12,7 +12,7 @@ fun LazyGridScope.postGrid(
     items(items = items, key = { it.id }) {
         ProfilePost(
             item = it,
-            onPostClick = { postId -> onPostClick(postId, PostOrigin.ProfileMedia) }
+            onPostClick = { postId -> onPostClick(postId, PostOrigin.ProfileMedia) },
         )
     }
 }

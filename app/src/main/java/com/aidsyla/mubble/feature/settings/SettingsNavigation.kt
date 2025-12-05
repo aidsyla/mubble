@@ -19,7 +19,7 @@ fun NavGraphBuilder.settingsStartScreen(
     onNavigateToDevicePermissions: () -> Unit,
     onNavigateToManageAccount: () -> Unit,
     onLogoutClick: () -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
 ) {
     composable<SettingsStartRoute> {
         SettingsStartScreen(
@@ -36,9 +36,7 @@ fun NavController.navigateToSettingsNotifications(navOptions: NavOptions? = null
     this.navigate(SettingsNotificationsRoute, navOptions)
 }
 
-fun NavGraphBuilder.settingsNotificationsScreen(
-    onBackClick: () -> Unit
-) {
+fun NavGraphBuilder.settingsNotificationsScreen(onBackClick: () -> Unit) {
     composable<SettingsNotificationsRoute> {
         SettingsNotificationsScreen(
             onBackClick = { if (it.lifecycleIsResumed()) onBackClick() },
@@ -50,9 +48,7 @@ fun NavController.navigateToSettingsDevicePermissions(navOptions: NavOptions? = 
     this.navigate(SettingsDevicePermissionsRoute, navOptions)
 }
 
-fun NavGraphBuilder.settingsDevicePermissionsScreen(
-    onBackClick: () -> Unit
-) {
+fun NavGraphBuilder.settingsDevicePermissionsScreen(onBackClick: () -> Unit) {
     composable<SettingsDevicePermissionsRoute> {
         SettingsDevicePermissionsScreen(
             onBackClick = { if (it.lifecycleIsResumed()) onBackClick() },
@@ -64,9 +60,7 @@ fun NavController.navigateToSettingsManageAccount(navOptions: NavOptions? = null
     this.navigate(SettingsManageAccountRoute, navOptions)
 }
 
-fun NavGraphBuilder.settingsManageAccountScreen(
-    onBackClick: () -> Unit
-) {
+fun NavGraphBuilder.settingsManageAccountScreen(onBackClick: () -> Unit) {
     composable<SettingsManageAccountRoute> {
         SettingsManageAccountScreen(
             onBackClick = { if (it.lifecycleIsResumed()) onBackClick() },

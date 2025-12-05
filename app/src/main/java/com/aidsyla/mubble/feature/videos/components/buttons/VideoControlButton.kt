@@ -28,18 +28,20 @@ internal fun VideoControlIconButton(
                 .minimumInteractiveComponentSize()
                 .size(
                     IconButtonDefaults.extraSmallContainerSize(
-                        IconButtonDefaults.IconButtonWidthOption.Uniform
-                    )
+                        IconButtonDefaults.IconButtonWidthOption.Uniform,
+                    ),
                 ),
-        shapes = IconButtonDefaults.shapes(
-            shape = IconButtonDefaults.extraSmallRoundShape,
-            pressedShape = IconButtonDefaults.extraSmallPressedShape,
-        ),
-        colors = IconButtonDefaults.outlinedIconButtonColors(
-            containerColor = Color.Black.copy(alpha = 0.25f),
-            contentColor = outlineVariantLight,
-        ),
-        border = BorderStroke(1.dp, Color.Transparent)
+        shapes =
+            IconButtonDefaults.shapes(
+                shape = IconButtonDefaults.extraSmallRoundShape,
+                pressedShape = IconButtonDefaults.extraSmallPressedShape,
+            ),
+        colors =
+            IconButtonDefaults.outlinedIconButtonColors(
+                containerColor = Color.Black.copy(alpha = 0.25f),
+                contentColor = outlineVariantLight,
+            ),
+        border = BorderStroke(1.dp, Color.Transparent),
     ) {
         content()
     }
@@ -61,21 +63,23 @@ internal fun VideoControlIconToggleButton(
                 .minimumInteractiveComponentSize()
                 .size(
                     IconButtonDefaults.extraSmallContainerSize(
-                        IconButtonDefaults.IconButtonWidthOption.Uniform
-                    )
+                        IconButtonDefaults.IconButtonWidthOption.Uniform,
+                    ),
                 ),
-        shapes = IconToggleButtonShapes(
-            shape = IconButtonDefaults.extraSmallRoundShape,
-            pressedShape = IconButtonDefaults.extraSmallPressedShape,
-            checkedShape = IconButtonDefaults.extraSmallSquareShape
-        ),
-        colors = IconButtonDefaults.outlinedIconToggleButtonColors(
-            containerColor = Color.Black.copy(alpha = 0.25f),
-            contentColor = outlineVariantLight,
-            checkedContainerColor = Color.Black.copy(alpha = 0.4f),
-            checkedContentColor = Color.White
-        ),
-        border = BorderStroke(1.dp, Color.Transparent)
+        shapes =
+            IconToggleButtonShapes(
+                shape = IconButtonDefaults.extraSmallRoundShape,
+                pressedShape = IconButtonDefaults.extraSmallPressedShape,
+                checkedShape = IconButtonDefaults.extraSmallSquareShape,
+            ),
+        colors =
+            IconButtonDefaults.outlinedIconToggleButtonColors(
+                containerColor = Color.Black.copy(alpha = 0.25f),
+                contentColor = outlineVariantLight,
+                checkedContainerColor = Color.Black.copy(alpha = 0.4f),
+                checkedContentColor = Color.White,
+            ),
+        border = BorderStroke(1.dp, Color.Transparent),
     ) {
         content()
     }

@@ -44,7 +44,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aidsyla.mubble.common.components.CircleImage
-import com.aidsyla.mubble.feature.circle.CircleItem
 import com.aidsyla.mubble.common.components.layout.MubbleGridTabPager
 import com.aidsyla.mubble.common.components.layout.MubbleTabRow
 import com.aidsyla.mubble.common.navigation.LocalNavAnimatedVisibilityScope
@@ -52,11 +51,12 @@ import com.aidsyla.mubble.common.navigation.LocalSharedTransitionScope
 import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
 import com.aidsyla.mubble.common.navigation.shared_elements.PostSharedElementKey
 import com.aidsyla.mubble.common.navigation.shared_elements.PostSharedElementType
+import com.aidsyla.mubble.data.BubbleFeedItem
+import com.aidsyla.mubble.data.DummyPostRepository
+import com.aidsyla.mubble.data.ImagePostFeedItem
+import com.aidsyla.mubble.feature.circle.CircleItem
 import com.aidsyla.mubble.feature.circle.model.Circle
 import com.aidsyla.mubble.feature.circle.model.CircleRepo
-import com.aidsyla.mubble.data.BubbleFeedItem
-import com.aidsyla.mubble.data.ImagePostFeedItem
-import com.aidsyla.mubble.data.DummyPostRepository
 import com.aidsyla.mubble.ui.LocalBottomBarPadding
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 
@@ -77,17 +77,21 @@ fun ExploreScreen(
         firstPage = {
             ExploreCircleGrid(
                 items = CircleRepo.dummyCircles,
-                onCircleClick = onCircleClick
+                onCircleClick = onCircleClick,
             )
         },
         secondPage = {
             ExplorePostGrid(
-                items = uiState.media, state = it, onPostClick = onPostClick
+                items = uiState.media,
+                state = it,
+                onPostClick = onPostClick,
             )
         },
         thirdPage = {
             ExploreBubbleGrid(
-                items = uiState.bubbles, state = it, onPostClick = onPostClick
+                items = uiState.bubbles,
+                state = it,
+                onPostClick = onPostClick,
             )
         },
         navigationIcon = {
@@ -95,7 +99,7 @@ fun ExploreScreen(
                 Icon(
                     painter = MubbleTheme.Icons.MubbleIcon,
                     contentDescription = null,
-                    tint = Color.Unspecified
+                    tint = Color.Unspecified,
                 )
             }
         },
@@ -103,9 +107,11 @@ fun ExploreScreen(
             IconButton(onClick = {}) {
                 Icon(painter = MubbleTheme.Icons.Search, contentDescription = null)
             }
-        }) {
+        },
+    ) {
         MubbleTabRow(
-            tabTitles = tabTitles, pagerState = pagerState
+            tabTitles = tabTitles,
+            pagerState = pagerState,
         )
     }
 }
@@ -131,7 +137,7 @@ fun ExploreCircleGrid(
                 modifier = Modifier.fillMaxWidth(),
                 onCircleClick = { circleId ->
                     onCircleClick(circleId, PostOrigin.ExploreCircles)
-                }
+                },
             )
         }
     }
@@ -150,10 +156,12 @@ fun ExploreBubbleGrid(
         contentPadding = PaddingValues(top = 4.dp, start = 8.dp, end = 8.dp, bottom = 8.dp),
         verticalItemSpacing = 8.dp,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         exploreBubblesFeed(
-            items = items, onProfileClick = {}, onPostClick = onPostClick
+            items = items,
+            onProfileClick = {},
+            onPostClick = onPostClick,
         )
     }
 }
@@ -171,10 +179,12 @@ fun ExplorePostGrid(
         contentPadding = PaddingValues(top = 4.dp, start = 8.dp, end = 8.dp, bottom = 8.dp),
         verticalItemSpacing = 8.dp,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         explorePostsFeed(
-            items = items, onProfileClick = {}, onPostClick = onPostClick
+            items = items,
+            onProfileClick = {},
+            onPostClick = onPostClick,
         )
     }
 }
@@ -186,10 +196,12 @@ fun ExplorePost(
     item: ImagePostFeedItem,
     onPostClick: (postId: String, origin: PostOrigin) -> Unit,
 ) {
-    val sharedTransitionScope = LocalSharedTransitionScope.current
-        ?: throw IllegalStateException("No SharedElementScope found")
-    val animatedContentScope = LocalNavAnimatedVisibilityScope.current
-        ?: throw IllegalStateException("No AnimatedVisibility found")
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current
+            ?: throw IllegalStateException("No SharedElementScope found")
+    val animatedContentScope =
+        LocalNavAnimatedVisibilityScope.current
+            ?: throw IllegalStateException("No AnimatedVisibility found")
 
     val roundedCornerAnimation by animatedContentScope.transition.animateDp {
         when (it) {
@@ -209,56 +221,60 @@ fun ExplorePost(
 
     with(sharedTransitionScope) {
         Box(
-            modifier = modifier
-                .clickable { onPostClick(item.id, PostOrigin.ExploreMedia) }
-                .sharedBounds(
-                    rememberSharedContentState(
-                        key = PostSharedElementKey(
-                            postId = item.id,
-                            origin = PostOrigin.ExploreMedia,
-                            type = PostSharedElementType.Bounds
-                        )
-                    ),
-                    animatedVisibilityScope = animatedContentScope,
-                    resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
-                    clipInOverlayDuringTransition = OverlayClip(
-                        RoundedCornerShape(
-                            roundedCornerAnimation
-                        )
-                    )
-                )
-                .clip(MaterialTheme.shapes.medium)) {
+            modifier =
+                modifier
+                    .clickable { onPostClick(item.id, PostOrigin.ExploreMedia) }
+                    .sharedBounds(
+                        rememberSharedContentState(
+                            key =
+                                PostSharedElementKey(
+                                    postId = item.id,
+                                    origin = PostOrigin.ExploreMedia,
+                                    type = PostSharedElementType.Bounds,
+                                ),
+                        ),
+                        animatedVisibilityScope = animatedContentScope,
+                        resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
+                        clipInOverlayDuringTransition =
+                            OverlayClip(
+                                RoundedCornerShape(
+                                    roundedCornerAnimation,
+                                ),
+                            ),
+                    ).clip(MaterialTheme.shapes.medium),
+        ) {
             Image(
                 painter = painterResource(item.postImageResId),
                 contentDescription = "Post media",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .sharedElement(
-                        rememberSharedContentState(
-                            key = PostSharedElementKey(
-                                postId = item.id,
-                                origin = PostOrigin.ExploreMedia,
-                                type = PostSharedElementType.Image
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .sharedElement(
+                            rememberSharedContentState(
+                                key =
+                                    PostSharedElementKey(
+                                        postId = item.id,
+                                        origin = PostOrigin.ExploreMedia,
+                                        type = PostSharedElementType.Image,
+                                    ),
+                            ),
+                            animatedVisibilityScope = animatedContentScope,
+                        ).clip(
+                            shape = RoundedCornerShape(roundedCornerAnimation),
+                        ).drawWithContent {
+                            drawContent()
+                            drawRect(
+                                MubbleTheme.Gradients.fadingBlackGradient,
+                                alpha = gradientAlpha2,
                             )
-                        ), animatedVisibilityScope = animatedContentScope
-                    )
-                    .clip(
-                        shape = RoundedCornerShape(roundedCornerAnimation)
-                    )
-                    .drawWithContent {
-                        drawContent()
-                        drawRect(
-                            MubbleTheme.Gradients.fadingBlackGradient,
-                            alpha = gradientAlpha2
-                        )
-                    }
+                        },
             )
             ExploreHeader(
                 modifier = Modifier.align(Alignment.TopStart),
                 origin = PostOrigin.ExploreMedia,
                 avatarResId = item.userAvatarResId,
                 id = item.id,
-                username = item.username
+                username = item.username,
             )
         }
     }
@@ -274,41 +290,55 @@ private fun ExploreHeader(
     textColor: Color = Color.White,
     @DrawableRes avatarResId: Int,
 ) {
-    val sharedTransitionScope = LocalSharedTransitionScope.current
-        ?: throw IllegalStateException("No SharedElementScope found")
-    val animatedContentScope = LocalNavAnimatedVisibilityScope.current
-        ?: throw IllegalStateException("No AnimatedVisibility found")
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current
+            ?: throw IllegalStateException("No SharedElementScope found")
+    val animatedContentScope =
+        LocalNavAnimatedVisibilityScope.current
+            ?: throw IllegalStateException("No AnimatedVisibility found")
 
     Row(
         modifier = modifier.padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         with(sharedTransitionScope) {
             CircleImage(
-                modifier = Modifier.sharedElement(
-                    rememberSharedContentState(
-                        key = PostSharedElementKey(
-                            postId = id,
-                            origin = origin,
-                            type = PostSharedElementType.ProfileAvatar
-                        )
-                    ), animatedVisibilityScope = animatedContentScope
-                ), painter = painterResource(avatarResId), size = 24.dp,
-                borderWidth = 0.2.dp
+                modifier =
+                    Modifier.sharedElement(
+                        rememberSharedContentState(
+                            key =
+                                PostSharedElementKey(
+                                    postId = id,
+                                    origin = origin,
+                                    type = PostSharedElementType.ProfileAvatar,
+                                ),
+                        ),
+                        animatedVisibilityScope = animatedContentScope,
+                    ),
+                painter = painterResource(avatarResId),
+                size = 24.dp,
+                borderWidth = 0.2.dp,
             )
             Text(
-                modifier = Modifier.sharedBounds(
-                    rememberSharedContentState(
-                        key = PostSharedElementKey(
-                            postId = id,
-                            origin = origin,
-                            type = PostSharedElementType.DisplayName
-                        )
-                    ), animatedVisibilityScope = animatedContentScope
-                ), text = username, style = MaterialTheme.typography.labelMedium.copy(
-                    fontWeight = FontWeight.Bold
-                ), color = textColor
+                modifier =
+                    Modifier.sharedBounds(
+                        rememberSharedContentState(
+                            key =
+                                PostSharedElementKey(
+                                    postId = id,
+                                    origin = origin,
+                                    type = PostSharedElementType.DisplayName,
+                                ),
+                        ),
+                        animatedVisibilityScope = animatedContentScope,
+                    ),
+                text = username,
+                style =
+                    MaterialTheme.typography.labelMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                    ),
+                color = textColor,
             )
         }
     }
@@ -326,7 +356,7 @@ fun ExploreBubble(
         username = item.username,
         description = item.postDescription,
         avatarResId = item.userAvatarResId,
-        onPostClick = onPostClick
+        onPostClick = onPostClick,
     )
 }
 
@@ -340,27 +370,31 @@ fun ExploreBubble(
     @DrawableRes avatarResId: Int,
     onPostClick: (postId: String, origin: PostOrigin) -> Unit,
 ) {
-    val sharedTransitionScope = LocalSharedTransitionScope.current
-        ?: throw IllegalStateException("No SharedElementScope found")
-    val animatedContentScope = LocalNavAnimatedVisibilityScope.current
-        ?: throw IllegalStateException("No AnimatedVisibility found")
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current
+            ?: throw IllegalStateException("No SharedElementScope found")
+    val animatedContentScope =
+        LocalNavAnimatedVisibilityScope.current
+            ?: throw IllegalStateException("No AnimatedVisibility found")
 
     with(sharedTransitionScope) {
         Card(
-            modifier = modifier
-                .fillMaxWidth()
-                .sharedBounds(
-                    rememberSharedContentState(
-                        key = PostSharedElementKey(
-                            postId = postId,
-                            origin = PostOrigin.ExploreBubbles,
-                            type = PostSharedElementType.Bounds
-                        )
+            modifier =
+                modifier
+                    .fillMaxWidth()
+                    .sharedBounds(
+                        rememberSharedContentState(
+                            key =
+                                PostSharedElementKey(
+                                    postId = postId,
+                                    origin = PostOrigin.ExploreBubbles,
+                                    type = PostSharedElementType.Bounds,
+                                ),
+                        ),
+                        animatedVisibilityScope = animatedContentScope,
                     ),
-                    animatedVisibilityScope = animatedContentScope,
-                ),
             onClick = { onPostClick(postId, PostOrigin.ExploreBubbles) },
-            shape = MaterialTheme.shapes.medium
+            shape = MaterialTheme.shapes.medium,
         ) {
             ExploreHeader(
                 origin = PostOrigin.ExploreBubbles,
@@ -370,24 +404,26 @@ fun ExploreBubble(
                 textColor = MaterialTheme.colorScheme.onSurface,
             )
             Box(
-                modifier = Modifier.sharedBounds(
-                    rememberSharedContentState(
-                        key = PostSharedElementKey(
-                            postId = postId,
-                            origin = PostOrigin.ExploreBubbles,
-                            type = PostSharedElementType.Bubble
-                        )
+                modifier =
+                    Modifier.sharedBounds(
+                        rememberSharedContentState(
+                            key =
+                                PostSharedElementKey(
+                                    postId = postId,
+                                    origin = PostOrigin.ExploreBubbles,
+                                    type = PostSharedElementType.Bubble,
+                                ),
+                        ),
+                        animatedVisibilityScope = animatedContentScope,
                     ),
-                    animatedVisibilityScope = animatedContentScope,
-                )
             ) {
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .padding(bottom = 8.dp)
-
+                    modifier =
+                        Modifier
+                            .padding(horizontal = 8.dp)
+                            .padding(bottom = 8.dp),
                 )
             }
         }
@@ -400,7 +436,9 @@ private fun ExplorePostPreview() {
     val item = DummyPostRepository.dummyFeedItems.filterIsInstance<ImagePostFeedItem>().first()
     MubbleTheme {
         ExplorePost(
-            item = item, onPostClick = { _, _ -> })
+            item = item,
+            onPostClick = { _, _ -> },
+        )
     }
 }
 
@@ -411,7 +449,9 @@ private fun ExploreBubblePreview() {
     MubbleTheme {
         Surface {
             ExploreBubble(
-                item = item, onPostClick = { _, _ -> })
+                item = item,
+                onPostClick = { _, _ -> },
+            )
         }
     }
 }

@@ -17,17 +17,19 @@ import androidx.compose.ui.Modifier
 fun LoadingPulse() {
     val infiniteTransition = rememberInfiniteTransition()
     val color by
-    infiniteTransition.animateColor(
-        initialValue = MaterialTheme.colorScheme.surfaceContainerLow,
-        targetValue = MaterialTheme.colorScheme.surfaceContainerHigh,
-        animationSpec = infiniteRepeatable(
-            animation = tween(600),
-            repeatMode = RepeatMode.Reverse
+        infiniteTransition.animateColor(
+            initialValue = MaterialTheme.colorScheme.surfaceContainerLow,
+            targetValue = MaterialTheme.colorScheme.surfaceContainerHigh,
+            animationSpec =
+                infiniteRepeatable(
+                    animation = tween(600),
+                    repeatMode = RepeatMode.Reverse,
+                ),
         )
-    )
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = color)
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(color = color),
     )
 }

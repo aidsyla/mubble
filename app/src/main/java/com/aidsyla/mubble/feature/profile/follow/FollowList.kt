@@ -35,17 +35,19 @@ fun FollowList(
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(
-            top = 4.dp,
-            bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-        ),
+        contentPadding =
+            PaddingValues(
+                top = 4.dp,
+                bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding(),
+            ),
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         item {
             SearchBar(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp, horizontal = 8.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp, horizontal = 8.dp),
                 state = searchBarState,
                 inputField = inputField,
             )
@@ -56,7 +58,7 @@ fun FollowList(
             items = items,
             onUserClick = onUserClick,
             onFollowClick = onFollowClick,
-            onMessageClick = onMessageClick
+            onMessageClick = onMessageClick,
         )
     }
 }

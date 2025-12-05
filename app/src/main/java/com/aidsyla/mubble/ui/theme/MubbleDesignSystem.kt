@@ -10,7 +10,6 @@ import com.aidsyla.mubble.util.linearGradient
 import androidx.compose.material.icons.Icons as MaterialIcons
 
 object MubbleTheme {
-
     object ProfileTabs {
         val iconsSelected @Composable get() = listOf(Icons.PostsSelected, Icons.BubblesSelected)
         val icons @Composable get() = listOf(Icons.Posts, Icons.Bubbles)
@@ -18,20 +17,22 @@ object MubbleTheme {
 
     object AppearanceTabs {
         val iconsSelected
-            @Composable get() = listOf(
-                Icons.AutoSelected,
-                Icons.DarkModeSelected,
-                Icons.LightModeSelected
-            )
+            @Composable get() =
+                listOf(
+                    Icons.AutoSelected,
+                    Icons.DarkModeSelected,
+                    Icons.LightModeSelected,
+                )
         val icons @Composable get() = listOf(Icons.Auto, Icons.DarkMode, Icons.LightMode)
     }
 
     object AccountVisibility {
         val iconsSelected
-            @Composable get() = listOf(
-                Icons.AccountPublicSelected,
-                Icons.AccountPrivateSelected
-            )
+            @Composable get() =
+                listOf(
+                    Icons.AccountPublicSelected,
+                    Icons.AccountPrivateSelected,
+                )
         val icons @Composable get() = listOf(Icons.AccountPublic, Icons.AccountPrivate)
     }
 
@@ -100,11 +101,9 @@ object MubbleTheme {
         val LightModeSelected @Composable get() = painterResource(id = R.drawable.light_mode_filled)
         val LightMode @Composable get() = painterResource(id = R.drawable.light_mode)
 
-
         val NotificationFilled @Composable get() = painterResource(id = R.drawable.notifications_filled)
         val Notification @Composable get() = painterResource(id = R.drawable.notifications)
         val NotificationsOff @Composable get() = painterResource(id = R.drawable.notifications_off)
-
 
         val DevicePermissions @Composable get() = painterResource(id = R.drawable.perm_device_information)
 
@@ -123,9 +122,7 @@ object MubbleTheme {
 
         val Delete @Composable get() = painterResource(id = R.drawable.delete)
 
-
         val Logout @Composable get() = painterResource(id = R.drawable.logout)
-
 
         val PersonAdd @Composable get() = painterResource(id = R.drawable.person_add_filled)
         val Message @Composable get() = painterResource(id = R.drawable.chat_filled)
@@ -140,61 +137,69 @@ object MubbleTheme {
     }
 
     object Gradients {
-        val fadingBlackGradient = Brush.verticalGradient(
-            colorStops = arrayOf(
-                0.0f to Color(0x80000000),
-                0.05f to Color(0x73000000),
-                0.10f to Color(0x66000000),
-                0.15f to Color(0x57000000),
-                0.20f to Color(0x47000000),
-                0.25f to Color(0x38000000),
-                0.30f to Color(0x29000000),
-                0.35f to Color(0x1A000000),
-                0.40f to Color(0x0F000000),
-                0.50f to Color(0x08000000),
-                0.60f to Color(0x03000000),
+        val fadingBlackGradient =
+            Brush.verticalGradient(
+                colorStops =
+                    arrayOf(
+                        0.0f to Color(0x80000000),
+                        0.05f to Color(0x73000000),
+                        0.10f to Color(0x66000000),
+                        0.15f to Color(0x57000000),
+                        0.20f to Color(0x47000000),
+                        0.25f to Color(0x38000000),
+                        0.30f to Color(0x29000000),
+                        0.35f to Color(0x1A000000),
+                        0.40f to Color(0x0F000000),
+                        0.50f to Color(0x08000000),
+                        0.60f to Color(0x03000000),
+                    ),
             )
-        )
 
-        val captionScrimGradient = Brush.verticalGradient(
-            colorStops = arrayOf(
-                0.0f to Color(0x80000000),
-                0.10f to Color(0x73000000),
-                0.15f to Color(0x66000000),
-                0.22f to Color(0x57000000),
-                0.28f to Color(0x47000000),
-                0.33f to Color(0x38000000),
-                0.40f to Color(0x29000000),
-                0.45f to Color(0x1A000000),
-                0.50f to Color(0x08000000),
-                0.60f to Color(0x03000000),
+        val captionScrimGradient =
+            Brush.verticalGradient(
+                colorStops =
+                    arrayOf(
+                        0.0f to Color(0x80000000),
+                        0.10f to Color(0x73000000),
+                        0.15f to Color(0x66000000),
+                        0.22f to Color(0x57000000),
+                        0.28f to Color(0x47000000),
+                        0.33f to Color(0x38000000),
+                        0.40f to Color(0x29000000),
+                        0.45f to Color(0x1A000000),
+                        0.50f to Color(0x08000000),
+                        0.60f to Color(0x03000000),
+                    ),
             )
-        )
 
-        val fadingBlackGradientReversed = Brush.verticalGradient(
-            startY = Float.POSITIVE_INFINITY,
-            endY = 0f,
-            colorStops = arrayOf(
-                0.00f to Color(0xCC000000),
-                0.08f to Color(0xBF000000),
-                0.13f to Color(0xAD000000),
-                0.18f to Color(0x97000000),
-                0.23f to Color(0x78000000),
-                0.28f to Color(0x55000000),
-                0.33f to Color(0x40000000),
-                0.38f to Color(0x2E000000),
-                0.43f to Color(0x1A000000),
-                0.50f to Color(0x0F000000),
-                0.70f to Color(0x00000000)
+        val fadingBlackGradientReversed =
+            Brush.verticalGradient(
+                startY = Float.POSITIVE_INFINITY,
+                endY = 0f,
+                colorStops =
+                    arrayOf(
+                        0.00f to Color(0xCC000000),
+                        0.08f to Color(0xBF000000),
+                        0.13f to Color(0xAD000000),
+                        0.18f to Color(0x97000000),
+                        0.23f to Color(0x78000000),
+                        0.28f to Color(0x55000000),
+                        0.33f to Color(0x40000000),
+                        0.38f to Color(0x2E000000),
+                        0.43f to Color(0x1A000000),
+                        0.50f to Color(0x0F000000),
+                        0.70f to Color(0x00000000),
+                    ),
             )
-        )
 
-        val appGradient = Brush.linearGradient(
-            colors = listOf(
-               Color(0x3400B6B6),
-               Color(0x34006797)
-            ),
-            angleInDegrees = 45f
-        )
+        val appGradient =
+            Brush.linearGradient(
+                colors =
+                    listOf(
+                        Color(0x3400B6B6),
+                        Color(0x34006797),
+                    ),
+                angleInDegrees = 45f,
+            )
     }
 }

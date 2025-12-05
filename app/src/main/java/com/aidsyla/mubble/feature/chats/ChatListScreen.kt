@@ -63,57 +63,68 @@ fun ChatListScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                AnimatedContent(
-                    targetState = editUiState.isEditing
-                ) {
-                    if (it) Text(text = "0 Selected") else Text(text = "Chats")
-                }
-            }, navigationIcon = {
-                AnimatedContent(
-                    targetState = editUiState.isEditing,
-                ) {
-                    IconButton(onClick = { viewModel.editModeSwitch() }) {
-                        Icon(
-                            painter = if (it) MubbleTheme.Icons.ArrowBack else MubbleTheme.Icons.EditFilled,
-                            contentDescription = null
-                        )
+                    AnimatedContent(
+                        targetState = editUiState.isEditing,
+                    ) {
+                        if (it) Text(text = "0 Selected") else Text(text = "Chats")
                     }
-                }
-            }, actions = {
-                AnimatedContent(targetState = editUiState.isEditing) {
-                    if (it) IconButton(onClick = { }) {
-                        Icon(
-                            painter = MubbleTheme.Icons.Delete, contentDescription = null
-                        )
+                },
+                navigationIcon = {
+                    AnimatedContent(
+                        targetState = editUiState.isEditing,
+                    ) {
+                        IconButton(onClick = { viewModel.editModeSwitch() }) {
+                            Icon(
+                                painter = if (it) MubbleTheme.Icons.ArrowBack else MubbleTheme.Icons.EditFilled,
+                                contentDescription = null,
+                            )
+                        }
                     }
-                    else IconButton(onClick = { }) {
-                        Icon(
-                            painter = MubbleTheme.Icons.Search, contentDescription = null
-                        )
+                },
+                actions = {
+                    AnimatedContent(targetState = editUiState.isEditing) {
+                        if (it) {
+                            IconButton(onClick = { }) {
+                                Icon(
+                                    painter = MubbleTheme.Icons.Delete,
+                                    contentDescription = null,
+                                )
+                            }
+                        } else {
+                            IconButton(onClick = { }) {
+                                Icon(
+                                    painter = MubbleTheme.Icons.Search,
+                                    contentDescription = null,
+                                )
+                            }
+                        }
                     }
-                }
-            }, scrollBehavior = scrollState
+                },
+                scrollBehavior = scrollState,
             )
         },
     ) { innerPadding ->
         val bottomPadding = LocalBottomBarPadding.current
         LazyColumn(
-            modifier = Modifier
-                .padding(
-                    top = innerPadding.calculateTopPadding(), bottom = bottomPadding
-                )
-                .nestedScroll(scrollState.nestedScrollConnection),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+            modifier =
+                Modifier
+                    .padding(
+                        top = innerPadding.calculateTopPadding(),
+                        bottom = bottomPadding,
+                    ).nestedScroll(scrollState.nestedScrollConnection),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             when (val state = uiState) {
                 ChatListUiState.Loading -> {}
                 is ChatListUiState.Success -> {
                     items(
-                        items = state.chatPreviews, key = { it.chatId }) { chatPreview ->
+                        items = state.chatPreviews,
+                        key = { it.chatId },
+                    ) { chatPreview ->
                         ChatListItem(
                             isEditing = editUiState.isEditing,
                             chatPreview = chatPreview,
-                            onChatClick = onChatClick
+                            onChatClick = onChatClick,
                         )
                     }
                 }
@@ -132,16 +143,25 @@ fun ChatListItem(
 ) {
     val dotColor = MaterialTheme.colorScheme.primary
     var isSelected by remember { mutableStateOf(false) }
-    val targetColor = if (isSelected) MaterialTheme.colorScheme.surfaceContainerHigh
-    else MaterialTheme.colorScheme.surface
+    val targetColor =
+        if (isSelected) {
+            MaterialTheme.colorScheme.surfaceContainerHigh
+        } else {
+            MaterialTheme.colorScheme.surface
+        }
     val backgroundColor by animateColorAsState(targetValue = targetColor)
 
-    val chatModifier = if (!isEditing) modifier.clickable {
-        onChatClick(
-            chatPreview.chatId, chatPreview.otherUserId
-        )
-    }
-    else modifier.clickable { isSelected = !isSelected }
+    val chatModifier =
+        if (!isEditing) {
+            modifier.clickable {
+                onChatClick(
+                    chatPreview.chatId,
+                    chatPreview.otherUserId,
+                )
+            }
+        } else {
+            modifier.clickable { isSelected = !isSelected }
+        }
 
     LaunchedEffect(isEditing) {
         if (!isEditing) {
@@ -150,63 +170,81 @@ fun ChatListItem(
     }
 
     CompositionLocalProvider(
-        value = LocalRippleConfiguration provides if (isEditing) null else LocalRippleConfiguration.current
+        value = LocalRippleConfiguration provides if (isEditing) null else LocalRippleConfiguration.current,
     ) {
         Box(
-            modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .clip(MaterialTheme.shapes.largeIncreased)
-                .background(backgroundColor)
+            modifier =
+                Modifier
+                    .padding(horizontal = 8.dp)
+                    .clip(MaterialTheme.shapes.largeIncreased)
+                    .background(backgroundColor),
         ) {
             Row(
-                modifier = chatModifier
-                    .fillMaxWidth()
-                    .padding(vertical = 6.dp, horizontal = 8.dp),
+                modifier =
+                    chatModifier
+                        .fillMaxWidth()
+                        .padding(vertical = 6.dp, horizontal = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalAlignment = Alignment.Top
+                verticalAlignment = Alignment.Top,
             ) {
                 CircleImage(
                     painter = painterResource(id = chatPreview.otherUserProfilePicResId),
                     contentDescription = "${chatPreview.otherUserName} profile picture",
-                    borderWidth = 0.dp
+                    borderWidth = 0.dp,
                 )
                 Column(
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 ) {
                     Text(
                         text = chatPreview.otherUserName,
-                        style = if (chatPreview.isUnread) MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold) else MaterialTheme.typography.titleMedium
+                        style =
+                            if (chatPreview.isUnread) {
+                                MaterialTheme.typography.titleMedium.copy(
+                                    fontWeight = FontWeight.Bold,
+                                )
+                            } else {
+                                MaterialTheme.typography.titleMedium
+                            },
                     )
                     Text(
                         text = chatPreview.lastMessage,
-                        style = if (chatPreview.isUnread) MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold) else MaterialTheme.typography.bodyMedium,
+                        style =
+                            if (chatPreview.isUnread) {
+                                MaterialTheme.typography.bodyMedium.copy(
+                                    fontWeight = FontWeight.Bold,
+                                )
+                            } else {
+                                MaterialTheme.typography.bodyMedium
+                            },
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         overflow = TextOverflow.Ellipsis,
-                        maxLines = 1
+                        maxLines = 1,
                     )
                 }
                 if (chatPreview.isUnread) {
                     Canvas(
-                        modifier = Modifier
-                            .size(8.dp)
-                            .align(Alignment.CenterVertically),
-                        onDraw = { drawCircle(color = dotColor) })
+                        modifier =
+                            Modifier
+                                .size(8.dp)
+                                .align(Alignment.CenterVertically),
+                        onDraw = { drawCircle(color = dotColor) },
+                    )
                 }
                 Column(
                     modifier = Modifier.align(Alignment.CenterVertically),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
                         text = chatPreview.timestamp,
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     if (chatPreview.notificationsOff) {
                         Icon(
                             painter = MubbleTheme.Icons.NotificationsOff,
                             contentDescription = "Notifications Off",
                             modifier = Modifier.size(16.dp),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 }
@@ -215,12 +253,12 @@ fun ChatListItem(
     }
 }
 
-
 @Preview
 @Composable
 private fun ChatPreview() {
     MubbleTheme {
         ChatListScreen(
-            onChatClick = { _, _ -> })
+            onChatClick = { _, _ -> },
+        )
     }
 }

@@ -24,7 +24,7 @@ fun ChipsRow(modifier: Modifier = Modifier) {
     var bubblesSelected by remember { mutableStateOf(false) }
 
     Row(
-        modifier = modifier
+        modifier = modifier,
     ) {
         AssistChip(
             onClick = { },
@@ -33,9 +33,9 @@ fun ChipsRow(modifier: Modifier = Modifier) {
                 Icon(
                     painter = MubbleTheme.Icons.Sort,
                     contentDescription = "Localized description",
-                    Modifier.size(AssistChipDefaults.IconSize)
+                    Modifier.size(AssistChipDefaults.IconSize),
                 )
-            }
+            },
         )
         FilterChip(
             modifier = Modifier.padding(horizontal = 8.dp),
@@ -44,17 +44,18 @@ fun ChipsRow(modifier: Modifier = Modifier) {
                 Text("Posts")
             },
             selected = postsSelected,
-            leadingIcon = if (postsSelected) {
-                {
-                    Icon(
-                        painter = MubbleTheme.Icons.Check,
-                        contentDescription = "Done icon",
-                        modifier = Modifier.size(FilterChipDefaults.IconSize)
-                    )
-                }
-            } else {
-                null
-            },
+            leadingIcon =
+                if (postsSelected) {
+                    {
+                        Icon(
+                            painter = MubbleTheme.Icons.Check,
+                            contentDescription = "Done icon",
+                            modifier = Modifier.size(FilterChipDefaults.IconSize),
+                        )
+                    }
+                } else {
+                    null
+                },
         )
         FilterChip(
             onClick = { bubblesSelected = !bubblesSelected },
@@ -62,17 +63,18 @@ fun ChipsRow(modifier: Modifier = Modifier) {
                 Text("Bubbles")
             },
             selected = bubblesSelected,
-            leadingIcon = if (bubblesSelected) {
-                {
-                    Icon(
-                        painter = MubbleTheme.Icons.Check,
-                        contentDescription = "Done icon",
-                        modifier = Modifier.size(FilterChipDefaults.IconSize)
-                    )
-                }
-            } else {
-                null
-            },
+            leadingIcon =
+                if (bubblesSelected) {
+                    {
+                        Icon(
+                            painter = MubbleTheme.Icons.Check,
+                            contentDescription = "Done icon",
+                            modifier = Modifier.size(FilterChipDefaults.IconSize),
+                        )
+                    }
+                } else {
+                    null
+                },
         )
     }
 }

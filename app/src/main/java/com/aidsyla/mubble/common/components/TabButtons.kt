@@ -13,7 +13,6 @@ import androidx.compose.material3.ToggleButton
 import androidx.compose.material3.ToggleButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
@@ -29,7 +28,7 @@ fun TabButtons(
     selectedIcons: List<Painter>,
     unselectedIcons: List<Painter>,
     selectedIndex: Int,
-    onTabSelected: (Int) -> Unit
+    onTabSelected: (Int) -> Unit,
 ) {
     Row(
         modifier = modifier,
@@ -50,16 +49,17 @@ fun TabButtons(
                         last -> ButtonGroupDefaults.connectedTrailingButtonShapes()
                         else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
                     },
-                colors = ToggleButtonDefaults.toggleButtonColors(
-                    checkedContainerColor = MaterialTheme.colorScheme.primary,
-                    checkedContentColor = MaterialTheme.colorScheme.onPrimary,
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                )
+                colors =
+                    ToggleButtonDefaults.toggleButtonColors(
+                        checkedContainerColor = MaterialTheme.colorScheme.primary,
+                        checkedContentColor = MaterialTheme.colorScheme.onPrimary,
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    ),
             ) {
                 Icon(
-                    painter = if (selectedIndex == index) selectedIcons[index] else unselectedIcons[index] ,
-                    contentDescription = "Localized description"
+                    painter = if (selectedIndex == index) selectedIcons[index] else unselectedIcons[index],
+                    contentDescription = "Localized description",
                 )
                 Spacer(Modifier.size(ToggleButtonDefaults.IconSpacing))
                 Text(option)
@@ -76,7 +76,7 @@ fun TabButtons(
     selectedIcons: List<Painter>,
     unselectedIcons: List<Painter>,
     selectedIndex: Int,
-    onTabSelected: (Int) -> Unit
+    onTabSelected: (Int) -> Unit,
 ) {
     Row(
         modifier = modifier,
@@ -96,16 +96,17 @@ fun TabButtons(
                         0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
                         else -> ButtonGroupDefaults.connectedTrailingButtonShapes()
                     },
-                colors = ToggleButtonDefaults.toggleButtonColors(
-                    checkedContainerColor = MaterialTheme.colorScheme.secondary,
-                    checkedContentColor = MaterialTheme.colorScheme.onSecondary,
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                )
+                colors =
+                    ToggleButtonDefaults.toggleButtonColors(
+                        checkedContainerColor = MaterialTheme.colorScheme.secondary,
+                        checkedContentColor = MaterialTheme.colorScheme.onSecondary,
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    ),
             ) {
                 Icon(
                     painter = if (selectedIndex == index) selectedIcons[index] else icon,
-                    contentDescription = "Localized description"
+                    contentDescription = "Localized description",
                 )
             }
         }

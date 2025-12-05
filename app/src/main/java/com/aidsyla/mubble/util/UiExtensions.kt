@@ -34,16 +34,17 @@ val Configuration.isSystemInDarkTheme
  * Registers listener for configuration changes to retrieve whether system is in dark theme or not.
  * Immediately upon subscribing, it sends the current value and then registers listener for changes.
  */
-fun ComponentActivity.isSystemInDarkThemeFlow() = callbackFlow {
-    channel.trySend(resources.configuration.isSystemInDarkTheme)
+fun ComponentActivity.isSystemInDarkThemeFlow() =
+    callbackFlow {
+        channel.trySend(resources.configuration.isSystemInDarkTheme)
 
-    val listener = Consumer<Configuration> {
-        channel.trySend(it.isSystemInDarkTheme)
-    }
+        val listener =
+            Consumer<Configuration> {
+                channel.trySend(it.isSystemInDarkTheme)
+            }
 
-    addOnConfigurationChangedListener(listener)
+        addOnConfigurationChangedListener(listener)
 
-    awaitClose { removeOnConfigurationChangedListener(listener) }
-}
-    .distinctUntilChanged()
-    .conflate()
+        awaitClose { removeOnConfigurationChangedListener(listener) }
+    }.distinctUntilChanged()
+        .conflate()

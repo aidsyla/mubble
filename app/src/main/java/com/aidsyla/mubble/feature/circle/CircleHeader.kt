@@ -48,35 +48,39 @@ fun CircleHeader(
     @DrawableRes bannerResId: Int,
     onMediaClick: (Int, FullScreenMediaType) -> Unit,
 ) {
-    val sharedTransitionScope = LocalSharedTransitionScope.current
-        ?: throw IllegalStateException("No SharedElementScope found")
-    val animatedContentScope = LocalNavAnimatedVisibilityScope.current
-        ?: throw IllegalStateException("No AnimatedVisibility found")
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current
+            ?: throw IllegalStateException("No SharedElementScope found")
+    val animatedContentScope =
+        LocalNavAnimatedVisibilityScope.current
+            ?: throw IllegalStateException("No AnimatedVisibility found")
 
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         Box {
             with(sharedTransitionScope) {
                 with(animatedContentScope) {
                     Box(
-                        modifier = Modifier
-                            .align(Alignment.TopCenter)
-                            .zIndex(1f)
-                            .fillMaxWidth()
-                            .windowInsetsTopHeight(WindowInsets.statusBars.add(WindowInsets(top = TopAppBarDefaults.TopAppBarExpandedHeight)))
-                            .renderInSharedTransitionScopeOverlay(
-                                zIndexInOverlay = 1f
-                            )
-                            .animateEnterExit()
-                            .background(
-                                Brush.verticalGradient(
-                                    colors = listOf(
-                                        Color.Black.copy(alpha = 0.3f), Color.Transparent
+                        modifier =
+                            Modifier
+                                .align(Alignment.TopCenter)
+                                .zIndex(1f)
+                                .fillMaxWidth()
+                                .windowInsetsTopHeight(
+                                    WindowInsets.statusBars.add(WindowInsets(top = TopAppBarDefaults.TopAppBarExpandedHeight)),
+                                ).renderInSharedTransitionScopeOverlay(
+                                    zIndexInOverlay = 1f,
+                                ).animateEnterExit()
+                                .background(
+                                    Brush.verticalGradient(
+                                        colors =
+                                            listOf(
+                                                Color.Black.copy(alpha = 0.3f),
+                                                Color.Transparent,
+                                            ),
                                     ),
-                                )
-                            )
-
+                                ),
                     )
                 }
             }
@@ -84,51 +88,53 @@ fun CircleHeader(
                 Image(
                     painter = painterResource(bannerResId),
                     contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(2.25f)
-                        .clickable {
-                            onMediaClick(bannerResId, FullScreenMediaType.BANNER)
-                        }
-                        .sharedElement(
-                            rememberSharedContentState(
-                                key = FullScreenMediaSharedElementKey(
-                                    imgId = bannerResId,
-                                    fullScreenMediaType = FullScreenMediaType.BANNER
-                                )
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(2.25f)
+                            .clickable {
+                                onMediaClick(bannerResId, FullScreenMediaType.BANNER)
+                            }.sharedElement(
+                                rememberSharedContentState(
+                                    key =
+                                        FullScreenMediaSharedElementKey(
+                                            imgId = bannerResId,
+                                            fullScreenMediaType = FullScreenMediaType.BANNER,
+                                        ),
+                                ),
+                                animatedVisibilityScope = animatedContentScope,
                             ),
-                            animatedVisibilityScope = animatedContentScope
-                        ),
-                    contentScale = ContentScale.FillWidth
+                    contentScale = ContentScale.FillWidth,
                 )
             }
         }
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(top = 12.dp, bottom = 4.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 12.dp, bottom = 4.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column {
                     Text(
                         text = title,
                         style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Medium),
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                     Text(
                         text = "$memberCount members",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 FilledTonalButton(
                     onClick = {},
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp)
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 10.dp),
                 ) {
                     Text(text = "Join")
                 }
@@ -136,7 +142,7 @@ fun CircleHeader(
             Text(
                 text = "Obviously the Material You design doesn't improve branding, but you already know the point is for cohesion.",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
             )
         }
     }

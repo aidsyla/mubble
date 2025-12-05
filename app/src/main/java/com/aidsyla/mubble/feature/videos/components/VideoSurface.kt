@@ -62,10 +62,12 @@ internal fun VideoSurface(
     val centerOffsetAnimatable = remember { Animatable(Offset.Zero, Offset.VectorConverter) }
 
     centerOffset =
-        if (initialSize == IntSize.Zero) Offset.Zero else {
+        if (initialSize == IntSize.Zero) {
+            Offset.Zero
+        } else {
             Offset(
                 x = (initialSize.width / 2f) * (zoom - 1) - offset.x * zoom,
-                y = (initialSize.height / 2f) * (zoom - 1) - offset.y * zoom
+                y = (initialSize.height / 2f) * (zoom - 1) - offset.y * zoom,
             )
         }
 
@@ -88,29 +90,33 @@ internal fun VideoSurface(
     fun resetToCenter() {
         coroutineScope.launch {
             isAnimatingBack = true
-            val zoomJob = launch {
-                zoomAnimatable.snapTo(zoom)
-                zoomAnimatable.animateTo(
-                    targetValue = 1f,
-                    animationSpec = tween(
-                        durationMillis = 300,
-                        easing = FastOutSlowInEasing
+            val zoomJob =
+                launch {
+                    zoomAnimatable.snapTo(zoom)
+                    zoomAnimatable.animateTo(
+                        targetValue = 1f,
+                        animationSpec =
+                            tween(
+                                durationMillis = 300,
+                                easing = FastOutSlowInEasing,
+                            ),
                     )
-                )
-                zoom = 1f
-            }
+                    zoom = 1f
+                }
 
-            val offsetJob = launch {
-                centerOffsetAnimatable.snapTo(centerOffset)
-                centerOffsetAnimatable.animateTo(
-                    targetValue = Offset.Zero,
-                    animationSpec = tween(
-                        durationMillis = 300,
-                        easing = FastOutSlowInEasing
+            val offsetJob =
+                launch {
+                    centerOffsetAnimatable.snapTo(centerOffset)
+                    centerOffsetAnimatable.animateTo(
+                        targetValue = Offset.Zero,
+                        animationSpec =
+                            tween(
+                                durationMillis = 300,
+                                easing = FastOutSlowInEasing,
+                            ),
                     )
-                )
-                centerOffset = Offset.Zero
-            }
+                    centerOffset = Offset.Zero
+                }
             joinAll(zoomJob, offsetJob)
             offset = Offset.Zero
             isAnimatingBack = false
@@ -119,9 +125,10 @@ internal fun VideoSurface(
     }
 
     Box(
-        modifier = Modifier
-            .wrapContentSize(),
-        contentAlignment = Alignment.Center
+        modifier =
+            Modifier
+                .wrapContentSize(),
+        contentAlignment = Alignment.Center,
     ) {
         player?.let {
             MediaPlayerScreen(
@@ -132,31 +139,32 @@ internal fun VideoSurface(
                         layoutCoordinates = coordinates
                         initialSize = coordinates.size
                         val position = coordinates.localToRoot(Offset.Zero)
-                        initialCenter = Offset(
-                            x = position.x + initialSize.width / 2f,
-                            y = position.y + initialSize.height / 2f
-                        )
-                    }
-                    .then(
-                        if (isAnimatingBack)
-                            Modifier else
+                        initialCenter =
+                            Offset(
+                                x = position.x + initialSize.width / 2f,
+                                y = position.y + initialSize.height / 2f,
+                            )
+                    }.then(
+                        if (isAnimatingBack) {
+                            Modifier
+                        } else {
                             Modifier.pointerInput(Unit) {
                                 detectTransformGesturesCustom(
                                     onGestureEnd = {
                                         resetToCenter()
-                                    }
+                                    },
                                 ) { centroid, pan, gestureZoom ->
                                     isZooming(true)
                                     val oldZoom = zoom
                                     val newZoom = max(zoom * gestureZoom, 0.7f)
 
                                     offset = (offset + centroid / oldZoom) -
-                                            (centroid / newZoom + pan / oldZoom)
+                                        (centroid / newZoom + pan / oldZoom)
                                     zoom = newZoom
                                 }
                             }
-                    )
-                    .graphicsLayer(
+                        },
+                    ).graphicsLayer(
                         scaleX = zoomAnimatable.value,
                         scaleY = zoomAnimatable.value,
                         translationX = centerOffsetAnimatable.value.x,
@@ -169,12 +177,16 @@ internal fun VideoSurface(
 
 @androidx.annotation.OptIn(UnstableApi::class)
 @Composable
-private fun MediaPlayerScreen(player: Player, modifier: Modifier = Modifier) {
+private fun MediaPlayerScreen(
+    player: Player,
+    modifier: Modifier = Modifier,
+) {
     var currentContentScale by remember { mutableStateOf(ContentScale.FillWidth) }
 
     Box(
-        modifier = modifier
-            .fillMaxSize()
+        modifier =
+            modifier
+                .fillMaxSize(),
     ) {
         val presentationState = rememberPresentationState(player)
         val videoSizeDp = presentationState.videoSizeDp
@@ -185,31 +197,33 @@ private fun MediaPlayerScreen(player: Player, modifier: Modifier = Modifier) {
                 val videoHeight = videoSizeDp.height
                 val videoAspectRatio = videoWidth / videoHeight
 
-                currentContentScale = when {
-                    videoAspectRatio <= 9f / 16f + 0.01f -> {
-                        ContentScale.Crop
+                currentContentScale =
+                    when {
+                        videoAspectRatio <= 9f / 16f + 0.01f -> {
+                            ContentScale.Crop
+                        }
+
+                        else -> {
+                            ContentScale.Fit
+                        }
                     }
 
-                    else -> {
-                        ContentScale.Fit
+                val aspectRatio =
+                    when {
+                        abs(videoAspectRatio - (16f / 9f)) < 0.01f -> "16:9 (Landscape)"
+                        abs(videoAspectRatio - (4f / 3f)) < 0.01f -> "4:3 (Standard)"
+                        abs(videoAspectRatio - (1f / 1f)) < 0.01f -> "1:1 (Square)"
+                        abs(videoAspectRatio - (9f / 16f)) < 0.01f -> "9:16 (Portrait)"
+                        videoAspectRatio < 9f / 16f -> "Taller than 9:16 (Portrait)"
+                        videoAspectRatio > (16f / 9f) -> "Wider than 16:9 (Ultra-wide Landscape)"
+                        videoAspectRatio > (4f / 3f) -> "Between 4:3 and 16:9 (Wide Landscape)"
+                        videoAspectRatio > (1f / 1f) -> "Between 1:1 and 4:3 (Slightly Wide Landscape)"
+                        else -> "Custom/Unknown $videoAspectRatio"
                     }
-                }
-
-                val aspectRatio = when {
-                    abs(videoAspectRatio - (16f / 9f)) < 0.01f -> "16:9 (Landscape)"
-                    abs(videoAspectRatio - (4f / 3f)) < 0.01f -> "4:3 (Standard)"
-                    abs(videoAspectRatio - (1f / 1f)) < 0.01f -> "1:1 (Square)"
-                    abs(videoAspectRatio - (9f / 16f)) < 0.01f -> "9:16 (Portrait)"
-                    videoAspectRatio < 9f / 16f -> "Taller than 9:16 (Portrait)"
-                    videoAspectRatio > (16f / 9f) -> "Wider than 16:9 (Ultra-wide Landscape)"
-                    videoAspectRatio > (4f / 3f) -> "Between 4:3 and 16:9 (Wide Landscape)"
-                    videoAspectRatio > (1f / 1f) -> "Between 1:1 and 4:3 (Slightly Wide Landscape)"
-                    else -> "Custom/Unknown $videoAspectRatio"
-                }
 
                 Log.d(
                     "VIDEO_SIZE",
-                    "Aspect Ratio: $aspectRatio, Applied Scale: $currentContentScale"
+                    "Aspect Ratio: $aspectRatio, Applied Scale: $currentContentScale",
                 )
             } else {
                 currentContentScale = ContentScale.FillWidth
@@ -222,7 +236,7 @@ private fun MediaPlayerScreen(player: Player, modifier: Modifier = Modifier) {
         PlayerSurface(
             player = player,
             surfaceType = SURFACE_TYPE_SURFACE_VIEW,
-            modifier = scaledModifier
+            modifier = scaledModifier,
         )
 
         if (presentationState.coverSurface) {

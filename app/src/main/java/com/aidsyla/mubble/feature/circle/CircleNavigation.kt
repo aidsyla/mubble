@@ -14,7 +14,7 @@ import com.aidsyla.mubble.feature.profile.components.FullScreenMediaType
 fun NavController.navigateToCircle(
     navOptions: NavOptions? = null,
     circleId: String,
-    origin: PostOrigin
+    origin: PostOrigin,
 ) {
     this.navigate(CircleRoute(circleId = circleId, origin = origin), navOptions)
 }
@@ -27,14 +27,14 @@ fun NavGraphBuilder.circleScreen(
 ) {
     composable<CircleRoute> {
         CompositionLocalProvider(
-            LocalNavAnimatedVisibilityScope provides this
+            LocalNavAnimatedVisibilityScope provides this,
         ) {
             CircleScreen(
                 origin = it.toRoute<CircleRoute>().origin,
                 onUserClick = onUserClick,
                 onPostClick = onPostClick,
                 onMediaClick = onMediaClick,
-                onBackClick = onBackClick
+                onBackClick = onBackClick,
             )
         }
     }

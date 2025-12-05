@@ -20,12 +20,12 @@ fun NavGraphBuilder.homeScreen(
 ) {
     composable<HomeRoute> {
         CompositionLocalProvider(
-            LocalNavAnimatedVisibilityScope provides this
+            LocalNavAnimatedVisibilityScope provides this,
         ) {
             HomeScreen(
                 onCircleClick = onCircleClick,
                 onUserClick = onUserClick,
-                onPostClick = onPostClick
+                onPostClick = onPostClick,
             )
         }
     }

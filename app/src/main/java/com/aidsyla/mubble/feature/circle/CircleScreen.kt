@@ -41,16 +41,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.aidsyla.mubble.common.components.ScrollReactingTopAppBar
 import com.aidsyla.mubble.common.navigation.LocalNavAnimatedVisibilityScope
 import com.aidsyla.mubble.common.navigation.LocalSharedTransitionScope
 import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
 import com.aidsyla.mubble.common.navigation.shared_elements.PostSharedElementKey
 import com.aidsyla.mubble.common.navigation.shared_elements.PostSharedElementType
-import com.aidsyla.mubble.feature.circle.model.Circle
 import com.aidsyla.mubble.data.FeedItem
+import com.aidsyla.mubble.feature.circle.model.Circle
 import com.aidsyla.mubble.feature.profile.components.FullScreenMediaType
 import com.aidsyla.mubble.feature.profile.components.STICKY_HEADER
-import com.aidsyla.mubble.common.components.ScrollReactingTopAppBar
 import com.aidsyla.mubble.feature.profile.components.getScreenHeight
 import com.aidsyla.mubble.feature.profile.components.rememberIsHeaderSticky
 import com.aidsyla.mubble.ui.theme.MubbleTheme
@@ -66,9 +66,8 @@ fun CircleScreen(
     onBackClick: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    when(val state = uiState) {
+    when (val state = uiState) {
         CircleUiState.Loading -> {
-
         }
         is CircleUiState.Success -> {
             CircleContent(
@@ -81,13 +80,13 @@ fun CircleScreen(
                         title = state.circle.name,
                         memberCount = state.circle.memberCount,
                         bannerResId = state.circle.bannerResId,
-                        onMediaClick = onMediaClick
+                        onMediaClick = onMediaClick,
                     )
                 },
                 onMoreClick = {},
                 onUserClick = onUserClick,
                 onPostClick = onPostClick,
-                onBackClick = onBackClick
+                onBackClick = onBackClick,
             )
         }
     }
@@ -107,10 +106,12 @@ fun CircleContent(
     onPostClick: (String, PostOrigin) -> Unit,
     onBackClick: () -> Unit,
 ) {
-    val sharedTransitionScope = LocalSharedTransitionScope.current
-        ?: throw IllegalStateException("No SharedElementScope found")
-    val animatedContentScope = LocalNavAnimatedVisibilityScope.current
-        ?: throw IllegalStateException("No AnimatedVisibility found")
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current
+            ?: throw IllegalStateException("No SharedElementScope found")
+    val animatedContentScope =
+        LocalNavAnimatedVisibilityScope.current
+            ?: throw IllegalStateException("No AnimatedVisibility found")
 
     val roundedCornerAnimation by animatedContentScope.transition.animateDp {
         when (it) {
@@ -122,19 +123,23 @@ fun CircleContent(
 
     val lazyListState = rememberLazyListState()
 
-    val nestedScrollConnection = remember {
-        object : NestedScrollConnection {
-            override fun onPreScroll(
-                available: Offset,
-                source: NestedScrollSource,
-            ): Offset {
-                return if (available.y > 0) Offset.Zero else Offset(
-                    x = 0f,
-                    y = -lazyListState.dispatchRawDelta(-available.y)
-                )
+    val nestedScrollConnection =
+        remember {
+            object : NestedScrollConnection {
+                override fun onPreScroll(
+                    available: Offset,
+                    source: NestedScrollSource,
+                ): Offset =
+                    if (available.y > 0) {
+                        Offset.Zero
+                    } else {
+                        Offset(
+                            x = 0f,
+                            y = -lazyListState.dispatchRawDelta(-available.y),
+                        )
+                    }
             }
         }
-    }
 
     val statusBars = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
     val offsetAmount = TopAppBarDefaults.TopAppBarExpandedHeight + statusBars
@@ -145,33 +150,36 @@ fun CircleContent(
     val isHeaderDocked by rememberIsHeaderSticky(
         lazyListState = lazyListState,
         itemKey = STICKY_HEADER,
-        offsetAmount = offsetAmount
+        offsetAmount = offsetAmount,
     )
     val dividerAlpha by animateFloatAsState(
-        targetValue = if (isHeaderDocked) 1f else 0f
+        targetValue = if (isHeaderDocked) 1f else 0f,
     )
 
     with(sharedTransitionScope) {
         Scaffold(
-            modifier = Modifier
-                .sharedBounds(
-                    rememberSharedContentState(
-                        key = PostSharedElementKey(
-                            postId = circle.id,
-                            origin = origin,
-                            type = PostSharedElementType.Bounds
-                        )
+            modifier =
+                Modifier
+                    .sharedBounds(
+                        rememberSharedContentState(
+                            key =
+                                PostSharedElementKey(
+                                    postId = circle.id,
+                                    origin = origin,
+                                    type = PostSharedElementType.Bounds,
+                                ),
+                        ),
+                        resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds(contentScale = ContentScale.Crop),
+                        clipInOverlayDuringTransition =
+                            OverlayClip(
+                                RoundedCornerShape(
+                                    roundedCornerAnimation,
+                                ),
+                            ),
+                        enter = EnterTransition.None,
+                        exit = ExitTransition.None,
+                        animatedVisibilityScope = animatedContentScope,
                     ),
-                    resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds(contentScale = ContentScale.Crop),
-                    clipInOverlayDuringTransition = OverlayClip(
-                        RoundedCornerShape(
-                            roundedCornerAnimation
-                        )
-                    ),
-                    enter = EnterTransition.None,
-                    exit = ExitTransition.None,
-                    animatedVisibilityScope = animatedContentScope
-                ),
             topBar = {
                 ScrollReactingTopAppBar(
                     modifier = Modifier,
@@ -182,10 +190,10 @@ fun CircleContent(
                     onMoreClick = onMoreClick,
                     onBackClick = onBackClick,
                     onNavigateToSettings = {},
-                    onEditClick = {}
+                    onEditClick = {},
                 )
             },
-            contentWindowInsets = WindowInsets(0, 0, 0, 0)
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
         ) {
             LazyColumn(
                 state = lazyListState,
@@ -196,33 +204,37 @@ fun CircleContent(
                 }
                 item(key = STICKY_HEADER) {
                     Surface(
-                        modifier = Modifier
-                            .zIndex(1f),
-                        color = MaterialTheme.colorScheme.surface
+                        modifier =
+                            Modifier
+                                .zIndex(1f),
+                        color = MaterialTheme.colorScheme.surface,
                     ) {
                         Column {
                             ChipsRow(
-                                modifier = Modifier
-                                    .padding(horizontal = 16.dp)
+                                modifier =
+                                    Modifier
+                                        .padding(horizontal = 16.dp),
                             )
                             HorizontalDivider(
-                                color = DividerDefaults.color.copy(alpha = dividerAlpha)
+                                color = DividerDefaults.color.copy(alpha = dividerAlpha),
                             )
                         }
                     }
                 }
                 item {
                     LazyColumn(
-                        modifier = modifier
-                            .fillMaxSize()
-                            .height(lazyColumnHeight)
-                            .nestedScroll(nestedScrollConnection),
-                        contentPadding = PaddingValues(
-                            start = 8.dp,
-                            end = 8.dp,
-                            top = 4.dp,
-                            bottom = 16.dp
-                        ),
+                        modifier =
+                            modifier
+                                .fillMaxSize()
+                                .height(lazyColumnHeight)
+                                .nestedScroll(nestedScrollConnection),
+                        contentPadding =
+                            PaddingValues(
+                                start = 8.dp,
+                                end = 8.dp,
+                                top = 4.dp,
+                                bottom = 16.dp,
+                            ),
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
                         circlePostFeed(
@@ -230,7 +242,7 @@ fun CircleContent(
                             origin = PostOrigin.HomeFollowing,
                             onUserClick = onUserClick,
                             onMoreClick = onMoreClick,
-                            onPostClick = onPostClick
+                            onPostClick = onPostClick,
                         )
                     }
                 }
@@ -246,10 +258,10 @@ private fun CircleScreenPreview() {
         Surface {
             CircleScreen(
                 origin = PostOrigin.HomeMyCircles,
-                onUserClick = {  },
-                onMediaClick = { _,_ -> },
+                onUserClick = { },
+                onMediaClick = { _, _ -> },
                 onPostClick = { _, _ -> },
-                onBackClick = {}
+                onBackClick = {},
             )
         }
     }

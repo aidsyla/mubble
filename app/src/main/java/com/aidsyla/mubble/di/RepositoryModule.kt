@@ -14,23 +14,16 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
-
     @Binds
-    abstract fun bindUserDataRepository(
-        userDataRepository: UserDataRepositoryImpl,
-    ): UserDataRepository
+    abstract fun bindUserDataRepository(userDataRepository: UserDataRepositoryImpl): UserDataRepository
 
     companion object {
         @Provides
         @Singleton
-        fun provideUserRepo(): UserRepo {
-            return UserRepo
-        }
+        fun provideUserRepo(): UserRepo = UserRepo
 
         @Provides
         @Singleton
-        fun provideChatRepo(): ChatRepo {
-            return ChatRepo
-        }
+        fun provideChatRepo(): ChatRepo = ChatRepo
     }
 }

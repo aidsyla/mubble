@@ -3,7 +3,6 @@ package com.aidsyla.mubble.common.components
 import android.app.Activity
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -36,7 +35,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
@@ -62,10 +60,12 @@ fun ScrollReactingTopAppBar(
     onEditClick: () -> Unit,
     onBackClick: () -> Unit,
 ) {
-    val sharedTransitionScope = LocalSharedTransitionScope.current
-        ?: throw IllegalStateException("No SharedElementScope found")
-    val animatedContentScope = LocalNavAnimatedVisibilityScope.current
-        ?: throw IllegalStateException("No AnimatedVisibility found")
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current
+            ?: throw IllegalStateException("No SharedElementScope found")
+    val animatedContentScope =
+        LocalNavAnimatedVisibilityScope.current
+            ?: throw IllegalStateException("No AnimatedVisibility found")
 
     val surface = MaterialTheme.colorScheme.surface
     val onSurface = MaterialTheme.colorScheme.onSurface
@@ -75,7 +75,7 @@ fun ScrollReactingTopAppBar(
     val targetAlpha by rememberTargetAlpha(
         lazyListState = lazyListState,
         transitionLength = transitionLength,
-        offsetAmount = offsetAmount
+        offsetAmount = offsetAmount,
     )
     val topAppBarBackgroundColor = surface.copy(alpha = targetAlpha)
 
@@ -100,13 +100,15 @@ fun ScrollReactingTopAppBar(
 
     val isLightMode = !LocalDarkTheme.current
     val statusBarIconColorChangeThreshold = 0.3f
-    val useDarkStatusBarIcons = remember(targetAlpha, isLightMode) {
-        if (targetAlpha >= statusBarIconColorChangeThreshold) isLightMode else false
-    }
+    val useDarkStatusBarIcons =
+        remember(targetAlpha, isLightMode) {
+            if (targetAlpha >= statusBarIconColorChangeThreshold) isLightMode else false
+        }
 
-    val insetsController = remember(window, view) {
-        WindowCompat.getInsetsController(window, view)
-    }
+    val insetsController =
+        remember(window, view) {
+            WindowCompat.getInsetsController(window, view)
+        }
 
     DisposableEffect(insetsController, useDarkStatusBarIcons) {
         insetsController.isAppearanceLightStatusBars = useDarkStatusBarIcons
@@ -117,37 +119,40 @@ fun ScrollReactingTopAppBar(
     }
 
     Column(
-        modifier = modifier
-            .background(color = topAppBarBackgroundColor)
-            .windowInsetsPadding(TopAppBarDefaults.windowInsets)
+        modifier =
+            modifier
+                .background(color = topAppBarBackgroundColor)
+                .windowInsetsPadding(TopAppBarDefaults.windowInsets),
     ) {
         with(sharedTransitionScope) {
             with(animatedContentScope) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(TopAppBarDefaults.TopAppBarExpandedHeight)
-                        .renderInSharedTransitionScopeOverlay(
-                            zIndexInOverlay = 1f
-                        )
-                        .animateEnterExit()
-                        .padding(horizontal = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(TopAppBarDefaults.TopAppBarExpandedHeight)
+                            .renderInSharedTransitionScopeOverlay(
+                                zIndexInOverlay = 1f,
+                            ).animateEnterExit()
+                            .padding(horizontal = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    if (!isCurrentUser)
+                    if (!isCurrentUser) {
                         IconButton(
                             onClick = onBackClick,
-                            colors = IconButtonDefaults.iconButtonColors(
-                                contentColor = iconColor
-                            )
+                            colors =
+                                IconButtonDefaults.iconButtonColors(
+                                    contentColor = iconColor,
+                                ),
                         ) {
                             Icon(
                                 painter = MubbleTheme.Icons.ArrowBack,
                                 contentDescription = null,
-                                modifier = Modifier
-                                    .offset(x = 1.dp, y = 1.dp)
-                                    .alpha(shadowAlpha)
-                                    .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
+                                modifier =
+                                    Modifier
+                                        .offset(x = 1.dp, y = 1.dp)
+                                        .alpha(shadowAlpha)
+                                        .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
                                 tint = shadowColor,
                             )
                             Icon(
@@ -155,32 +160,36 @@ fun ScrollReactingTopAppBar(
                                 contentDescription = "Back",
                             )
                         }
+                    }
                     Text(
                         text = title,
-                        modifier = Modifier
-                            .padding(start = 12.dp)
-                            .alpha(targetAlpha),
+                        modifier =
+                            Modifier
+                                .padding(start = 12.dp)
+                                .alpha(targetAlpha),
                         style = MaterialTheme.typography.titleLarge,
-                        color = onSurface
+                        color = onSurface,
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         if (isCurrentUser) {
                             IconButton(
                                 onClick = onEditClick,
-                                colors = IconButtonDefaults.iconButtonColors(
-                                    contentColor = iconVariantColor
-                                )
+                                colors =
+                                    IconButtonDefaults.iconButtonColors(
+                                        contentColor = iconVariantColor,
+                                    ),
                             ) {
                                 Icon(
                                     painter = MubbleTheme.Icons.Edit,
                                     contentDescription = null,
-                                    modifier = Modifier
-                                        .offset(x = 1.dp, y = 1.dp)
-                                        .alpha(shadowAlpha)
-                                        .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
+                                    modifier =
+                                        Modifier
+                                            .offset(x = 1.dp, y = 1.dp)
+                                            .alpha(shadowAlpha)
+                                            .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
                                     tint = shadowColor,
                                 )
                                 Icon(
@@ -190,17 +199,19 @@ fun ScrollReactingTopAppBar(
                             }
                             IconButton(
                                 onClick = {},
-                                colors = IconButtonDefaults.iconButtonColors(
-                                    contentColor = iconVariantColor
-                                )
+                                colors =
+                                    IconButtonDefaults.iconButtonColors(
+                                        contentColor = iconVariantColor,
+                                    ),
                             ) {
                                 Icon(
                                     painter = MubbleTheme.Icons.Save,
                                     contentDescription = null,
-                                    modifier = Modifier
-                                        .offset(x = 1.dp, y = 1.dp)
-                                        .alpha(shadowAlpha)
-                                        .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
+                                    modifier =
+                                        Modifier
+                                            .offset(x = 1.dp, y = 1.dp)
+                                            .alpha(shadowAlpha)
+                                            .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
                                     tint = shadowColor,
                                 )
                                 Icon(
@@ -210,17 +221,19 @@ fun ScrollReactingTopAppBar(
                             }
                             IconButton(
                                 onClick = onNavigateToSettings,
-                                colors = IconButtonDefaults.iconButtonColors(
-                                    contentColor = iconVariantColor
-                                )
+                                colors =
+                                    IconButtonDefaults.iconButtonColors(
+                                        contentColor = iconVariantColor,
+                                    ),
                             ) {
                                 Icon(
                                     imageVector = MubbleTheme.Icons.Settings,
                                     contentDescription = null,
-                                    modifier = Modifier
-                                        .offset(x = 1.dp, y = 1.dp)
-                                        .alpha(shadowAlpha)
-                                        .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
+                                    modifier =
+                                        Modifier
+                                            .offset(x = 1.dp, y = 1.dp)
+                                            .alpha(shadowAlpha)
+                                            .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
                                     tint = shadowColor,
                                 )
                                 Icon(
@@ -231,17 +244,19 @@ fun ScrollReactingTopAppBar(
                         } else {
                             IconButton(
                                 onClick = onMoreClick,
-                                colors = IconButtonDefaults.iconButtonColors(
-                                    contentColor = iconVariantColor
-                                )
+                                colors =
+                                    IconButtonDefaults.iconButtonColors(
+                                        contentColor = iconVariantColor,
+                                    ),
                             ) {
                                 Icon(
                                     painter = MubbleTheme.Icons.MoreHorizontal,
                                     contentDescription = null,
-                                    modifier = Modifier
-                                        .offset(x = 1.dp, y = 1.dp)
-                                        .alpha(shadowAlpha)
-                                        .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
+                                    modifier =
+                                        Modifier
+                                            .offset(x = 1.dp, y = 1.dp)
+                                            .alpha(shadowAlpha)
+                                            .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
                                     tint = shadowColor,
                                 )
                                 Icon(
@@ -264,9 +279,10 @@ private fun rememberTargetAlpha(
     offsetAmount: Dp,
 ): State<Float> {
     val density = LocalDensity.current
-    val alphaTransitionLengthPx = remember(transitionLength, density) {
-        with(density) { (transitionLength / 2f).toPx() }
-    }
+    val alphaTransitionLengthPx =
+        remember(transitionLength, density) {
+            with(density) { (transitionLength / 2f).toPx() }
+        }
     return remember(offsetAmount, alphaTransitionLengthPx, density) {
         derivedStateOf {
             val stickyKeyItemDockingOffsetPx = with(density) { offsetAmount.toPx() }

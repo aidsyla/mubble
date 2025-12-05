@@ -28,21 +28,23 @@ internal fun ExpandButton(
                 .minimumInteractiveComponentSize()
                 .size(
                     IconButtonDefaults.extraSmallContainerSize(
-                        IconButtonDefaults.IconButtonWidthOption.Uniform
-                    )
+                        IconButtonDefaults.IconButtonWidthOption.Uniform,
+                    ),
                 ),
-        shapes = IconToggleButtonShapes(
-            shape = IconButtonDefaults.extraSmallRoundShape,
-            pressedShape = IconButtonDefaults.extraSmallPressedShape,
-            checkedShape = IconButtonDefaults.extraSmallSquareShape
-        ),
-        colors = IconButtonDefaults.outlinedIconToggleButtonColors(
-            containerColor = Color.Black.copy(alpha = 0.4f),
-            contentColor = Color.White,
-            checkedContainerColor = Color.Black.copy(alpha = 0.25f),
-            checkedContentColor = Color.White
-        ),
-        border = BorderStroke(1.dp, Color.Transparent)
+        shapes =
+            IconToggleButtonShapes(
+                shape = IconButtonDefaults.extraSmallRoundShape,
+                pressedShape = IconButtonDefaults.extraSmallPressedShape,
+                checkedShape = IconButtonDefaults.extraSmallSquareShape,
+            ),
+        colors =
+            IconButtonDefaults.outlinedIconToggleButtonColors(
+                containerColor = Color.Black.copy(alpha = 0.4f),
+                contentColor = Color.White,
+                checkedContainerColor = Color.Black.copy(alpha = 0.25f),
+                checkedContentColor = Color.White,
+            ),
+        border = BorderStroke(1.dp, Color.Transparent),
     ) {
         content()
     }

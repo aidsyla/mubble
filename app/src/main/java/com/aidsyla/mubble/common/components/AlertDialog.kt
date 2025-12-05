@@ -29,7 +29,7 @@ fun AlertDialog(
             FilledTonalButton(
                 onClick = {
                     onConfirmation()
-                }
+                },
             ) {
                 Text(text = confirmButtonText)
             }
@@ -38,10 +38,10 @@ fun AlertDialog(
             TextButton(
                 onClick = {
                     onDismissRequest()
-                }
+                },
             ) {
                 Text(text = "Cancel")
             }
-        }
+        },
     )
 }

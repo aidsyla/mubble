@@ -51,10 +51,12 @@ fun MubbleListTabPager(
     actions: @Composable RowScope.() -> Unit = {},
     appBarTitle: @Composable () -> Unit,
 ) {
-    val sharedTransitionScope = LocalSharedTransitionScope.current
-        ?: throw IllegalStateException("No SharedElementScope found")
-    val animatedContentScope = LocalNavAnimatedVisibilityScope.current
-        ?: throw IllegalStateException("No AnimatedVisibility found")
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current
+            ?: throw IllegalStateException("No SharedElementScope found")
+    val animatedContentScope =
+        LocalNavAnimatedVisibilityScope.current
+            ?: throw IllegalStateException("No AnimatedVisibility found")
 
     val isAtTopFirst = firstPageListState.rememberIsAtTop()
     val isAtTopSecond = secondPageListState.rememberIsAtTop()
@@ -64,14 +66,16 @@ fun MubbleListTabPager(
             scrollBehavior,
             pagerState,
             isAtTopFirst,
-            isAtTopSecond
+            isAtTopSecond,
         )
 
     val dividerAlpha by animateFloatAsState(
-        targetValue = state.targetDividerAlpha, label = "dividerAlpha"
+        targetValue = state.targetDividerAlpha,
+        label = "dividerAlpha",
     )
     val appBarAlpha by animateFloatAsState(
-        targetValue = state.targetAppBarAlpha, label = "appBarAlpha"
+        targetValue = state.targetAppBarAlpha,
+        label = "appBarAlpha",
     )
 
     val animatedAppBarColor = MaterialTheme.colorScheme.surface.copy(alpha = appBarAlpha)
@@ -82,26 +86,27 @@ fun MubbleListTabPager(
             with(animatedContentScope) {
                 with(sharedTransitionScope) {
                     Surface(
-                        modifier = Modifier
-                            .renderInSharedTransitionScopeOverlay(
-                                zIndexInOverlay = 1f
-                            )
-                            .animateEnterExit(),
-                        color = animatedAppBarColor
+                        modifier =
+                            Modifier
+                                .renderInSharedTransitionScopeOverlay(
+                                    zIndexInOverlay = 1f,
+                                ).animateEnterExit(),
+                        color = animatedAppBarColor,
                     ) {
                         Box {
                             CenterAlignedTopAppBar(
-                                colors = TopAppBarDefaults.topAppBarColors(
-                                    containerColor = Color.Transparent,
-                                    scrolledContainerColor = Color.Transparent,
-                                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
-                                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                                    actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                                ),
+                                colors =
+                                    TopAppBarDefaults.topAppBarColors(
+                                        containerColor = Color.Transparent,
+                                        scrolledContainerColor = Color.Transparent,
+                                        navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+                                        titleContentColor = MaterialTheme.colorScheme.onSurface,
+                                        actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    ),
                                 navigationIcon = navigationIcon,
                                 title = appBarTitle,
                                 actions = actions,
-                                scrollBehavior = scrollBehavior
+                                scrollBehavior = scrollBehavior,
                             )
                             SubtleHorizontalDivider(
                                 modifier = Modifier.align(Alignment.BottomCenter).alpha(dividerAlpha),
@@ -110,22 +115,24 @@ fun MubbleListTabPager(
                     }
                 }
             }
-
-        }, contentWindowInsets = WindowInsets(0.dp)
+        },
+        contentWindowInsets = WindowInsets(0.dp),
     ) {
         val topInset = it.calculateTopPadding()
-        val pagerTopPadding: Dp = if (state.collapsedFraction != 1f) {
-            lerp(start = topInset, stop = 0.dp, fraction = state.collapsedFraction)
-        } else {
-            0.dp
-        }
+        val pagerTopPadding: Dp =
+            if (state.collapsedFraction != 1f) {
+                lerp(start = topInset, stop = 0.dp, fraction = state.collapsedFraction)
+            } else {
+                0.dp
+            }
 
         HorizontalPager(
             state = pagerState,
             verticalAlignment = Alignment.Top,
-            modifier = modifier
-                .fillMaxSize()
-                .padding(top = pagerTopPadding)
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .padding(top = pagerTopPadding),
         ) { pageIndex ->
             when (pageIndex) {
                 0 -> firstPage(firstPageListState)
@@ -163,59 +170,66 @@ fun MubbleGridTabPager(
             pagerState,
             isAtTopFirst,
             isAtTopSecond,
-            isAtTopThird
+            isAtTopThird,
         )
 
     Log.d("TEST", "MubbleGridTabPager: $isAtTopFirst")
 
     val dividerAlpha by animateFloatAsState(
-        targetValue = state.targetDividerAlpha, label = "dividerAlpha"
+        targetValue = state.targetDividerAlpha,
+        label = "dividerAlpha",
     )
     val appBarAlpha by animateFloatAsState(
-        targetValue = state.targetAppBarAlpha, label = "appBarAlpha"
+        targetValue = state.targetAppBarAlpha,
+        label = "appBarAlpha",
     )
 
     val animatedAppBarColor = MaterialTheme.colorScheme.surface.copy(alpha = appBarAlpha)
 
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection), topBar = {
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
             Surface(
-                color = animatedAppBarColor
+                color = animatedAppBarColor,
             ) {
                 Box {
                     CenterAlignedTopAppBar(
-                        colors = TopAppBarDefaults.topAppBarColors(
-                            containerColor = Color.Transparent,
-                            scrolledContainerColor = Color.Transparent,
-                            navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
-                            titleContentColor = MaterialTheme.colorScheme.onSurface,
-                            actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        ),
+                        colors =
+                            TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color.Transparent,
+                                scrolledContainerColor = Color.Transparent,
+                                navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+                                titleContentColor = MaterialTheme.colorScheme.onSurface,
+                                actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            ),
                         navigationIcon = navigationIcon,
                         title = appBarTitle,
                         actions = actions,
-                        scrollBehavior = scrollBehavior
+                        scrollBehavior = scrollBehavior,
                     )
                     SubtleHorizontalDivider(
                         modifier = Modifier.align(Alignment.BottomCenter).alpha(dividerAlpha),
                     )
                 }
             }
-        }, contentWindowInsets = WindowInsets(0.dp)
+        },
+        contentWindowInsets = WindowInsets(0.dp),
     ) {
         val topInset = it.calculateTopPadding()
-        val pagerTopPadding: Dp = if (state.collapsedFraction != 1f) {
-            lerp(start = topInset, stop = 0.dp, fraction = state.collapsedFraction)
-        } else {
-            0.dp
-        }
+        val pagerTopPadding: Dp =
+            if (state.collapsedFraction != 1f) {
+                lerp(start = topInset, stop = 0.dp, fraction = state.collapsedFraction)
+            } else {
+                0.dp
+            }
 
         HorizontalPager(
             state = pagerState,
             verticalAlignment = Alignment.Top,
-            modifier = modifier
-                .fillMaxSize()
-                .padding(top = pagerTopPadding)
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .padding(top = pagerTopPadding),
         ) { pageIndex ->
             when (pageIndex) {
                 0 -> firstPage(firstPageGridState)
@@ -269,37 +283,37 @@ private fun rememberCollapsingTopBarScreenState(
     isAtTopFirst: Boolean,
     isAtTopSecond: Boolean,
     isAtTopThird: Boolean? = null,
-): CollapsingTopBarScreenState {
-    return remember(scrollBehavior, pagerState, isAtTopFirst, isAtTopSecond) {
+): CollapsingTopBarScreenState =
+    remember(scrollBehavior, pagerState, isAtTopFirst, isAtTopSecond) {
         CollapsingTopBarScreenState(
-            scrollBehavior, pagerState, isAtTopFirst, isAtTopSecond, isAtTopThird
+            scrollBehavior,
+            pagerState,
+            isAtTopFirst,
+            isAtTopSecond,
+            isAtTopThird,
         )
     }
-}
 
 @Composable
-fun LazyListState.rememberIsAtTop(): Boolean {
-    return remember {
+fun LazyListState.rememberIsAtTop(): Boolean =
+    remember {
         derivedStateOf {
             firstVisibleItemIndex == 0 && firstVisibleItemScrollOffset == 0
         }
     }.value
-}
 
 @Composable
-fun LazyGridState.rememberIsAtTop(): Boolean {
-    return remember {
+fun LazyGridState.rememberIsAtTop(): Boolean =
+    remember {
         derivedStateOf {
             firstVisibleItemIndex == 0 && firstVisibleItemScrollOffset == 0
         }
     }.value
-}
 
 @Composable
-fun LazyStaggeredGridState.rememberIsAtTop(): Boolean {
-    return remember {
+fun LazyStaggeredGridState.rememberIsAtTop(): Boolean =
+    remember {
         derivedStateOf {
             firstVisibleItemIndex == 0 && firstVisibleItemScrollOffset == 0
         }
     }.value
-}

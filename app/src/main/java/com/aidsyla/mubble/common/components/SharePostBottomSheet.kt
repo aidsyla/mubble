@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -40,7 +39,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExpandedFullScreenSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -59,9 +57,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.aidsyla.mubble.R
 import com.aidsyla.mubble.common.components.layout.rememberIsAtTop
 import com.aidsyla.mubble.data.UserRepo
 import com.aidsyla.mubble.feature.profile.follow.SearchResults
@@ -90,26 +86,33 @@ fun SharePostBottomSheet(
                     targetState = searchBarState.currentValue,
                     contentAlignment = Alignment.Center,
                     transitionSpec = {
-                        fadeIn() + expandIn(
-                            expandFrom = Alignment.Center, clip = false
-                        ) togetherWith fadeOut() + shrinkOut(
-                            shrinkTowards = Alignment.Center, clip = false
-                        )
-                    }) { targetSearchBarValue ->
+                        fadeIn() +
+                            expandIn(
+                                expandFrom = Alignment.Center,
+                                clip = false,
+                            ) togetherWith fadeOut() +
+                            shrinkOut(
+                                shrinkTowards = Alignment.Center,
+                                clip = false,
+                            )
+                    },
+                ) { targetSearchBarValue ->
                     when (targetSearchBarValue) {
                         SearchBarValue.Expanded -> {
                             IconButton(
-                                onClick = { coroutineScope.launch { searchBarState.animateToCollapsed() } }) {
+                                onClick = { coroutineScope.launch { searchBarState.animateToCollapsed() } },
+                            ) {
                                 Icon(
                                     painter = MubbleTheme.Icons.ArrowBack,
-                                    contentDescription = "Back"
+                                    contentDescription = "Back",
                                 )
                             }
                         }
 
                         SearchBarValue.Collapsed -> {
                             Icon(
-                                painter = MubbleTheme.Icons.Search, contentDescription = "Search"
+                                painter = MubbleTheme.Icons.Search,
+                                contentDescription = "Search",
                             )
                         }
                     }
@@ -117,7 +120,6 @@ fun SharePostBottomSheet(
             },
         )
     }
-
 
     val bottomSheetState =
         rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -130,26 +132,30 @@ fun SharePostBottomSheet(
     ExpandedFullScreenSearchBar(
         state = searchBarState,
         inputField = inputField,
-        windowInsets = { WindowInsets.statusBars }) {
+        windowInsets = { WindowInsets.statusBars },
+    ) {
         SearchResults(
             onResultClick = { result ->
                 textFieldState.setTextAndPlaceCursorAtEnd(result)
                 coroutineScope.launch { searchBarState.animateToCollapsed() }
-            })
+            },
+        )
     }
 
     if (openSheet) {
         ModalBottomSheet(
             dragHandle = {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(),
                 ) {
                     Column {
                         Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 12.dp)
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 12.dp),
                         ) {
                             Surface(
                                 modifier =
@@ -161,19 +167,21 @@ fun SharePostBottomSheet(
                                 Box(Modifier.size(width = 32.dp, height = 4.dp))
                             }
                             Icon(
-                                modifier = Modifier
-                                    .padding(end = 16.dp)
-                                    .size(20.dp)
-                                    .align(Alignment.CenterEnd),
+                                modifier =
+                                    Modifier
+                                        .padding(end = 16.dp)
+                                        .size(20.dp)
+                                        .align(Alignment.CenterEnd),
                                 painter = MubbleTheme.Icons.Close,
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             )
                         }
                         SearchBar(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp, horizontal = 8.dp),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 8.dp, horizontal = 8.dp),
                             state = searchBarState,
                             inputField = inputField,
                         )
@@ -182,7 +190,7 @@ fun SharePostBottomSheet(
                         modifier = Modifier.align(Alignment.BottomCenter),
                         enter = fadeIn(animationSpec = tween(durationMillis = 300)),
                         exit = fadeOut(animationSpec = tween(durationMillis = 300)),
-                        visible = !isAtTop
+                        visible = !isAtTop,
                     ) {
                         SubtleHorizontalDivider()
                     }
@@ -194,22 +202,24 @@ fun SharePostBottomSheet(
             sheetState = bottomSheetState,
         ) {
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxHeight(0.75f),
+                modifier =
+                    Modifier
+                        .fillMaxHeight(0.75f),
                 state = listState,
-                contentPadding = PaddingValues(
-                    start = 16.dp,
-                    end = 16.dp,
-                    top = 4.dp,
-                    bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-                ),
+                contentPadding =
+                    PaddingValues(
+                        start = 16.dp,
+                        end = 16.dp,
+                        top = 4.dp,
+                        bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding(),
+                    ),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 items(users) {
                     SharePostRow(
                         profilePictureResId = it.profilePictureResId,
                         displayName = it.displayName,
-                        username = it.username
+                        username = it.username,
                     )
                 }
             }
@@ -233,7 +243,7 @@ fun SharePostRow(
         CircleImage(
             painter = painterResource(profilePictureResId),
             borderWidth = 0.1.dp,
-            size = 48.dp
+            size = 48.dp,
         )
         Spacer(modifier = Modifier.width(12.dp))
         Column {
@@ -241,14 +251,14 @@ fun SharePostRow(
                 text = displayName,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium)
+                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
             )
             Text(
                 text = "@$username",
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f)
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
             )
         }
 
@@ -259,7 +269,8 @@ fun SharePostRow(
             contentPadding = ButtonDefaults.contentPaddingFor(size),
         ) {
             Icon(
-                painter = MubbleTheme.Icons.SendNew, contentDescription = null,
+                painter = MubbleTheme.Icons.SendNew,
+                contentDescription = null,
                 modifier = Modifier.size(ButtonDefaults.iconSizeFor(size)),
             )
             Spacer(Modifier.size(ButtonDefaults.iconSpacingFor(size)))

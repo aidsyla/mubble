@@ -27,7 +27,7 @@ fun LazyListScope.circlePostFeed(
                 is ImagePostFeedItem -> "Image_Post"
                 is BubbleFeedItem -> "Bubble_Post"
             }
-        }
+        },
     ) { index, item ->
         val modifier = if (isCircleScreen) Modifier.padding(horizontal = 8.dp) else Modifier
         BasePostLayout(
@@ -37,7 +37,7 @@ fun LazyListScope.circlePostFeed(
             useCard = true,
             onUserClick = onUserClick,
             onMoreClick = { onMoreClick() },
-            onPostClick = { onPostClick(it, origin) }
+            onPostClick = { onPostClick(it, origin) },
         )
     }
 }

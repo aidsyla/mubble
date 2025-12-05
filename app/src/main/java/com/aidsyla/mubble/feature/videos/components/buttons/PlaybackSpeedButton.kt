@@ -18,22 +18,29 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.compose.state.rememberPlaybackSpeedState
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 
-private enum class PlaybackSpeed(val multiplier: Float) {
+private enum class PlaybackSpeed(
+    val multiplier: Float,
+) {
     HALF(0.5f),
     NORMAL(1.0f),
-    DOUBLE(2.0f);
+    DOUBLE(2.0f),
+    ;
 
-    fun next(): PlaybackSpeed = when (this) {
-        HALF -> NORMAL
-        NORMAL -> DOUBLE
-        DOUBLE -> HALF
-    }
+    fun next(): PlaybackSpeed =
+        when (this) {
+            HALF -> NORMAL
+            NORMAL -> DOUBLE
+            DOUBLE -> HALF
+        }
 }
 
 @androidx.annotation.OptIn(UnstableApi::class)
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-internal fun PlaybackSpeedButton(modifier: Modifier = Modifier, player: Player) {
+internal fun PlaybackSpeedButton(
+    modifier: Modifier = Modifier,
+    player: Player,
+) {
     var speed by remember { mutableStateOf(PlaybackSpeed.NORMAL) }
     val playbackSpeedState = rememberPlaybackSpeedState(player)
 
@@ -43,15 +50,16 @@ internal fun PlaybackSpeedButton(modifier: Modifier = Modifier, player: Player) 
 
     VideoControlIconButton(
         modifier = modifier,
-        onClick = { speed = speed.next() }
+        onClick = { speed = speed.next() },
     ) {
         AnimatedContent(
-            targetState = speed
+            targetState = speed,
         ) {
             Icon(
-                modifier = Modifier.size(
-                    IconButtonDefaults.extraSmallIconSize
-                ),
+                modifier =
+                    Modifier.size(
+                        IconButtonDefaults.extraSmallIconSize,
+                    ),
                 painter =
                     when (it) {
                         PlaybackSpeed.HALF -> MubbleTheme.Icons.Speed0_5x
@@ -59,7 +67,7 @@ internal fun PlaybackSpeedButton(modifier: Modifier = Modifier, player: Player) 
                         PlaybackSpeed.DOUBLE -> MubbleTheme.Icons.Speed2x
                     },
                 contentDescription = null,
-                tint = Color.White
+                tint = Color.White,
             )
         }
     }
@@ -71,15 +79,16 @@ internal fun PlaybackSpeedButton(modifier: Modifier = Modifier, player: Player) 
 internal fun PlaybackSpeedButton(modifier: Modifier = Modifier) {
     VideoControlIconButton(
         modifier = modifier,
-        onClick = {}
+        onClick = {},
     ) {
         Icon(
-            modifier = Modifier.size(
-                IconButtonDefaults.extraSmallIconSize
-            ),
+            modifier =
+                Modifier.size(
+                    IconButtonDefaults.extraSmallIconSize,
+                ),
             painter = MubbleTheme.Icons.Speed1x,
             contentDescription = null,
-            tint = Color.White
+            tint = Color.White,
         )
     }
 }

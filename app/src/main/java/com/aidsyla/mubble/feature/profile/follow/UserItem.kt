@@ -60,13 +60,14 @@ fun UserItem(
                     onDismissRequest = { openDialog = false },
                     onConfirmation = {},
                     dialogTitle = "Remove follower?",
-                    dialogText = buildAnnotatedString {
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.SemiBold)) {
-                            append(username)
-                        }
-                        append(text = " will no longer see your posts in their feed.")
-                    },
-                    confirmButtonText = "Remove"
+                    dialogText =
+                        buildAnnotatedString {
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.SemiBold)) {
+                                append(username)
+                            }
+                            append(text = " will no longer see your posts in their feed.")
+                        },
+                    confirmButtonText = "Remove",
                 )
             }
         }
@@ -77,31 +78,34 @@ fun UserItem(
                     onDismissRequest = { openDialog = false },
                     onConfirmation = {},
                     dialogTitle = "Stop following?",
-                    dialogText = buildAnnotatedString {
-                        append(text = "You won’t see")
-                        append(text = " ")
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.SemiBold)) {
-                            append(username)
-                            append("'s")
-                        }
-                        append(text = " ")
-                        append(text = "updates anymore.")
-                    },
-                    confirmButtonText = "Unfollow"
+                    dialogText =
+                        buildAnnotatedString {
+                            append(text = "You won’t see")
+                            append(text = " ")
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.SemiBold)) {
+                                append(username)
+                                append("'s")
+                            }
+                            append(text = " ")
+                            append(text = "updates anymore.")
+                        },
+                    confirmButtonText = "Unfollow",
                 )
             }
         }
     }
 
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable { onUserClick(userId) }
-            .padding(start = 16.dp, end = 4.dp, top = 6.dp, bottom = 6.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clickable { onUserClick(userId) }
+                .padding(start = 16.dp, end = 4.dp, top = 6.dp, bottom = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         CircleImage(
-            painter = painterResource(profilePictureResId), borderWidth = 0.1.dp
+            painter = painterResource(profilePictureResId),
+            borderWidth = 0.1.dp,
         )
         Spacer(modifier = Modifier.width(12.dp))
         Text(
@@ -112,38 +116,47 @@ fun UserItem(
             Spacer(modifier = Modifier.weight(1f))
             FilledIconButton(
                 onClick = { onMessageClick(userId) },
-                modifier = modifier
-                    .minimumInteractiveComponentSize()
-                    .size(
-                        IconButtonDefaults.extraSmallContainerSize(
-                            IconButtonDefaults.IconButtonWidthOption.Wide
-                        )
+                modifier =
+                    modifier
+                        .minimumInteractiveComponentSize()
+                        .size(
+                            IconButtonDefaults.extraSmallContainerSize(
+                                IconButtonDefaults.IconButtonWidthOption.Wide,
+                            ),
+                        ),
+                shapes =
+                    IconButtonDefaults.shapes(
+                        shape = IconButtonDefaults.extraSmallRoundShape,
+                        pressedShape = IconButtonDefaults.extraSmallPressedShape,
                     ),
-                shapes = IconButtonDefaults.shapes(
-                    shape = IconButtonDefaults.extraSmallRoundShape,
-                    pressedShape = IconButtonDefaults.extraSmallPressedShape,
-                ),
             ) {
                 Icon(
-                    modifier = Modifier.size(
-                        IconButtonDefaults.extraSmallIconSize
-                    ), painter = MubbleTheme.Icons.Message, contentDescription = null
+                    modifier =
+                        Modifier.size(
+                            IconButtonDefaults.extraSmallIconSize,
+                        ),
+                    painter = MubbleTheme.Icons.Message,
+                    contentDescription = null,
                 )
             }
             IconButton(
                 onClick = { openDialog = true },
-                modifier = modifier
-                    .minimumInteractiveComponentSize()
-                    .size(
-                        IconButtonDefaults.extraSmallContainerSize(
-                            IconButtonDefaults.IconButtonWidthOption.Uniform
-                        )
-                    ),
+                modifier =
+                    modifier
+                        .minimumInteractiveComponentSize()
+                        .size(
+                            IconButtonDefaults.extraSmallContainerSize(
+                                IconButtonDefaults.IconButtonWidthOption.Uniform,
+                            ),
+                        ),
             ) {
                 Icon(
-                    modifier = Modifier.size(
-                        IconButtonDefaults.extraSmallIconSize
-                    ), painter = MubbleTheme.Icons.Close, contentDescription = null
+                    modifier =
+                        Modifier.size(
+                            IconButtonDefaults.extraSmallIconSize,
+                        ),
+                    painter = MubbleTheme.Icons.Close,
+                    contentDescription = null,
                 )
             }
         } else {

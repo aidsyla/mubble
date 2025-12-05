@@ -63,14 +63,18 @@ fun HomeScreen(
 
     LaunchedEffect(pagerState.currentPage) {
         val scrollOffset =
-            if (scrollBehavior.state.collapsedFraction == 1f) -200
-            else -16
+            if (scrollBehavior.state.collapsedFraction == 1f) {
+                -200
+            } else {
+                -16
+            }
 
-        val targetIndex = if (pagerState.currentPage == 0) {
-            viewModel.firstPageClickedIndex
-        } else {
-            viewModel.secondPageClickedIndex
-        }
+        val targetIndex =
+            if (pagerState.currentPage == 0) {
+                viewModel.firstPageClickedIndex
+            } else {
+                viewModel.secondPageClickedIndex
+            }
 
         if (targetIndex != -1) {
             val targetListState =
@@ -87,7 +91,7 @@ fun HomeScreen(
     }
 
     CompositionLocalProvider(
-        LocalPagerState provides pagerState
+        LocalPagerState provides pagerState,
     ) {
         MubbleListTabPager(
             modifier = modifier.padding(bottom = bottomPadding),
@@ -104,7 +108,7 @@ fun HomeScreen(
                     onPostClick = { index, postId, origin ->
                         viewModel.firstPageClickedIndex = index
                         onPostClick(postId, origin)
-                    }
+                    },
                 )
             },
             secondPage = {
@@ -117,14 +121,15 @@ fun HomeScreen(
                     onPostClick = { index, postId, origin ->
                         viewModel.secondPageClickedIndex = index + 1
                         onPostClick(postId, origin)
-                    }
+                    },
                 )
             },
             navigationIcon = {
                 IconButton(onClick = {}, enabled = false) {
                     Icon(
-                        painter = MubbleTheme.Icons.MubbleIcon, contentDescription = null,
-                        tint = Color.Unspecified
+                        painter = MubbleTheme.Icons.MubbleIcon,
+                        contentDescription = null,
+                        tint = Color.Unspecified,
                     )
                 }
             },
@@ -132,11 +137,11 @@ fun HomeScreen(
                 IconButton(onClick = {}) {
                     Icon(painter = MubbleTheme.Icons.Search, contentDescription = null)
                 }
-            }
+            },
         ) {
             MubbleTabRow(
                 tabTitles = tabTitles,
-                pagerState = pagerState
+                pagerState = pagerState,
             )
         }
     }
@@ -162,7 +167,7 @@ fun HomeFollowingScreen(
             origin = PostOrigin.HomeFollowing,
             onUserClick = onUserClick,
             onMoreClick = onMoreClick,
-            onPostClick = onPostClick
+            onPostClick = onPostClick,
         )
     }
 }
@@ -181,7 +186,7 @@ fun HomeMyCirclesScreen(
         modifier = modifier.fillMaxSize(),
         state = listState,
         contentPadding = PaddingValues(top = 4.dp, bottom = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         item {
             LazyRow(
@@ -201,9 +206,9 @@ fun HomeMyCirclesScreen(
                         onCircleClick = { circleId ->
                             onCircleClick(
                                 circleId,
-                                PostOrigin.HomeMyCircles
+                                PostOrigin.HomeMyCircles,
                             )
-                        }
+                        },
                     )
                 }
             }
@@ -214,7 +219,7 @@ fun HomeMyCirclesScreen(
             isCircleScreen = true,
             onUserClick = onUserClick,
             onMoreClick = onMoreClick,
-            onPostClick = onPostClick
+            onPostClick = onPostClick,
         )
     }
 }

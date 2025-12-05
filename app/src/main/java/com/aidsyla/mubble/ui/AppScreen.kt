@@ -38,8 +38,7 @@ import kotlin.reflect.KClass
 val LocalBottomBarPadding = compositionLocalOf { 0.dp }
 
 @Composable
-fun AppScreen(
-) {
+fun AppScreen() {
     val appState = rememberAppState()
     val currentDestination = appState.currentDestination
     val currentTopLevelDestination = appState.currentTopLevelDestination
@@ -47,14 +46,19 @@ fun AppScreen(
     val isVideoScreen = currentDestination.isRouteInHierarchy(TopLevelDestination.VIDEOS.route)
 
     val showNavBar =
-        (currentTopLevelDestination != null || currentDestination.isRouteInSettingsHierarchy() || currentDestination.isRouteInHierarchy(
-            FollowScreenRoute::class
-        )) &&
-                !isVideoScreen
+        (
+            currentTopLevelDestination != null ||
+                currentDestination.isRouteInSettingsHierarchy() ||
+                currentDestination.isRouteInHierarchy(
+                    FollowScreenRoute::class,
+                )
+        ) &&
+            !isVideoScreen
 
-    val navBarVisibilityState = remember {
-        MutableTransitionState(initialState = true)
-    }
+    val navBarVisibilityState =
+        remember {
+            MutableTransitionState(initialState = true)
+        }
 
     LaunchedEffect(showNavBar) {
         navBarVisibilityState.targetState = showNavBar
@@ -65,32 +69,38 @@ fun AppScreen(
             AnimatedVisibility(
                 visibleState = navBarVisibilityState,
                 enter = fadeIn(animationSpec = tween(300)),
-                exit = fadeOut(animationSpec = tween(300))
+                exit = fadeOut(animationSpec = tween(300)),
             ) {
                 Box {
                     NavigationBar(
                         modifier = Modifier.height(80.dp),
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
                     ) {
                         appState.topLevelDestinations.forEach { destination ->
-                            val selected = when (destination) {
-                                TopLevelDestination.PROFILE -> {
-                                    currentDestination.isRouteInHierarchy(TopLevelDestination.PROFILE.route) ||
-                                            currentDestination.isRouteInSettingsHierarchy() || currentDestination.isRouteInHierarchy(
-                                        FollowScreenRoute::class
-                                    )
-                                }
+                            val selected =
+                                when (destination) {
+                                    TopLevelDestination.PROFILE -> {
+                                        currentDestination.isRouteInHierarchy(TopLevelDestination.PROFILE.route) ||
+                                            currentDestination.isRouteInSettingsHierarchy() ||
+                                            currentDestination.isRouteInHierarchy(
+                                                FollowScreenRoute::class,
+                                            )
+                                    }
 
-                                else -> {
-                                    currentDestination.isRouteInHierarchy(destination.route)
+                                    else -> {
+                                        currentDestination.isRouteInHierarchy(destination.route)
+                                    }
                                 }
-                            }
                             NavigationBarItem(
                                 selected = selected,
                                 onClick = {
-                                    if (destination == TopLevelDestination.PROFILE && (currentDestination.isRouteInSettingsHierarchy() || currentDestination.isRouteInHierarchy(
-                                            FollowScreenRoute::class
-                                        ))
+                                    if (destination == TopLevelDestination.PROFILE &&
+                                        (
+                                            currentDestination.isRouteInSettingsHierarchy() ||
+                                                currentDestination.isRouteInHierarchy(
+                                                    FollowScreenRoute::class,
+                                                )
+                                        )
                                     ) {
                                         appState.navigateToProfileFromSettings()
                                     } else {
@@ -102,9 +112,9 @@ fun AppScreen(
                                         if (selected) destination.selectedIcon else destination.unselectedIcon
                                     Icon(
                                         painterResource(icon),
-                                        contentDescription = destination.iconText
+                                        contentDescription = destination.iconText,
                                     )
-                                }
+                                },
                             )
                         }
                     }
@@ -113,26 +123,27 @@ fun AppScreen(
                     )
                 }
             }
-        }
+        },
     ) {
         val bottomPadding = it.calculateBottomPadding()
         CompositionLocalProvider(LocalBottomBarPadding provides bottomPadding) {
             AppNavHost(
                 modifier = Modifier,
                 appState = appState,
-                startDestination = HomeRoute
+                startDestination = HomeRoute,
             )
         }
     }
 }
 
 private fun NavDestination?.isRouteInSettingsHierarchy(): Boolean {
-    val settingsRoutes = setOf(
-        SettingsStartRoute::class.qualifiedName,
-        SettingsNotificationsRoute::class.qualifiedName,
-        SettingsDevicePermissionsRoute::class.qualifiedName,
-        SettingsManageAccountRoute::class.qualifiedName
-    )
+    val settingsRoutes =
+        setOf(
+            SettingsStartRoute::class.qualifiedName,
+            SettingsNotificationsRoute::class.qualifiedName,
+            SettingsDevicePermissionsRoute::class.qualifiedName,
+            SettingsManageAccountRoute::class.qualifiedName,
+        )
     return this?.hierarchy?.any { navDest -> navDest.route in settingsRoutes } ?: false
 }
 

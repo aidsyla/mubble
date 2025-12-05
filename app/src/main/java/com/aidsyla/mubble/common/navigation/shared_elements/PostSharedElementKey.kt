@@ -14,7 +14,7 @@ enum class PostOrigin {
     ExploreMedia,
     ExploreBubbles,
     ProfileMedia,
-    ProfileBubbles
+    ProfileBubbles,
 }
 
 enum class PostSharedElementType {
@@ -23,5 +23,5 @@ enum class PostSharedElementType {
     DisplayName,
     Image,
     Video,
-    Bubble
+    Bubble,
 }

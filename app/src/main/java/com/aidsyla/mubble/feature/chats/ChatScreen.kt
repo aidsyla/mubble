@@ -72,55 +72,61 @@ fun ChatScreen(
                     TopAppBar(
                         title = {
                             Row(
-                                modifier = Modifier.clickable {
-                                    onProfileClick(state.otherUser.id)
-                                },
+                                modifier =
+                                    Modifier.clickable {
+                                        onProfileClick(state.otherUser.id)
+                                    },
                                 verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
                             ) {
                                 CircleImage(
-                                    painter = painterResource(
-                                        id = state.otherUser.profilePictureResId
-                                    ),
+                                    painter =
+                                        painterResource(
+                                            id = state.otherUser.profilePictureResId,
+                                        ),
                                     contentDescription = "${state.otherUser.displayName} profile picture",
                                     size = 40.dp,
-                                    borderWidth = 0.5.dp
+                                    borderWidth = 0.5.dp,
                                 )
                                 Text(
                                     text = state.otherUser.displayName,
-                                    style = MaterialTheme.typography.titleMedium
+                                    style = MaterialTheme.typography.titleMedium,
                                 )
                             }
-                        }, navigationIcon = {
+                        },
+                        navigationIcon = {
                             IconButton(onClick = onBackClick) {
                                 Icon(painter = MubbleTheme.Icons.ArrowBack, "Back")
                             }
-                        }, actions = {
+                        },
+                        actions = {
                             IconButton(onClick = { onMoreClick(state.otherUser.id) }) {
                                 Icon(MubbleTheme.Icons.MoreHorizontal, "More options")
                             }
-                        }, scrollBehavior = scrollBehavior
+                        },
+                        scrollBehavior = scrollBehavior,
                     )
-                }, bottomBar = {
+                },
+                bottomBar = {
                     MessageBottomBar()
                 },
-                containerColor = Color.Unspecified
-            )
-            {
+                containerColor = Color.Unspecified,
+            ) {
                 LazyColumn(
                     state = listState,
                     reverseLayout = true,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(it)
-                        .nestedScroll(scrollBehavior.nestedScrollConnection),
-//                        .background(brush = MubbleTheme.Gradients.appGradient),
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .padding(it)
+                            .nestedScroll(scrollBehavior.nestedScrollConnection),
+                    //                        .background(brush = MubbleTheme.Gradients.appGradient),
                     contentPadding = PaddingValues(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Bottom)
+                    verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Bottom),
                 ) {
                     chat(
                         chatMessages = state.messages,
-                        currentUserId = state.currentUserId
+                        currentUserId = state.currentUserId,
                     )
                 }
             }
@@ -133,7 +139,6 @@ fun ChatScreen(
     }
 }
 
-
 @Composable
 fun MessageBottomBar(
     modifier: Modifier = Modifier,
@@ -144,53 +149,54 @@ fun MessageBottomBar(
         color = color,
     ) {
         Row(
-            modifier = Modifier
-                .height(80.dp)
-                .padding(start = 8.dp, end = 4.dp)
-                .padding(vertical = 4.dp)
-                .navigationBarsPadding(),
-            verticalAlignment = Alignment.CenterVertically
+            modifier =
+                Modifier
+                    .height(80.dp)
+                    .padding(start = 8.dp, end = 4.dp)
+                    .padding(vertical = 4.dp)
+                    .navigationBarsPadding(),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .height(40.dp)
-                    .clip(shape = RoundedCornerShape(100))
-                    .border(
-                        width = 0.5.dp,
-                        color = MaterialTheme.colorScheme.outlineVariant,
-                        shape = RoundedCornerShape(100)
-                    )
-                    .background(color = MaterialTheme.colorScheme.surfaceContainerHighest),
-                contentAlignment = Alignment.CenterStart
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .height(40.dp)
+                        .clip(shape = RoundedCornerShape(100))
+                        .border(
+                            width = 0.5.dp,
+                            color = MaterialTheme.colorScheme.outlineVariant,
+                            shape = RoundedCornerShape(100),
+                        ).background(color = MaterialTheme.colorScheme.surfaceContainerHighest),
+                contentAlignment = Alignment.CenterStart,
             ) {
                 Row(
                     modifier = Modifier.padding(start = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     FilledIconButton(
                         onClick = {},
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(32.dp),
                     ) {
                         Icon(
                             painter = MubbleTheme.Icons.Camera,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                     Text(
                         modifier = Modifier.padding(start = 8.dp, end = 4.dp),
                         text = "Message...",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
             IconButton(
-                onClick = {}
+                onClick = {},
             ) {
                 Icon(
                     painter = MubbleTheme.Icons.Gallery,
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
 //            IconButton(
@@ -215,52 +221,58 @@ fun ChatMessageBubble(
     var showDate by remember { mutableStateOf(false) }
     Box(
         modifier = modifier.fillMaxWidth(),
-        contentAlignment = if (isOutgoing) Alignment.CenterEnd else Alignment.CenterStart
+        contentAlignment = if (isOutgoing) Alignment.CenterEnd else Alignment.CenterStart,
     ) {
         Column(
             horizontalAlignment = if (isOutgoing) Alignment.End else Alignment.Start,
-            modifier = Modifier.fillMaxWidth(0.8f)
+            modifier = Modifier.fillMaxWidth(0.8f),
         ) {
             Box(
-                modifier = Modifier
-                    .clip(shape = RoundedCornerShape(20.dp))
-                    .background(
-                        if (isOutgoing) MaterialTheme.colorScheme.primaryContainer
-                        else MaterialTheme.colorScheme.surfaceContainer
-                    )
-                    .clickable { showDate = !showDate },
+                modifier =
+                    Modifier
+                        .clip(shape = RoundedCornerShape(20.dp))
+                        .background(
+                            if (isOutgoing) {
+                                MaterialTheme.colorScheme.primaryContainer
+                            } else {
+                                MaterialTheme.colorScheme.surfaceContainer
+                            },
+                        ).clickable { showDate = !showDate },
             ) {
                 Text(
                     text = text,
                     modifier = Modifier.padding(12.dp),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
                 )
             }
             AnimatedVisibility(
                 visible = showDate,
             ) {
                 Text(
-                    text = timestamp, modifier = Modifier.padding(
-                        end = if (isOutgoing) 12.dp else 0.dp,
-                        start = if (isOutgoing) 0.dp else 12.dp
-                    ), style = MaterialTheme.typography.labelSmall
+                    text = timestamp,
+                    modifier =
+                        Modifier.padding(
+                            end = if (isOutgoing) 12.dp else 0.dp,
+                            start = if (isOutgoing) 0.dp else 12.dp,
+                        ),
+                    style = MaterialTheme.typography.labelSmall,
                 )
             }
         }
     }
 }
 
-
 @Composable
 fun ChatImage(modifier: Modifier = Modifier) {
     Image(
         painter = painterResource(R.drawable.ic_launcher_background),
         contentDescription = null,
-        modifier = modifier
-            .fillMaxWidth(0.5f)
-            .clip(
-                shape = RoundedCornerShape(20.dp)
-            ),
-        contentScale = ContentScale.FillWidth
+        modifier =
+            modifier
+                .fillMaxWidth(0.5f)
+                .clip(
+                    shape = RoundedCornerShape(20.dp),
+                ),
+        contentScale = ContentScale.FillWidth,
     )
 }

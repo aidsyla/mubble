@@ -37,44 +37,46 @@ import com.aidsyla.mubble.ui.theme.MubbleTheme
 @Composable
 fun EditProfileScreen(modifier: Modifier = Modifier) {
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         Box(
-            contentAlignment = Alignment.BottomEnd
+            contentAlignment = Alignment.BottomEnd,
         ) {
             Image(
                 painter = painterResource(R.drawable.ic_launcher_background),
                 contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(2f),
-                contentScale = ContentScale.FillWidth
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(2f),
+                contentScale = ContentScale.FillWidth,
             )
             Image(
                 painter = painterResource(R.drawable.ic_launcher_background),
                 colorFilter = ColorFilter.tint(Color.Blue),
                 contentDescription = null,
-                modifier = Modifier
-                    .padding(end = 16.dp)
-                    .offset(y = (50).dp)
-                    .size(100.dp)
-                    .clip(CircleShape)
+                modifier =
+                    Modifier
+                        .padding(end = 16.dp)
+                        .offset(y = (50).dp)
+                        .size(100.dp)
+                        .clip(CircleShape),
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
         Column(
-            modifier = Modifier.padding(horizontal = 16.dp)
+            modifier = Modifier.padding(horizontal = 16.dp),
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     FilledIconButton(
-                        onClick = {}
+                        onClick = {},
                     ) { Icon(imageVector = Icons.Default.Edit, contentDescription = null) }
                     Text("Edit Banner")
                 }
@@ -83,35 +85,35 @@ fun EditProfileScreen(modifier: Modifier = Modifier) {
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     FilledIconButton(
-                        onClick = {}
+                        onClick = {},
                     ) { Icon(imageVector = Icons.Default.Edit, contentDescription = null) }
                     Text("Edit Profile")
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
             Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 OutlinedTextField(
                     "President Donald J. Trump",
                     {},
                     label = { Text("Name") },
                     supportingText = { Text("25/30") },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
                 OutlinedTextField(
                     "Obviously the Material You design doesn't improve branding, but you already know the point is for cohesion.",
                     {},
                     label = { Text("Bio") },
                     supportingText = { Text("107/200") },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
                 OutlinedTextField(
                     "realdonaldtrump",
                     {},
                     label = { Text("Username") },
                     supportingText = { Text("15/20") },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         }

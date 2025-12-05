@@ -50,25 +50,32 @@ internal fun VideoActionButtons(
     onLikeChange: (Boolean) -> Unit,
 ) {
     Column(
-        modifier = modifier
-            .padding(end = 0.dp),
+        modifier =
+            modifier
+                .padding(end = 0.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         BouncingHeartIcon(
             isPostLiked = isPostLiked,
             onLikeChange = onLikeChange,
             count = 5321,
-            onClick = onLikeClick
+            onClick = onLikeClick,
         )
         ActionButton(
-            painter = MubbleTheme.Icons.Comment, count = "588", onClick = onCommentClick
+            painter = MubbleTheme.Icons.Comment,
+            count = "588",
+            onClick = onCommentClick,
         )
         ActionButton(
-            painter = MubbleTheme.Icons.SendNew, count = "42", onClick = onSendClick
+            painter = MubbleTheme.Icons.SendNew,
+            count = "42",
+            onClick = onSendClick,
         )
         ActionButton(
-            painter = MubbleTheme.Icons.Save, count = "54", onClick = onSaveClick
+            painter = MubbleTheme.Icons.Save,
+            count = "54",
+            onClick = onSaveClick,
         )
     }
 }
@@ -81,43 +88,48 @@ private fun ActionButton(
     onClick: () -> Unit,
 ) {
     Column(
-        modifier = modifier
-            .requiredSize(48.dp)
-            .clickableWithScaleIndication {
-                onClick()
-            }
-            .background(color = Color.Transparent),
+        modifier =
+            modifier
+                .requiredSize(48.dp)
+                .clickableWithScaleIndication {
+                    onClick()
+                }.background(color = Color.Transparent),
         verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterVertically),
-        horizontalAlignment = Alignment.CenterHorizontally) {
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
         Box(
             modifier = Modifier,
         ) {
             Icon(
                 painter = painter,
                 contentDescription = null,
-                modifier = Modifier
-                    .size(28.dp)
-                    .offset(x = 0.dp, y = 0.dp)
-                    .alpha(0.3f)
-                    .blur(2.5.dp),
+                modifier =
+                    Modifier
+                        .size(28.dp)
+                        .offset(x = 0.dp, y = 0.dp)
+                        .alpha(0.3f)
+                        .blur(2.5.dp),
                 tint = Color.Black,
             )
             Icon(
                 modifier = Modifier.size(28.dp),
                 painter = painter,
                 contentDescription = null,
-                tint = Color.White
+                tint = Color.White,
             )
         }
         Text(
             text = count,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
-            style = MaterialTheme.typography.labelSmall.copy(
-                shadow = Shadow(
-                    color = Color.Black.copy(alpha = 0.4f), blurRadius = 6f
-                )
-            ),
+            style =
+                MaterialTheme.typography.labelSmall.copy(
+                    shadow =
+                        Shadow(
+                            color = Color.Black.copy(alpha = 0.4f),
+                            blurRadius = 6f,
+                        ),
+                ),
             color = Color.White,
         )
     }
@@ -135,7 +147,7 @@ fun BouncingHeartIcon(
     val offsetAnim = remember { Animatable(Offset.Zero, Offset.VectorConverter) }
 
     val alpha by animateFloatAsState(
-        targetValue = if (sizeAnim.value != 0f) 0f else 1f
+        targetValue = if (sizeAnim.value != 0f) 0f else 1f,
     )
 
     LaunchedEffect(isPostLiked) {
@@ -145,12 +157,13 @@ fun BouncingHeartIcon(
                 launch {
                     sizeAnim.animateTo(
                         targetValue = 2.1f,
-                        animationSpec = tween(durationMillis = 250, easing = EaseOutQuad)
+                        animationSpec = tween(durationMillis = 250, easing = EaseOutQuad),
                     )
                 }
                 launch {
                     offsetAnim.animateTo(
-                        targetValue = Offset(x = 0f, y = -100f), animationSpec = tween(250)
+                        targetValue = Offset(x = 0f, y = -100f),
+                        animationSpec = tween(250),
                     )
                 }
             }
@@ -159,16 +172,16 @@ fun BouncingHeartIcon(
                 launch {
                     sizeAnim.animateTo(
                         targetValue = 1f,
-                        animationSpec = tween(durationMillis = 200, easing = EaseInOutCubic)
+                        animationSpec = tween(durationMillis = 200, easing = EaseInOutCubic),
                     )
                 }
                 launch {
                     offsetAnim.animateTo(
-                        targetValue = Offset.Zero, animationSpec = tween(250)
+                        targetValue = Offset.Zero,
+                        animationSpec = tween(250),
                     )
                 }
             }
-
         } else {
             coroutineScope {
                 launch {
@@ -176,7 +189,8 @@ fun BouncingHeartIcon(
                 }
                 launch {
                     offsetAnim.animateTo(
-                        targetValue = Offset.Zero, animationSpec = tween(250)
+                        targetValue = Offset.Zero,
+                        animationSpec = tween(250),
                     )
                 }
             }
@@ -184,29 +198,32 @@ fun BouncingHeartIcon(
     }
 
     Column(
-        modifier = Modifier
-            .requiredSize(48.dp)
-            .clickableWithScaleIndication {
-                onClick()
-                onLikeChange(!isPostLiked)
-            }
-            .background(color = Color.Transparent),
+        modifier =
+            Modifier
+                .requiredSize(48.dp)
+                .clickableWithScaleIndication {
+                    onClick()
+                    onLikeChange(!isPostLiked)
+                }.background(color = Color.Transparent),
         verticalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterVertically),
-        horizontalAlignment = Alignment.CenterHorizontally) {
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
         Box {
             Box(
-                modifier = Modifier.alpha(
-                    alpha
-                )
+                modifier =
+                    Modifier.alpha(
+                        alpha,
+                    ),
             ) {
                 Icon(
                     painter = MubbleTheme.Icons.Favorite,
                     contentDescription = null,
-                    modifier = Modifier
-                        .size(26.dp)
-                        .scale(1.1f)
-                        .alpha(0.3f)
-                        .blur(2.5.dp),
+                    modifier =
+                        Modifier
+                            .size(26.dp)
+                            .scale(1.1f)
+                            .alpha(0.3f)
+                            .blur(2.5.dp),
                     tint = Color.Black,
                 )
                 Icon(
@@ -219,17 +236,18 @@ fun BouncingHeartIcon(
 
             if (sizeAnim.value > 0f) {
                 Icon(
-                    modifier = Modifier
-                        .size(26.dp)
-                        .graphicsLayer {
-                            translationX = offsetAnim.value.x
-                            translationY = offsetAnim.value.y
-                            scaleX = sizeAnim.value
-                            scaleY = sizeAnim.value
-                        },
+                    modifier =
+                        Modifier
+                            .size(26.dp)
+                            .graphicsLayer {
+                                translationX = offsetAnim.value.x
+                                translationY = offsetAnim.value.y
+                                scaleX = sizeAnim.value
+                                scaleY = sizeAnim.value
+                            },
                     painter = MubbleTheme.Icons.Heart,
                     contentDescription = null,
-                    tint = Color.Unspecified
+                    tint = Color.Unspecified,
                 )
             }
         }
@@ -237,11 +255,14 @@ fun BouncingHeartIcon(
             text = count.toString(),
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
-            style = MaterialTheme.typography.labelSmall.copy(
-                shadow = Shadow(
-                    color = Color.Black.copy(alpha = 0.4f), blurRadius = 6f
-                )
-            ),
+            style =
+                MaterialTheme.typography.labelSmall.copy(
+                    shadow =
+                        Shadow(
+                            color = Color.Black.copy(alpha = 0.4f),
+                            blurRadius = 6f,
+                        ),
+                ),
             color = Color.White,
         )
     }

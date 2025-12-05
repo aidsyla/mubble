@@ -10,8 +10,7 @@ import com.aidsyla.mubble.common.navigation.ChatListRoute
 import com.aidsyla.mubble.common.navigation.ChatRoute
 import com.aidsyla.mubble.common.navigation.lifecycleIsResumed
 
-fun NavController.navigateToChatList(navOptions: NavOptions) =
-    navigate(route = ChatListRoute, navOptions)
+fun NavController.navigateToChatList(navOptions: NavOptions) = navigate(route = ChatListRoute, navOptions)
 
 fun NavController.navigateToChat(
     chatId: String,
@@ -23,11 +22,10 @@ fun NavController.navigateToChat(
 
 fun NavController.navigateToChatDetails(
     otherUserId: String,
-    navOptions: NavOptions? = null
+    navOptions: NavOptions? = null,
 ) {
     this.navigate(ChatDetailsRoute(otherUserId = otherUserId), navOptions = navOptions)
 }
-
 
 fun NavGraphBuilder.chatListScreen(
     onChatClick: (
@@ -37,7 +35,7 @@ fun NavGraphBuilder.chatListScreen(
 ) {
     composable<ChatListRoute> {
         ChatListScreen(
-            onChatClick = onChatClick
+            onChatClick = onChatClick,
         )
     }
 }
@@ -45,25 +43,27 @@ fun NavGraphBuilder.chatListScreen(
 fun NavGraphBuilder.chatScreen(
     onBackClick: () -> Unit,
     onProfileClick: (userId: String) -> Unit,
-    onMoreClick: (userId: String) -> Unit
+    onMoreClick: (userId: String) -> Unit,
 ) {
     composable<ChatRoute> {
         ChatScreen(
             onBackClick = { if (it.lifecycleIsResumed()) onBackClick() },
             onProfileClick = onProfileClick,
-            onMoreClick = onMoreClick
+            onMoreClick = onMoreClick,
         )
     }
 }
 
 fun NavGraphBuilder.chatDetailsScreen(
     onBackClick: () -> Unit,
-    onProfileClick: (String) -> Unit
+    onProfileClick: (String) -> Unit,
 ) {
     composable<ChatDetailsRoute> {
         val args: ChatDetailsRoute = it.toRoute()
         ChatDetailsScreen(
             onBackClick = { if (it.lifecycleIsResumed()) onBackClick() },
-            onProfileClick = onProfileClick, otherUserId = args.otherUserId)
+            onProfileClick = onProfileClick,
+            otherUserId = args.otherUserId,
+        )
     }
 }
