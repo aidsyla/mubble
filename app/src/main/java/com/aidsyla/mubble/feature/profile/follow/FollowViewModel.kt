@@ -13,31 +13,31 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FollowViewModel
-    @Inject
-    constructor() : ViewModel() {
-        private val _uiState = MutableStateFlow<FollowScreenUiState>(FollowScreenUiState.Loading)
-        val uiState: StateFlow<FollowScreenUiState> = _uiState.asStateFlow()
+@Inject
+constructor() : ViewModel() {
+    private val _uiState = MutableStateFlow<FollowScreenUiState>(FollowScreenUiState.Loading)
+    val uiState: StateFlow<FollowScreenUiState> = _uiState.asStateFlow()
 
-        init {
-            load()
-        }
+    init {
+        load()
+    }
 
-        private fun load() {
-            viewModelScope.launch {
-                _uiState.value =
-                    FollowScreenUiState.Success(
-                        followers = UserRepo.dummyUsers,
-                        following = UserRepo.dummyUsers,
-                    )
-            }
+    private fun load() {
+        viewModelScope.launch {
+            _uiState.value =
+                FollowScreenUiState.Success(
+                    followers = UserRepo.dummyUsers,
+                    following = UserRepo.dummyUsers
+                )
         }
     }
+}
 
 sealed interface FollowScreenUiState {
     data object Loading : FollowScreenUiState
 
     data class Success(
         val followers: List<User>,
-        val following: List<User>,
+        val following: List<User>
     ) : FollowScreenUiState
 }

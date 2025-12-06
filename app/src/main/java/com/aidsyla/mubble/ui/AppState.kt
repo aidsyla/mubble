@@ -26,7 +26,7 @@ import com.aidsyla.mubble.feature.videos.navigateToVideos
 
 @Stable
 class AppState(
-    val navController: NavHostController,
+    val navController: NavHostController
 ) {
     private val previousDestination = mutableStateOf<NavDestination?>(null)
 
@@ -88,7 +88,6 @@ class AppState(
 }
 
 @Composable
-fun rememberAppState(navController: NavHostController = rememberNavController()): AppState =
-    remember(navController) {
-        AppState(navController)
-    }
+fun rememberAppState(navController: NavHostController = rememberNavController()): AppState = remember(navController) {
+    AppState(navController)
+}

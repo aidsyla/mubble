@@ -21,7 +21,7 @@ fun CircleImage(
     size: Dp = 48.dp,
     borderWidth: Dp = 1.dp,
     borderColor: Color = MaterialTheme.colorScheme.outlineVariant,
-    contentDescription: String? = null,
+    contentDescription: String? = null
 ) {
     val imageModifier =
         modifier
@@ -32,12 +32,12 @@ fun CircleImage(
                     Modifier.border(borderWidth, borderColor, CircleShape)
                 } else {
                     Modifier
-                },
+                }
             )
     Image(
         painter = painter,
         contentDescription = contentDescription,
         modifier = imageModifier,
-        contentScale = ContentScale.Crop,
+        contentScale = ContentScale.Crop
     )
 }

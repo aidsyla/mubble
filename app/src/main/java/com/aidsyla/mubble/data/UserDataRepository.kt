@@ -4,7 +4,7 @@ import com.aidsyla.mubble.model.DarkThemeConfig
 import kotlinx.coroutines.flow.Flow
 
 data class UserData(
-    val darkThemeConfig: DarkThemeConfig,
+    val darkThemeConfig: DarkThemeConfig
 )
 
 interface UserDataRepository {

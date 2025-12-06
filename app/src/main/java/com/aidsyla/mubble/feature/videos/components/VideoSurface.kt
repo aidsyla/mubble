@@ -43,7 +43,7 @@ import kotlin.math.max
 internal fun VideoSurface(
     modifier: Modifier = Modifier,
     player: Player?,
-    isZooming: (Boolean) -> Unit,
+    isZooming: (Boolean) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     var isAnimatingBack by remember { mutableStateOf(false) }
@@ -67,7 +67,7 @@ internal fun VideoSurface(
         } else {
             Offset(
                 x = (initialSize.width / 2f) * (zoom - 1) - offset.x * zoom,
-                y = (initialSize.height / 2f) * (zoom - 1) - offset.y * zoom,
+                y = (initialSize.height / 2f) * (zoom - 1) - offset.y * zoom
             )
         }
 
@@ -96,10 +96,10 @@ internal fun VideoSurface(
                     zoomAnimatable.animateTo(
                         targetValue = 1f,
                         animationSpec =
-                            tween(
-                                durationMillis = 300,
-                                easing = FastOutSlowInEasing,
-                            ),
+                        tween(
+                            durationMillis = 300,
+                            easing = FastOutSlowInEasing
+                        )
                     )
                     zoom = 1f
                 }
@@ -110,10 +110,10 @@ internal fun VideoSurface(
                     centerOffsetAnimatable.animateTo(
                         targetValue = Offset.Zero,
                         animationSpec =
-                            tween(
-                                durationMillis = 300,
-                                easing = FastOutSlowInEasing,
-                            ),
+                        tween(
+                            durationMillis = 300,
+                            easing = FastOutSlowInEasing
+                        )
                     )
                     centerOffset = Offset.Zero
                 }
@@ -126,9 +126,9 @@ internal fun VideoSurface(
 
     Box(
         modifier =
-            Modifier
-                .wrapContentSize(),
-        contentAlignment = Alignment.Center,
+        Modifier
+            .wrapContentSize(),
+        contentAlignment = Alignment.Center
     ) {
         player?.let {
             MediaPlayerScreen(
@@ -142,7 +142,7 @@ internal fun VideoSurface(
                         initialCenter =
                             Offset(
                                 x = position.x + initialSize.width / 2f,
-                                y = position.y + initialSize.height / 2f,
+                                y = position.y + initialSize.height / 2f
                             )
                     }.then(
                         if (isAnimatingBack) {
@@ -152,7 +152,7 @@ internal fun VideoSurface(
                                 detectTransformGesturesCustom(
                                     onGestureEnd = {
                                         resetToCenter()
-                                    },
+                                    }
                                 ) { centroid, pan, gestureZoom ->
                                     isZooming(true)
                                     val oldZoom = zoom
@@ -163,13 +163,13 @@ internal fun VideoSurface(
                                     zoom = newZoom
                                 }
                             }
-                        },
+                        }
                     ).graphicsLayer(
                         scaleX = zoomAnimatable.value,
                         scaleY = zoomAnimatable.value,
                         translationX = centerOffsetAnimatable.value.x,
-                        translationY = centerOffsetAnimatable.value.y,
-                    ),
+                        translationY = centerOffsetAnimatable.value.y
+                    )
             )
         }
     }
@@ -179,14 +179,14 @@ internal fun VideoSurface(
 @Composable
 private fun MediaPlayerScreen(
     player: Player,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     var currentContentScale by remember { mutableStateOf(ContentScale.FillWidth) }
 
     Box(
         modifier =
-            modifier
-                .fillMaxSize(),
+        modifier
+            .fillMaxSize()
     ) {
         val presentationState = rememberPresentationState(player)
         val videoSizeDp = presentationState.videoSizeDp
@@ -223,7 +223,7 @@ private fun MediaPlayerScreen(
 
                 Log.d(
                     "VIDEO_SIZE",
-                    "Aspect Ratio: $aspectRatio, Applied Scale: $currentContentScale",
+                    "Aspect Ratio: $aspectRatio, Applied Scale: $currentContentScale"
                 )
             } else {
                 currentContentScale = ContentScale.FillWidth
@@ -236,7 +236,7 @@ private fun MediaPlayerScreen(
         PlayerSurface(
             player = player,
             surfaceType = SURFACE_TYPE_SURFACE_VIEW,
-            modifier = scaledModifier,
+            modifier = scaledModifier
         )
 
         if (presentationState.coverSurface) {

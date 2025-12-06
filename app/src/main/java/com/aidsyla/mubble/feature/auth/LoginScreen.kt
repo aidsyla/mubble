@@ -40,45 +40,45 @@ fun LoginScreen(modifier: Modifier = Modifier) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(it)
-                    .padding(horizontal = 16.dp),
+            Modifier
+                .fillMaxSize()
+                .padding(it)
+                .padding(horizontal = 16.dp)
         ) {
             Spacer(modifier = Modifier.weight(1f))
             Column(
                 verticalArrangement = Arrangement.spacedBy(20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
                     painter = painterResource(R.drawable.ic_launcher_background),
                     contentDescription = null,
                     modifier =
-                        modifier
-                            .fillMaxWidth(0.3f)
-                            .aspectRatio(1f)
-                            .clip(shape = MaterialTheme.shapes.medium),
+                    modifier
+                        .fillMaxWidth(0.3f)
+                        .aspectRatio(1f)
+                        .clip(shape = MaterialTheme.shapes.medium)
                 )
                 Card(
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
                 ) {
                     Row(
                         modifier = Modifier.padding(12.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = null,
-                            modifier = Modifier.size(40.dp),
+                            modifier = Modifier.size(40.dp)
                         )
                         Column(
-                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                             Text("Email not found", style = MaterialTheme.typography.bodyMedium)
                             Text(
                                 "This email is not registered with us. Please check and try again.",
-                                style = MaterialTheme.typography.bodySmall,
+                                style = MaterialTheme.typography.bodySmall
                             )
                         }
                     }
@@ -87,7 +87,7 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                 OutlinedTextField("Password", {}, modifier = Modifier.fillMaxWidth())
             }
             Row(
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Checkbox(checked = true, {})
                 Text("Remember me", style = MaterialTheme.typography.labelLarge)
@@ -96,25 +96,25 @@ fun LoginScreen(modifier: Modifier = Modifier) {
             }
             Spacer(modifier = Modifier.weight(1f))
             Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Button(
                     onClick = {},
                     modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .height(56.dp),
-                    shape = MaterialTheme.shapes.medium,
+                    Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    shape = MaterialTheme.shapes.medium
                 ) {
                     Text("Log in")
                 }
                 FilledTonalButton(
                     onClick = {},
                     modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .height(56.dp),
-                    shape = MaterialTheme.shapes.medium,
+                    Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    shape = MaterialTheme.shapes.medium
                 ) {
                     Text("Create Account")
                 }

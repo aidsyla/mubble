@@ -45,11 +45,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aidsyla.mubble.common.navigation.LocalNavAnimatedVisibilityScope
 import com.aidsyla.mubble.common.navigation.LocalSharedTransitionScope
-import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
-import com.aidsyla.mubble.common.navigation.shared_elements.PostSharedElementKey
-import com.aidsyla.mubble.common.navigation.shared_elements.PostSharedElementType
+import com.aidsyla.mubble.common.navigation.sharedelements.PostOrigin
+import com.aidsyla.mubble.common.navigation.sharedelements.PostSharedElementKey
+import com.aidsyla.mubble.common.navigation.sharedelements.PostSharedElementType
 import com.aidsyla.mubble.feature.circle.model.Circle
 import com.aidsyla.mubble.feature.circle.model.CircleRepo
+import com.aidsyla.mubble.ui.theme.MubbleDesignSystem
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 import com.aidsyla.mubble.ui.theme.onSurfaceDark
 
@@ -59,12 +60,12 @@ fun AllButton(modifier: Modifier = Modifier) {
     FilledIconButton(
         onClick = {},
         modifier =
-            modifier
-                .minimumInteractiveComponentSize()
-                .width(
-                    48.dp,
-                ),
-        shapes = IconButtonDefaults.shapes(),
+        modifier
+            .minimumInteractiveComponentSize()
+            .width(
+                48.dp
+            ),
+        shapes = IconButtonDefaults.shapes()
     ) {
         Text("All", style = MaterialTheme.typography.labelLarge)
     }
@@ -77,7 +78,7 @@ fun CircleItem(
     origin: PostOrigin,
     circle: Circle,
     showIcon: Boolean,
-    onCircleClick: (circleId: String) -> Unit,
+    onCircleClick: (circleId: String) -> Unit
 ) {
     var checked by remember { mutableStateOf(false) }
 
@@ -99,67 +100,67 @@ fun CircleItem(
     with(sharedTransitionScope) {
         Box(
             modifier =
-                modifier
-                    .clip(MaterialTheme.shapes.medium)
-                    .clickable { onCircleClick(circle.id) }
-                    .aspectRatio(1.45f)
-                    .border(
-                        width = 1.dp,
-                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.75f),
-                        shape = MaterialTheme.shapes.medium,
-                    ).sharedBounds(
-                        rememberSharedContentState(
-                            key =
-                                PostSharedElementKey(
-                                    postId = circle.id,
-                                    origin = origin,
-                                    type = PostSharedElementType.Bounds,
-                                ),
-                        ),
-                        animatedVisibilityScope = animatedContentScope,
-                        resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
-                        clipInOverlayDuringTransition =
-                            OverlayClip(
-                                RoundedCornerShape(
-                                    roundedCornerAnimation,
-                                ),
-                            ),
+            modifier
+                .clip(MaterialTheme.shapes.medium)
+                .clickable { onCircleClick(circle.id) }
+                .aspectRatio(1.45f)
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.75f),
+                    shape = MaterialTheme.shapes.medium
+                ).sharedBounds(
+                    rememberSharedContentState(
+                        key =
+                        PostSharedElementKey(
+                            postId = circle.id,
+                            origin = origin,
+                            type = PostSharedElementType.Bounds
+                        )
                     ),
+                    animatedVisibilityScope = animatedContentScope,
+                    resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
+                    clipInOverlayDuringTransition =
+                    OverlayClip(
+                        RoundedCornerShape(
+                            roundedCornerAnimation
+                        )
+                    )
+                )
         ) {
             Image(
                 painter = painterResource(circle.bannerResId),
                 contentDescription = null,
                 modifier =
-                    Modifier
-                        .fillMaxWidth(),
-                contentScale = ContentScale.Crop,
+                Modifier
+                    .fillMaxWidth(),
+                contentScale = ContentScale.Crop
             )
             Box(
                 modifier =
-                    Modifier
-                        .matchParentSize()
-                        .background(MubbleTheme.Gradients.fadingBlackGradientReversed),
+                Modifier
+                    .matchParentSize()
+                    .background(MubbleDesignSystem.Gradients.fadingBlackGradientReversed)
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier =
-                    Modifier
-                        .padding(start = 12.dp, end = 4.dp, bottom = if (showIcon) 4.dp else 8.dp)
-                        .align(Alignment.BottomStart),
+                Modifier
+                    .padding(start = 12.dp, end = 4.dp, bottom = if (showIcon) 4.dp else 8.dp)
+                    .align(Alignment.BottomStart)
             ) {
                 Column {
                     Text(
                         text = circle.name,
                         style =
-                            MaterialTheme.typography.titleMedium.copy(
-                                fontWeight = FontWeight.Bold,
-                            ),
-                        color = Color.White,
+                        MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
+                        color = Color.White
                     )
                     Text(
                         text = circle.memberCount.toString() + " members",
                         style = MaterialTheme.typography.bodySmall,
-                        color = onSurfaceDark,
+                        color = onSurfaceDark
                     )
                 }
                 if (showIcon) {
@@ -168,39 +169,39 @@ fun CircleItem(
                         checked = checked,
                         onCheckedChange = { checked = it },
                         modifier =
-                            Modifier
-                                .minimumInteractiveComponentSize()
-                                .size(
-                                    IconButtonDefaults.extraSmallContainerSize(
-                                        IconButtonDefaults.IconButtonWidthOption.Wide,
-                                    ),
-                                ),
+                        Modifier
+                            .minimumInteractiveComponentSize()
+                            .size(
+                                IconButtonDefaults.extraSmallContainerSize(
+                                    IconButtonDefaults.IconButtonWidthOption.Wide
+                                )
+                            ),
                         shapes =
-                            IconToggleButtonShapes(
-                                shape = IconButtonDefaults.extraSmallRoundShape,
-                                pressedShape = IconButtonDefaults.extraSmallPressedShape,
-                                checkedShape = IconButtonDefaults.extraSmallSquareShape,
-                            ),
+                        IconToggleButtonShapes(
+                            shape = IconButtonDefaults.extraSmallRoundShape,
+                            pressedShape = IconButtonDefaults.extraSmallPressedShape,
+                            checkedShape = IconButtonDefaults.extraSmallSquareShape
+                        ),
                         colors =
-                            IconButtonDefaults.outlinedIconToggleButtonColors(
-                                containerColor = Color.Transparent,
-                                contentColor = Color.White,
-                                checkedContainerColor = Color.Transparent,
-                                checkedContentColor = Color.White,
-                            ),
-                        border = BorderStroke(1.dp, Color.White),
+                        IconButtonDefaults.outlinedIconToggleButtonColors(
+                            containerColor = Color.Transparent,
+                            contentColor = Color.White,
+                            checkedContainerColor = Color.Transparent,
+                            checkedContentColor = Color.White
+                        ),
+                        border = BorderStroke(1.dp, Color.White)
                     ) {
                         AnimatedContent(
-                            targetState = checked,
+                            targetState = checked
                         ) {
                             Icon(
                                 modifier =
-                                    Modifier.size(
-                                        IconButtonDefaults.extraSmallIconSize,
-                                    ),
-                                painter = if (it) MubbleTheme.Icons.Check else MubbleTheme.Icons.Add,
+                                Modifier.size(
+                                    IconButtonDefaults.extraSmallIconSize
+                                ),
+                                painter = if (it) MubbleDesignSystem.Icons.Check else MubbleDesignSystem.Icons.Add,
                                 contentDescription = null,
-                                tint = Color.White,
+                                tint = Color.White
                             )
                         }
                     }

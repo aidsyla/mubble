@@ -38,13 +38,13 @@ import com.aidsyla.mubble.common.components.layout.rememberIsAtTop
 import com.aidsyla.mubble.common.components.post.CommentItem
 import com.aidsyla.mubble.data.DummyCommentRepository
 import com.aidsyla.mubble.feature.postdetails.CommentBottomBar
-import com.aidsyla.mubble.ui.theme.MubbleTheme
+import com.aidsyla.mubble.ui.theme.MubbleDesignSystem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentsBottomSheet(
     openBottomSheet: Boolean,
-    onOpenChange: (Boolean) -> Unit,
+    onOpenChange: (Boolean) -> Unit
 ) {
     val bottomSheetState =
         rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -65,53 +65,53 @@ fun CommentsBottomSheet(
             dragHandle = {
                 Box(
                     modifier =
-                        Modifier
-                            .fillMaxWidth(),
+                    Modifier
+                        .fillMaxWidth()
                 ) {
                     Column(
                         modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement =
-                            Arrangement.spacedBy(
-                                4.dp,
-                                Alignment.CenterVertically,
-                            ),
+                        Arrangement.spacedBy(
+                            4.dp,
+                            Alignment.CenterVertically
+                        )
                     ) {
                         Surface(
                             modifier =
-                                Modifier.padding(vertical = 8.dp),
+                            Modifier.padding(vertical = 8.dp),
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            shape = MaterialTheme.shapes.extraLarge,
+                            shape = MaterialTheme.shapes.extraLarge
                         ) {
                             Box(Modifier.size(width = 32.dp, height = 4.dp))
                         }
                         Box(
-                            contentAlignment = Alignment.Center,
+                            contentAlignment = Alignment.Center
                         ) {
                             Text(
                                 text = "13 Comments",
-                                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.SemiBold),
+                                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.SemiBold)
                             )
                         }
                     }
                     Icon(
                         modifier =
-                            Modifier
-                                .padding(end = 16.dp)
-                                .size(20.dp)
-                                .align(Alignment.CenterEnd),
-                        painter = MubbleTheme.Icons.Close,
+                        Modifier
+                            .padding(end = 16.dp)
+                            .size(20.dp)
+                            .align(Alignment.CenterEnd),
+                        painter = MubbleDesignSystem.Icons.Close,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     AnimatedVisibility(
                         modifier = Modifier.align(Alignment.BottomCenter),
                         enter = fadeIn(animationSpec = tween(durationMillis = 300)),
                         exit = fadeOut(animationSpec = tween(durationMillis = 300)),
-                        visible = !isAtTop,
+                        visible = !isAtTop
                     ) {
                         SubtleHorizontalDivider()
                     }
@@ -119,15 +119,15 @@ fun CommentsBottomSheet(
             },
             sheetGesturesEnabled = false,
             onDismissRequest = { onOpenChange(false) },
-            sheetState = bottomSheetState,
+            sheetState = bottomSheetState
         ) {
             Box(modifier = Modifier.wrapContentSize()) {
                 LazyColumn(
                     modifier =
-                        Modifier
-                            .fillMaxHeight(0.75f)
-                            .padding(bottom = 64.dp),
-                    state = listState,
+                    Modifier
+                        .fillMaxHeight(0.75f)
+                        .padding(bottom = 64.dp),
+                    state = listState
                 ) {
                     items(commentsForPost) { comment ->
                         CommentItem(
@@ -135,30 +135,30 @@ fun CommentsBottomSheet(
                             onViewRepliesClick = { commentId ->
                                 areRepliesOpen = !areRepliesOpen
                                 commentIdToFetchReplies = commentId
-                            },
+                            }
                         )
                         with(this@ModalBottomSheet) {
                             AnimatedVisibility(
                                 visible = comment.userId == commentIdToFetchReplies && areRepliesOpen,
                                 enter =
-                                    fadeIn(animationSpec = tween(durationMillis = 300)) +
-                                        expandIn(
-                                            expandFrom = Alignment.TopStart,
-                                            clip = false,
-                                        ),
+                                fadeIn(animationSpec = tween(durationMillis = 300)) +
+                                    expandIn(
+                                        expandFrom = Alignment.TopStart,
+                                        clip = false
+                                    ),
                                 exit =
-                                    shrinkOut(
-                                        animationSpec = tween(durationMillis = 300),
-                                        shrinkTowards = Alignment.TopStart,
-                                        clip = false,
-                                    ) + fadeOut(),
+                                shrinkOut(
+                                    animationSpec = tween(durationMillis = 300),
+                                    shrinkTowards = Alignment.TopStart,
+                                    clip = false
+                                ) + fadeOut()
                             ) {
                                 Column {
                                     replies.forEach { replies ->
                                         CommentItem(
                                             comment = replies,
                                             startPadding = 44.dp,
-                                            onViewRepliesClick = {},
+                                            onViewRepliesClick = {}
                                         )
                                     }
                                 }

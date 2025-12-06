@@ -20,12 +20,12 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
-import com.aidsyla.mubble.ui.theme.MubbleTheme
+import com.aidsyla.mubble.ui.theme.MubbleDesignSystem
 import kotlinx.coroutines.launch
 
 enum class IndicatorVariant {
     PRIMARY,
-    SECONDARY,
+    SECONDARY
 }
 
 @Composable
@@ -33,7 +33,7 @@ fun Tab(
     modifier: Modifier = Modifier,
     indicatorVariant: IndicatorVariant = IndicatorVariant.SECONDARY,
     pagerState: PagerState,
-    tabs: List<String>,
+    tabs: List<String>
 ) {
     val coroutineScope = rememberCoroutineScope()
     val currentScreen = pagerState.currentPage
@@ -44,9 +44,9 @@ fun Tab(
         indicator = {
             AnimatedIndicator(
                 indicatorVariant = indicatorVariant,
-                pagerState = pagerState,
+                pagerState = pagerState
             )
-        },
+        }
     ) {
         tabs.forEachIndexed { index, title ->
             Tab(
@@ -55,13 +55,13 @@ fun Tab(
                     coroutineScope.launch {
                         pagerState.animateScrollToPage(
                             page = index,
-                            animationSpec = tween(durationMillis = 300),
+                            animationSpec = tween(durationMillis = 300)
                         )
                     }
                 },
                 text = { Text(title) },
                 selectedContentColor = MaterialTheme.colorScheme.primary,
-                unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -71,13 +71,13 @@ fun Tab(
 fun Tab(
     modifier: Modifier = Modifier,
     indicatorVariant: IndicatorVariant = IndicatorVariant.SECONDARY,
-    pagerState: PagerState,
+    pagerState: PagerState
 ) {
     val coroutineScope = rememberCoroutineScope()
     val currentScreen = pagerState.currentPage
 
-    val selectedIcons = MubbleTheme.ProfileTabs.iconsSelected
-    val unselectedIcons = MubbleTheme.ProfileTabs.icons
+    val selectedIcons = MubbleDesignSystem.ProfileTabs.iconsSelected
+    val unselectedIcons = MubbleDesignSystem.ProfileTabs.icons
 
     PrimaryTabRow(
         modifier = modifier,
@@ -85,10 +85,10 @@ fun Tab(
         indicator = {
             AnimatedIndicator(
                 indicatorVariant = indicatorVariant,
-                pagerState = pagerState,
+                pagerState = pagerState
             )
         },
-        divider = { HorizontalDivider(thickness = 0.5.dp) },
+        divider = { HorizontalDivider(thickness = 0.5.dp) }
     ) {
         selectedIcons.forEachIndexed { index, icon ->
             Tab(
@@ -97,25 +97,25 @@ fun Tab(
                     coroutineScope.launch {
                         pagerState.animateScrollToPage(
                             page = index,
-                            animationSpec = tween(durationMillis = 300),
+                            animationSpec = tween(durationMillis = 300)
                         )
                     }
                 },
                 icon = {
                     Icon(
                         painter =
-                            if (currentScreen ==
-                                index
-                            ) {
-                                selectedIcons[index]
-                            } else {
-                                unselectedIcons[index]
-                            },
-                        contentDescription = null,
+                        if (currentScreen ==
+                            index
+                        ) {
+                            selectedIcons[index]
+                        } else {
+                            unselectedIcons[index]
+                        },
+                        contentDescription = null
                     )
                 },
                 selectedContentColor = MaterialTheme.colorScheme.secondary,
-                unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     }
@@ -124,7 +124,7 @@ fun Tab(
 @Composable
 fun TabIndicatorScope.AnimatedIndicator(
     indicatorVariant: IndicatorVariant = IndicatorVariant.PRIMARY,
-    pagerState: PagerState,
+    pagerState: PagerState
 ) {
     val currentPage = pagerState.currentPage
     val pageOffset = pagerState.currentPageOffsetFraction
@@ -136,44 +136,50 @@ fun TabIndicatorScope.AnimatedIndicator(
 
                 val indicatorStart: Dp =
                     when {
-                        nextTab != null ->
+                        nextTab != null -> {
                             lerp(
                                 start = currentTab.left,
                                 stop = nextTab.left,
-                                fraction = pageOffset,
+                                fraction = pageOffset
                             )
+                        }
 
                         pageOffset < 0f && currentPage > 0 -> {
                             val previousTab = tabPositions[currentPage - 1]
                             lerp(
                                 start = previousTab.left,
                                 stop = currentTab.left,
-                                fraction = pageOffset + 1f,
+                                fraction = pageOffset + 1f
                             )
                         }
 
-                        else -> currentTab.left
+                        else -> {
+                            currentTab.left
+                        }
                     }
 
                 val indicatorEnd: Dp =
                     when {
-                        nextTab != null ->
+                        nextTab != null -> {
                             lerp(
                                 start = currentTab.right,
                                 stop = nextTab.right,
-                                fraction = pageOffset,
+                                fraction = pageOffset
                             )
+                        }
 
                         pageOffset < 0f && currentPage > 0 -> {
                             val previousTab = tabPositions[currentPage - 1]
                             lerp(
                                 start = previousTab.right,
                                 stop = currentTab.right,
-                                fraction = pageOffset + 1f,
+                                fraction = pageOffset + 1f
                             )
                         }
 
-                        else -> currentTab.right
+                        else -> {
+                            currentTab.right
+                        }
                     }
 
                 val indicatorStartPx = indicatorStart.roundToPx()
@@ -184,13 +190,13 @@ fun TabIndicatorScope.AnimatedIndicator(
                     measurable.measure(
                         constraints.copy(
                             minWidth = indicatorWidth,
-                            maxWidth = indicatorWidth,
-                        ),
+                            maxWidth = indicatorWidth
+                        )
                     )
                 layout(constraints.maxWidth, constraints.maxHeight) {
                     placeable.placeRelative(
                         x = indicatorStartPx,
-                        y = constraints.maxHeight - placeable.height,
+                        y = constraints.maxHeight - placeable.height
                     )
                 }
             }
@@ -213,7 +219,7 @@ fun TabIndicatorScope.AnimatedIndicator(
                 width = dynamicWidth,
                 modifier = indicatorModifier,
                 height = 2.dp,
-                color = MaterialTheme.colorScheme.secondary,
+                color = MaterialTheme.colorScheme.secondary
             )
         }
 
@@ -221,7 +227,7 @@ fun TabIndicatorScope.AnimatedIndicator(
             SecondaryIndicator(
                 modifier = indicatorModifier,
                 height = 2.dp,
-                color = MaterialTheme.colorScheme.secondary,
+                color = MaterialTheme.colorScheme.secondary
             )
         }
     }

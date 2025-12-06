@@ -18,42 +18,42 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CircleViewModel
-    @Inject
-    constructor(
-        savedStateHandle: SavedStateHandle,
-    ) : ViewModel() {
-        private val circleId: String = savedStateHandle.toRoute<CircleRoute>().circleId
+@Inject
+constructor(
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
+    private val circleId: String = savedStateHandle.toRoute<CircleRoute>().circleId
 
-        private val _uiState = MutableStateFlow<CircleUiState>(CircleUiState.Loading)
-        val uiState: StateFlow<CircleUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<CircleUiState>(CircleUiState.Loading)
+    val uiState: StateFlow<CircleUiState> = _uiState.asStateFlow()
 
-        init {
-            loadCircle()
-        }
+    init {
+        loadCircle()
+    }
 
-        private fun loadCircle() {
-            viewModelScope.launch {
-                val circle =
-                    CircleRepo.dummyCircles.find {
-                        it.id == circleId
-                    }
-                val posts = DummyPostRepository.dummyFeedItems
-                if (circle != null) {
-                    _uiState.value =
-                        CircleUiState.Success(
-                            circle = circle,
-                            items = posts,
-                        )
+    private fun loadCircle() {
+        viewModelScope.launch {
+            val circle =
+                CircleRepo.dummyCircles.find {
+                    it.id == circleId
                 }
+            val posts = DummyPostRepository.dummyFeedItems
+            if (circle != null) {
+                _uiState.value =
+                    CircleUiState.Success(
+                        circle = circle,
+                        items = posts
+                    )
             }
         }
     }
+}
 
 sealed interface CircleUiState {
     data object Loading : CircleUiState
 
     data class Success(
         val circle: Circle,
-        val items: List<FeedItem>,
+        val items: List<FeedItem>
     ) : CircleUiState
 }

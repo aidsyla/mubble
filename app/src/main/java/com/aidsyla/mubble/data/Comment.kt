@@ -12,5 +12,5 @@ data class Comment(
     val text: String,
     val createdAt: String,
     val likeCount: Int,
-    val replyCount: Int = 0,
+    val replyCount: Int = 0
 )

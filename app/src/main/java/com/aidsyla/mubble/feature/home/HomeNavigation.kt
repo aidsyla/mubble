@@ -7,7 +7,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.aidsyla.mubble.common.navigation.HomeRoute
 import com.aidsyla.mubble.common.navigation.LocalNavAnimatedVisibilityScope
-import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
+import com.aidsyla.mubble.common.navigation.sharedelements.PostOrigin
 
 fun NavController.navigateToHome(navOptions: NavOptions) {
     this.navigate(HomeRoute, navOptions)
@@ -16,16 +16,16 @@ fun NavController.navigateToHome(navOptions: NavOptions) {
 fun NavGraphBuilder.homeScreen(
     onCircleClick: (String, PostOrigin) -> Unit,
     onUserClick: (String) -> Unit,
-    onPostClick: (postId: String, origin: PostOrigin) -> Unit,
+    onPostClick: (postId: String, origin: PostOrigin) -> Unit
 ) {
     composable<HomeRoute> {
         CompositionLocalProvider(
-            LocalNavAnimatedVisibilityScope provides this,
+            LocalNavAnimatedVisibilityScope provides this
         ) {
             HomeScreen(
                 onCircleClick = onCircleClick,
                 onUserClick = onUserClick,
-                onPostClick = onPostClick,
+                onPostClick = onPostClick
             )
         }
     }

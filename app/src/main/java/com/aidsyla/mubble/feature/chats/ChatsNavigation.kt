@@ -15,14 +15,14 @@ fun NavController.navigateToChatList(navOptions: NavOptions) = navigate(route = 
 fun NavController.navigateToChat(
     chatId: String,
     otherUserId: String,
-    navOptions: NavOptions? = null,
+    navOptions: NavOptions? = null
 ) {
     this.navigate(ChatRoute(chatId = chatId, otherUserId = otherUserId), navOptions)
 }
 
 fun NavController.navigateToChatDetails(
     otherUserId: String,
-    navOptions: NavOptions? = null,
+    navOptions: NavOptions? = null
 ) {
     this.navigate(ChatDetailsRoute(otherUserId = otherUserId), navOptions = navOptions)
 }
@@ -30,12 +30,12 @@ fun NavController.navigateToChatDetails(
 fun NavGraphBuilder.chatListScreen(
     onChatClick: (
         chatId: String,
-        otherUserId: String,
-    ) -> Unit,
+        otherUserId: String
+    ) -> Unit
 ) {
     composable<ChatListRoute> {
         ChatListScreen(
-            onChatClick = onChatClick,
+            onChatClick = onChatClick
         )
     }
 }
@@ -43,27 +43,27 @@ fun NavGraphBuilder.chatListScreen(
 fun NavGraphBuilder.chatScreen(
     onBackClick: () -> Unit,
     onProfileClick: (userId: String) -> Unit,
-    onMoreClick: (userId: String) -> Unit,
+    onMoreClick: (userId: String) -> Unit
 ) {
     composable<ChatRoute> {
         ChatScreen(
             onBackClick = { if (it.lifecycleIsResumed()) onBackClick() },
             onProfileClick = onProfileClick,
-            onMoreClick = onMoreClick,
+            onMoreClick = onMoreClick
         )
     }
 }
 
 fun NavGraphBuilder.chatDetailsScreen(
     onBackClick: () -> Unit,
-    onProfileClick: (String) -> Unit,
+    onProfileClick: (String) -> Unit
 ) {
     composable<ChatDetailsRoute> {
         val args: ChatDetailsRoute = it.toRoute()
         ChatDetailsScreen(
             onBackClick = { if (it.lifecycleIsResumed()) onBackClick() },
             onProfileClick = onProfileClick,
-            otherUserId = args.otherUserId,
+            otherUserId = args.otherUserId
         )
     }
 }

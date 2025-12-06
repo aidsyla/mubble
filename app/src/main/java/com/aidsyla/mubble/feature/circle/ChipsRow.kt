@@ -16,7 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.aidsyla.mubble.ui.theme.MubbleTheme
+import com.aidsyla.mubble.ui.theme.MubbleDesignSystem
 
 @Composable
 fun ChipsRow(modifier: Modifier = Modifier) {
@@ -24,18 +24,18 @@ fun ChipsRow(modifier: Modifier = Modifier) {
     var bubblesSelected by remember { mutableStateOf(false) }
 
     Row(
-        modifier = modifier,
+        modifier = modifier
     ) {
         AssistChip(
             onClick = { },
             label = { Text("Sort") },
             leadingIcon = {
                 Icon(
-                    painter = MubbleTheme.Icons.Sort,
+                    painter = MubbleDesignSystem.Icons.Sort,
                     contentDescription = "Localized description",
-                    Modifier.size(AssistChipDefaults.IconSize),
+                    Modifier.size(AssistChipDefaults.IconSize)
                 )
-            },
+            }
         )
         FilterChip(
             modifier = Modifier.padding(horizontal = 8.dp),
@@ -45,17 +45,17 @@ fun ChipsRow(modifier: Modifier = Modifier) {
             },
             selected = postsSelected,
             leadingIcon =
-                if (postsSelected) {
-                    {
-                        Icon(
-                            painter = MubbleTheme.Icons.Check,
-                            contentDescription = "Done icon",
-                            modifier = Modifier.size(FilterChipDefaults.IconSize),
-                        )
-                    }
-                } else {
-                    null
-                },
+            if (postsSelected) {
+                {
+                    Icon(
+                        painter = MubbleDesignSystem.Icons.Check,
+                        contentDescription = "Done icon",
+                        modifier = Modifier.size(FilterChipDefaults.IconSize)
+                    )
+                }
+            } else {
+                null
+            }
         )
         FilterChip(
             onClick = { bubblesSelected = !bubblesSelected },
@@ -64,17 +64,17 @@ fun ChipsRow(modifier: Modifier = Modifier) {
             },
             selected = bubblesSelected,
             leadingIcon =
-                if (bubblesSelected) {
-                    {
-                        Icon(
-                            painter = MubbleTheme.Icons.Check,
-                            contentDescription = "Done icon",
-                            modifier = Modifier.size(FilterChipDefaults.IconSize),
-                        )
-                    }
-                } else {
-                    null
-                },
+            if (bubblesSelected) {
+                {
+                    Icon(
+                        painter = MubbleDesignSystem.Icons.Check,
+                        contentDescription = "Done icon",
+                        modifier = Modifier.size(FilterChipDefaults.IconSize)
+                    )
+                }
+            } else {
+                null
+            }
         )
     }
 }

@@ -31,25 +31,25 @@ fun FollowList(
     inputField: @Composable () -> Unit,
     onUserClick: (String) -> Unit,
     onFollowClick: (String) -> Unit,
-    onMessageClick: (String) -> Unit,
+    onMessageClick: (String) -> Unit
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         contentPadding =
-            PaddingValues(
-                top = 4.dp,
-                bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding(),
-            ),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+        PaddingValues(
+            top = 4.dp,
+            bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+        ),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         item {
             SearchBar(
                 modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp, horizontal = 8.dp),
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp, horizontal = 8.dp),
                 state = searchBarState,
-                inputField = inputField,
+                inputField = inputField
             )
         }
         followList(
@@ -58,7 +58,7 @@ fun FollowList(
             items = items,
             onUserClick = onUserClick,
             onFollowClick = onFollowClick,
-            onMessageClick = onMessageClick,
+            onMessageClick = onMessageClick
         )
     }
 }
@@ -69,10 +69,10 @@ private fun LazyListScope.followList(
     items: List<User>,
     onUserClick: (String) -> Unit,
     onFollowClick: (String) -> Unit,
-    onMessageClick: (String) -> Unit,
+    onMessageClick: (String) -> Unit
 ) {
     items(
-        items = items,
+        items = items
     ) {
         UserItem(
             isCurrentUser = isCurrentUser,
@@ -82,7 +82,7 @@ private fun LazyListScope.followList(
             profilePictureResId = it.profilePictureResId,
             onUserClick = onUserClick,
             onFollowClick = onFollowClick,
-            onMessageClick = onMessageClick,
+            onMessageClick = onMessageClick
         )
     }
 }

@@ -34,12 +34,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aidsyla.mubble.common.components.layout.MubbleListTabPager
 import com.aidsyla.mubble.common.components.layout.MubbleTabRow
-import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
+import com.aidsyla.mubble.common.navigation.sharedelements.PostOrigin
 import com.aidsyla.mubble.feature.circle.AllButton
 import com.aidsyla.mubble.feature.circle.CircleItem
 import com.aidsyla.mubble.feature.circle.model.CircleRepo
 import com.aidsyla.mubble.ui.LocalBottomBarPadding
-import com.aidsyla.mubble.ui.theme.MubbleTheme
+import com.aidsyla.mubble.ui.theme.MubbleDesignSystem
 
 val LocalPagerState = compositionLocalOf<PagerState?> { null }
 
@@ -50,7 +50,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     onCircleClick: (String, PostOrigin) -> Unit,
     onUserClick: (String) -> Unit,
-    onPostClick: (postId: String, origin: PostOrigin) -> Unit,
+    onPostClick: (postId: String, origin: PostOrigin) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val tabTitles = remember { listOf("Following", "My Circles") }
@@ -91,7 +91,7 @@ fun HomeScreen(
     }
 
     CompositionLocalProvider(
-        LocalPagerState provides pagerState,
+        LocalPagerState provides pagerState
     ) {
         MubbleListTabPager(
             modifier = modifier.padding(bottom = bottomPadding),
@@ -108,7 +108,7 @@ fun HomeScreen(
                     onPostClick = { index, postId, origin ->
                         viewModel.firstPageClickedIndex = index
                         onPostClick(postId, origin)
-                    },
+                    }
                 )
             },
             secondPage = {
@@ -121,27 +121,27 @@ fun HomeScreen(
                     onPostClick = { index, postId, origin ->
                         viewModel.secondPageClickedIndex = index + 1
                         onPostClick(postId, origin)
-                    },
+                    }
                 )
             },
             navigationIcon = {
                 IconButton(onClick = {}, enabled = false) {
                     Icon(
-                        painter = MubbleTheme.Icons.MubbleIcon,
+                        painter = MubbleDesignSystem.Icons.MubbleIcon,
                         contentDescription = null,
-                        tint = Color.Unspecified,
+                        tint = Color.Unspecified
                     )
                 }
             },
             actions = {
                 IconButton(onClick = {}) {
-                    Icon(painter = MubbleTheme.Icons.Search, contentDescription = null)
+                    Icon(painter = MubbleDesignSystem.Icons.Search, contentDescription = null)
                 }
-            },
+            }
         ) {
             MubbleTabRow(
                 tabTitles = tabTitles,
-                pagerState = pagerState,
+                pagerState = pagerState
             )
         }
     }
@@ -154,20 +154,20 @@ fun HomeFollowingScreen(
     listState: LazyListState,
     onUserClick: (String) -> Unit,
     onMoreClick: (postId: String) -> Unit,
-    onPostClick: (index: Int, postId: String, origin: PostOrigin) -> Unit,
+    onPostClick: (index: Int, postId: String, origin: PostOrigin) -> Unit
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         state = listState,
         contentPadding = PaddingValues(start = 8.dp, end = 8.dp, top = 4.dp, bottom = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         postFeed(
             uiState = uiState,
             origin = PostOrigin.HomeFollowing,
             onUserClick = onUserClick,
             onMoreClick = onMoreClick,
-            onPostClick = onPostClick,
+            onPostClick = onPostClick
         )
     }
 }
@@ -180,19 +180,19 @@ fun HomeMyCirclesScreen(
     onCircleClick: (String, PostOrigin) -> Unit,
     onUserClick: (String) -> Unit,
     onMoreClick: (postId: String) -> Unit,
-    onPostClick: (index: Int, postId: String, origin: PostOrigin) -> Unit,
+    onPostClick: (index: Int, postId: String, origin: PostOrigin) -> Unit
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         state = listState,
         contentPadding = PaddingValues(top = 4.dp, bottom = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
             LazyRow(
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 item {
                     AllButton()
@@ -206,9 +206,9 @@ fun HomeMyCirclesScreen(
                         onCircleClick = { circleId ->
                             onCircleClick(
                                 circleId,
-                                PostOrigin.HomeMyCircles,
+                                PostOrigin.HomeMyCircles
                             )
-                        },
+                        }
                     )
                 }
             }
@@ -219,7 +219,7 @@ fun HomeMyCirclesScreen(
             isCircleScreen = true,
             onUserClick = onUserClick,
             onMoreClick = onMoreClick,
-            onPostClick = onPostClick,
+            onPostClick = onPostClick
         )
     }
 }

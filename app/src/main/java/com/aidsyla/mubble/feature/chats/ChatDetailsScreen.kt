@@ -34,43 +34,44 @@ import com.aidsyla.mubble.data.UserRepo
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatDetailsScreen(
-    modifier: Modifier = Modifier,
     otherUserId: String,
     onBackClick: () -> Unit,
     onProfileClick: (userId: String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val otherUser by remember(otherUserId) {
         mutableStateOf(UserRepo.getUser(otherUserId))
     }
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     Scaffold(
+        modifier = modifier,
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
                     Column(
                         modifier =
-                            Modifier
-                                .clickable { onProfileClick(otherUserId) }
-                                .fillMaxHeight(),
+                        Modifier
+                            .clickable { onProfileClick(otherUserId) }
+                            .fillMaxHeight(),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Image(
                             painter =
-                                painterResource(
-                                    id = otherUser?.profilePictureResId ?: R.drawable.profile_1,
-                                ),
+                            painterResource(
+                                id = otherUser?.profilePictureResId ?: R.drawable.profile_1
+                            ),
                             contentDescription = "${otherUser?.displayName ?: "User"} profile picture",
                             modifier =
-                                Modifier
-                                    .clip(CircleShape)
-                                    .aspectRatio(1f)
-                                    .weight(1f),
-                            contentScale = ContentScale.Crop,
+                            Modifier
+                                .clip(CircleShape)
+                                .aspectRatio(1f)
+                                .weight(1f),
+                            contentScale = ContentScale.Crop
                         )
                         Text(
                             otherUser?.displayName ?: "Chat",
-                            style = MaterialTheme.typography.titleMedium,
+                            style = MaterialTheme.typography.titleMedium
                         )
                     }
                 },
@@ -80,12 +81,12 @@ fun ChatDetailsScreen(
                     }
                 },
                 expandedHeight = TopAppBarDefaults.MediumAppBarExpandedHeight,
-                scrollBehavior = scrollBehavior,
+                scrollBehavior = scrollBehavior
             )
-        },
+        }
     ) {
         ChatDetailsPager(
-            modifier = Modifier.padding(it),
+            modifier = Modifier.padding(it)
         )
     }
 }

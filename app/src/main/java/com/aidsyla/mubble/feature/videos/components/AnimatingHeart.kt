@@ -16,19 +16,19 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
-import com.aidsyla.mubble.ui.theme.MubbleTheme
+import com.aidsyla.mubble.ui.theme.MubbleDesignSystem
 import java.util.UUID
 import kotlin.random.Random
 
 internal data class Like(
     val id: UUID,
-    val offset: Offset,
+    val offset: Offset
 )
 
 @Composable
 fun AnimatingHeart(
     offset: Offset,
-    onAnimationFinished: () -> Unit,
+    onAnimationFinished: () -> Unit
 ) {
     val sizeAnim = remember { Animatable(0f) }
 
@@ -40,49 +40,49 @@ fun AnimatingHeart(
     LaunchedEffect(Unit) {
         sizeAnim.animateTo(
             targetValue = 1f,
-            animationSpec = tween(durationMillis = 300, easing = EaseOutQuad),
+            animationSpec = tween(durationMillis = 300, easing = EaseOutQuad)
         )
         sizeAnim.animateTo(
             targetValue = 0f,
-            animationSpec = tween(durationMillis = 300, easing = EaseInOutCubic),
+            animationSpec = tween(durationMillis = 300, easing = EaseInOutCubic)
         )
         onAnimationFinished()
     }
 
     Icon(
         modifier =
-            Modifier
-                .size(125.dp)
-                .graphicsLayer {
-                    translationX = offset.x - (size.width / 2)
-                    translationY = offset.y - (size.height / 2)
-                    scaleX = sizeAnim.value
-                    scaleY = sizeAnim.value
-                    alpha = sizeAnim.value
-                    rotationZ = randomRotation
-                }.blur(
-                    radius = 8.dp,
-                    edgeTreatment = BlurredEdgeTreatment.Unbounded,
-                ),
-        painter = MubbleTheme.Icons.FavoriteFilled,
+        Modifier
+            .size(125.dp)
+            .graphicsLayer {
+                translationX = offset.x - (size.width / 2)
+                translationY = offset.y - (size.height / 2)
+                scaleX = sizeAnim.value
+                scaleY = sizeAnim.value
+                alpha = sizeAnim.value
+                rotationZ = randomRotation
+            }.blur(
+                radius = 8.dp,
+                edgeTreatment = BlurredEdgeTreatment.Unbounded
+            ),
+        painter = MubbleDesignSystem.Icons.FavoriteFilled,
         contentDescription = null,
-        tint = Color.Black.copy(alpha = 0.3f),
+        tint = Color.Black.copy(alpha = 0.3f)
     )
 
     Icon(
         modifier =
-            Modifier
-                .size(120.dp)
-                .graphicsLayer {
-                    translationX = offset.x - (size.width / 2)
-                    translationY = offset.y - (size.height / 2)
-                    scaleX = sizeAnim.value
-                    scaleY = sizeAnim.value
-                    alpha = sizeAnim.value
-                    rotationZ = randomRotation
-                },
-        painter = MubbleTheme.Icons.Heart,
+        Modifier
+            .size(120.dp)
+            .graphicsLayer {
+                translationX = offset.x - (size.width / 2)
+                translationY = offset.y - (size.height / 2)
+                scaleX = sizeAnim.value
+                scaleY = sizeAnim.value
+                alpha = sizeAnim.value
+                rotationZ = randomRotation
+            },
+        painter = MubbleDesignSystem.Icons.Heart,
         contentDescription = null,
-        tint = Color.Unspecified,
+        tint = Color.Unspecified
     )
 }

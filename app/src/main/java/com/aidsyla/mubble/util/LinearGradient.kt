@@ -57,7 +57,7 @@ class LinearGradient constructor(
     private val stops: List<Float>? = null,
     private val tileMode: TileMode = TileMode.Clamp,
     angleInDegrees: Float = 0f,
-    useAsCssAngle: Boolean = false,
+    useAsCssAngle: Boolean = false
 ) : ShaderBrush() {
     // handle edge cases like: -1235, ...
     private val normalizedAngle: Float =
@@ -76,7 +76,7 @@ class LinearGradient constructor(
             colorStops = stops,
             from = from,
             to = to,
-            tileMode = tileMode,
+            tileMode = tileMode
         )
     }
 
@@ -122,11 +122,10 @@ class LinearGradient constructor(
         return result
     }
 
-    override fun toString(): String =
-        "LinearGradient(colors=$colors, " +
-            "stops=$stops, " +
-            "angle=$normalizedAngle, " +
-            "tileMode=$tileMode)"
+    override fun toString(): String = "LinearGradient(colors=$colors, " +
+        "stops=$stops, " +
+        "angle=$normalizedAngle, " +
+        "tileMode=$tileMode)"
 }
 
 /**
@@ -151,15 +150,14 @@ fun Brush.Companion.linearGradient(
     stops: List<Float>? = null,
     tileMode: TileMode = TileMode.Clamp,
     angleInDegrees: Float = 0f,
-    useAsCssAngle: Boolean = false,
-): Brush =
-    LinearGradient(
-        colors = colors,
-        stops = stops,
-        tileMode = tileMode,
-        angleInDegrees = angleInDegrees,
-        useAsCssAngle = useAsCssAngle,
-    )
+    useAsCssAngle: Boolean = false
+): Brush = LinearGradient(
+    colors = colors,
+    stops = stops,
+    tileMode = tileMode,
+    angleInDegrees = angleInDegrees,
+    useAsCssAngle = useAsCssAngle
+)
 
 /**
  * Creates a linear gradient with the provided colors
@@ -180,12 +178,11 @@ fun Brush.Companion.linearGradient(
     vararg colorStops: Pair<Float, Color>,
     tileMode: TileMode = TileMode.Clamp,
     angleInDegrees: Float = 0f,
-    useAsCssAngle: Boolean = false,
-): Brush =
-    LinearGradient(
-        colors = List(colorStops.size) { i -> colorStops[i].second },
-        stops = List(colorStops.size) { i -> colorStops[i].first },
-        tileMode = tileMode,
-        angleInDegrees = angleInDegrees,
-        useAsCssAngle = useAsCssAngle,
-    )
+    useAsCssAngle: Boolean = false
+): Brush = LinearGradient(
+    colors = List(colorStops.size) { i -> colorStops[i].second },
+    stops = List(colorStops.size) { i -> colorStops[i].first },
+    tileMode = tileMode,
+    angleInDegrees = angleInDegrees,
+    useAsCssAngle = useAsCssAngle
+)

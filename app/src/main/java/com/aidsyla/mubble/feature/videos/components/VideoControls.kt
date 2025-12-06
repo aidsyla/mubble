@@ -20,7 +20,7 @@ import com.aidsyla.mubble.feature.videos.components.buttons.PlayPauseButton
 import com.aidsyla.mubble.feature.videos.components.buttons.PlaybackSpeedButton
 import com.aidsyla.mubble.feature.videos.components.buttons.VideoControlIconButton
 import com.aidsyla.mubble.feature.videos.components.buttons.VolumeButton
-import com.aidsyla.mubble.ui.theme.MubbleTheme
+import com.aidsyla.mubble.ui.theme.MubbleDesignSystem
 
 @androidx.annotation.OptIn(UnstableApi::class)
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -28,28 +28,28 @@ import com.aidsyla.mubble.ui.theme.MubbleTheme
 internal fun VideoControls(
     modifier: Modifier = Modifier,
     player: Player?,
-    onBackClick: () -> Unit,
+    onBackClick: () -> Unit
 ) {
     Row(
         modifier =
-            modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp),
+        modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         VideoControlIconButton(
             modifier = Modifier,
-            onClick = onBackClick,
+            onClick = onBackClick
         ) {
             Icon(
                 modifier =
-                    Modifier.size(
-                        IconButtonDefaults.extraSmallIconSize,
-                    ),
-                painter = MubbleTheme.Icons.ArrowBack,
+                Modifier.size(
+                    IconButtonDefaults.extraSmallIconSize
+                ),
+                painter = MubbleDesignSystem.Icons.ArrowBack,
                 contentDescription = null,
-                tint = Color.White,
+                tint = Color.White
             )
         }
         Row {
@@ -65,11 +65,11 @@ internal fun VideoControls(
         }
         Box(
             modifier =
-                Modifier.size(
-                    IconButtonDefaults.extraSmallContainerSize(
-                        IconButtonDefaults.IconButtonWidthOption.Uniform,
-                    ),
-                ),
+            Modifier.size(
+                IconButtonDefaults.extraSmallContainerSize(
+                    IconButtonDefaults.IconButtonWidthOption.Uniform
+                )
+            )
         )
     }
 }

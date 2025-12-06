@@ -48,9 +48,9 @@ import com.aidsyla.mubble.common.components.layout.MubbleGridTabPager
 import com.aidsyla.mubble.common.components.layout.MubbleTabRow
 import com.aidsyla.mubble.common.navigation.LocalNavAnimatedVisibilityScope
 import com.aidsyla.mubble.common.navigation.LocalSharedTransitionScope
-import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
-import com.aidsyla.mubble.common.navigation.shared_elements.PostSharedElementKey
-import com.aidsyla.mubble.common.navigation.shared_elements.PostSharedElementType
+import com.aidsyla.mubble.common.navigation.sharedelements.PostOrigin
+import com.aidsyla.mubble.common.navigation.sharedelements.PostSharedElementKey
+import com.aidsyla.mubble.common.navigation.sharedelements.PostSharedElementType
 import com.aidsyla.mubble.data.BubbleFeedItem
 import com.aidsyla.mubble.data.DummyPostRepository
 import com.aidsyla.mubble.data.ImagePostFeedItem
@@ -58,13 +58,14 @@ import com.aidsyla.mubble.feature.circle.CircleItem
 import com.aidsyla.mubble.feature.circle.model.Circle
 import com.aidsyla.mubble.feature.circle.model.CircleRepo
 import com.aidsyla.mubble.ui.LocalBottomBarPadding
+import com.aidsyla.mubble.ui.theme.MubbleDesignSystem
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 
 @Composable
 fun ExploreScreen(
     viewModel: ExploreViewModel = hiltViewModel(),
     onPostClick: (postId: String, origin: PostOrigin) -> Unit,
-    onCircleClick: (String, PostOrigin) -> Unit,
+    onCircleClick: (String, PostOrigin) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val tabTitles = remember { listOf("Circles", "Media", "Bubbles") }
@@ -77,41 +78,41 @@ fun ExploreScreen(
         firstPage = {
             ExploreCircleGrid(
                 items = CircleRepo.dummyCircles,
-                onCircleClick = onCircleClick,
+                onCircleClick = onCircleClick
             )
         },
         secondPage = {
             ExplorePostGrid(
                 items = uiState.media,
                 state = it,
-                onPostClick = onPostClick,
+                onPostClick = onPostClick
             )
         },
         thirdPage = {
             ExploreBubbleGrid(
                 items = uiState.bubbles,
                 state = it,
-                onPostClick = onPostClick,
+                onPostClick = onPostClick
             )
         },
         navigationIcon = {
             IconButton(onClick = {}, enabled = false) {
                 Icon(
-                    painter = MubbleTheme.Icons.MubbleIcon,
+                    painter = MubbleDesignSystem.Icons.MubbleIcon,
                     contentDescription = null,
-                    tint = Color.Unspecified,
+                    tint = Color.Unspecified
                 )
             }
         },
         actions = {
             IconButton(onClick = {}) {
-                Icon(painter = MubbleTheme.Icons.Search, contentDescription = null)
+                Icon(painter = MubbleDesignSystem.Icons.Search, contentDescription = null)
             }
-        },
+        }
     ) {
         MubbleTabRow(
             tabTitles = tabTitles,
-            pagerState = pagerState,
+            pagerState = pagerState
         )
     }
 }
@@ -120,14 +121,14 @@ fun ExploreScreen(
 fun ExploreCircleGrid(
     modifier: Modifier = Modifier,
     items: List<Circle>,
-    onCircleClick: (String, PostOrigin) -> Unit,
+    onCircleClick: (String, PostOrigin) -> Unit
 ) {
     LazyVerticalGrid(
         modifier = modifier,
         columns = GridCells.Fixed(2),
         contentPadding = PaddingValues(top = 4.dp, start = 8.dp, end = 8.dp, bottom = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(items) {
             CircleItem(
@@ -137,7 +138,7 @@ fun ExploreCircleGrid(
                 modifier = Modifier.fillMaxWidth(),
                 onCircleClick = { circleId ->
                     onCircleClick(circleId, PostOrigin.ExploreCircles)
-                },
+                }
             )
         }
     }
@@ -148,7 +149,7 @@ fun ExploreBubbleGrid(
     modifier: Modifier = Modifier,
     items: List<BubbleFeedItem>,
     state: LazyStaggeredGridState,
-    onPostClick: (postId: String, origin: PostOrigin) -> Unit,
+    onPostClick: (postId: String, origin: PostOrigin) -> Unit
 ) {
     LazyVerticalStaggeredGrid(
         state = state,
@@ -156,12 +157,12 @@ fun ExploreBubbleGrid(
         contentPadding = PaddingValues(top = 4.dp, start = 8.dp, end = 8.dp, bottom = 8.dp),
         verticalItemSpacing = 8.dp,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize()
     ) {
         exploreBubblesFeed(
             items = items,
             onProfileClick = {},
-            onPostClick = onPostClick,
+            onPostClick = onPostClick
         )
     }
 }
@@ -171,7 +172,7 @@ fun ExplorePostGrid(
     modifier: Modifier = Modifier,
     items: List<ImagePostFeedItem>,
     state: LazyStaggeredGridState,
-    onPostClick: (postId: String, origin: PostOrigin) -> Unit,
+    onPostClick: (postId: String, origin: PostOrigin) -> Unit
 ) {
     LazyVerticalStaggeredGrid(
         state = state,
@@ -179,12 +180,12 @@ fun ExplorePostGrid(
         contentPadding = PaddingValues(top = 4.dp, start = 8.dp, end = 8.dp, bottom = 8.dp),
         verticalItemSpacing = 8.dp,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize()
     ) {
         explorePostsFeed(
             items = items,
             onProfileClick = {},
-            onPostClick = onPostClick,
+            onPostClick = onPostClick
         )
     }
 }
@@ -194,7 +195,7 @@ fun ExplorePostGrid(
 fun ExplorePost(
     modifier: Modifier = Modifier,
     item: ImagePostFeedItem,
-    onPostClick: (postId: String, origin: PostOrigin) -> Unit,
+    onPostClick: (postId: String, origin: PostOrigin) -> Unit
 ) {
     val sharedTransitionScope =
         LocalSharedTransitionScope.current
@@ -222,59 +223,59 @@ fun ExplorePost(
     with(sharedTransitionScope) {
         Box(
             modifier =
-                modifier
-                    .clickable { onPostClick(item.id, PostOrigin.ExploreMedia) }
-                    .sharedBounds(
-                        rememberSharedContentState(
-                            key =
-                                PostSharedElementKey(
-                                    postId = item.id,
-                                    origin = PostOrigin.ExploreMedia,
-                                    type = PostSharedElementType.Bounds,
-                                ),
-                        ),
-                        animatedVisibilityScope = animatedContentScope,
-                        resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
-                        clipInOverlayDuringTransition =
-                            OverlayClip(
-                                RoundedCornerShape(
-                                    roundedCornerAnimation,
-                                ),
-                            ),
-                    ).clip(MaterialTheme.shapes.medium),
+            modifier
+                .clickable { onPostClick(item.id, PostOrigin.ExploreMedia) }
+                .sharedBounds(
+                    rememberSharedContentState(
+                        key =
+                        PostSharedElementKey(
+                            postId = item.id,
+                            origin = PostOrigin.ExploreMedia,
+                            type = PostSharedElementType.Bounds
+                        )
+                    ),
+                    animatedVisibilityScope = animatedContentScope,
+                    resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds,
+                    clipInOverlayDuringTransition =
+                    OverlayClip(
+                        RoundedCornerShape(
+                            roundedCornerAnimation
+                        )
+                    )
+                ).clip(MaterialTheme.shapes.medium)
         ) {
             Image(
                 painter = painterResource(item.postImageResId),
                 contentDescription = "Post media",
                 modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .sharedElement(
-                            rememberSharedContentState(
-                                key =
-                                    PostSharedElementKey(
-                                        postId = item.id,
-                                        origin = PostOrigin.ExploreMedia,
-                                        type = PostSharedElementType.Image,
-                                    ),
-                            ),
-                            animatedVisibilityScope = animatedContentScope,
-                        ).clip(
-                            shape = RoundedCornerShape(roundedCornerAnimation),
-                        ).drawWithContent {
-                            drawContent()
-                            drawRect(
-                                MubbleTheme.Gradients.fadingBlackGradient,
-                                alpha = gradientAlpha2,
+                Modifier
+                    .fillMaxWidth()
+                    .sharedElement(
+                        rememberSharedContentState(
+                            key =
+                            PostSharedElementKey(
+                                postId = item.id,
+                                origin = PostOrigin.ExploreMedia,
+                                type = PostSharedElementType.Image
                             )
-                        },
+                        ),
+                        animatedVisibilityScope = animatedContentScope
+                    ).clip(
+                        shape = RoundedCornerShape(roundedCornerAnimation)
+                    ).drawWithContent {
+                        drawContent()
+                        drawRect(
+                            MubbleDesignSystem.Gradients.fadingBlackGradient,
+                            alpha = gradientAlpha2
+                        )
+                    }
             )
             ExploreHeader(
                 modifier = Modifier.align(Alignment.TopStart),
                 origin = PostOrigin.ExploreMedia,
                 avatarResId = item.userAvatarResId,
                 id = item.id,
-                username = item.username,
+                username = item.username
             )
         }
     }
@@ -288,7 +289,7 @@ private fun ExploreHeader(
     id: String,
     username: String,
     textColor: Color = Color.White,
-    @DrawableRes avatarResId: Int,
+    @DrawableRes avatarResId: Int
 ) {
     val sharedTransitionScope =
         LocalSharedTransitionScope.current
@@ -300,45 +301,45 @@ private fun ExploreHeader(
     Row(
         modifier = modifier.padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         with(sharedTransitionScope) {
             CircleImage(
                 modifier =
-                    Modifier.sharedElement(
-                        rememberSharedContentState(
-                            key =
-                                PostSharedElementKey(
-                                    postId = id,
-                                    origin = origin,
-                                    type = PostSharedElementType.ProfileAvatar,
-                                ),
-                        ),
-                        animatedVisibilityScope = animatedContentScope,
+                Modifier.sharedElement(
+                    rememberSharedContentState(
+                        key =
+                        PostSharedElementKey(
+                            postId = id,
+                            origin = origin,
+                            type = PostSharedElementType.ProfileAvatar
+                        )
                     ),
+                    animatedVisibilityScope = animatedContentScope
+                ),
                 painter = painterResource(avatarResId),
                 size = 24.dp,
-                borderWidth = 0.2.dp,
+                borderWidth = 0.2.dp
             )
             Text(
                 modifier =
-                    Modifier.sharedBounds(
-                        rememberSharedContentState(
-                            key =
-                                PostSharedElementKey(
-                                    postId = id,
-                                    origin = origin,
-                                    type = PostSharedElementType.DisplayName,
-                                ),
-                        ),
-                        animatedVisibilityScope = animatedContentScope,
+                Modifier.sharedBounds(
+                    rememberSharedContentState(
+                        key =
+                        PostSharedElementKey(
+                            postId = id,
+                            origin = origin,
+                            type = PostSharedElementType.DisplayName
+                        )
                     ),
+                    animatedVisibilityScope = animatedContentScope
+                ),
                 text = username,
                 style =
-                    MaterialTheme.typography.labelMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                    ),
-                color = textColor,
+                MaterialTheme.typography.labelMedium.copy(
+                    fontWeight = FontWeight.Bold
+                ),
+                color = textColor
             )
         }
     }
@@ -348,7 +349,7 @@ private fun ExploreHeader(
 fun ExploreBubble(
     modifier: Modifier = Modifier,
     item: BubbleFeedItem,
-    onPostClick: (postId: String, origin: PostOrigin) -> Unit,
+    onPostClick: (postId: String, origin: PostOrigin) -> Unit
 ) {
     ExploreBubble(
         modifier = modifier,
@@ -356,7 +357,7 @@ fun ExploreBubble(
         username = item.username,
         description = item.postDescription,
         avatarResId = item.userAvatarResId,
-        onPostClick = onPostClick,
+        onPostClick = onPostClick
     )
 }
 
@@ -368,7 +369,7 @@ fun ExploreBubble(
     username: String,
     description: String,
     @DrawableRes avatarResId: Int,
-    onPostClick: (postId: String, origin: PostOrigin) -> Unit,
+    onPostClick: (postId: String, origin: PostOrigin) -> Unit
 ) {
     val sharedTransitionScope =
         LocalSharedTransitionScope.current
@@ -380,50 +381,50 @@ fun ExploreBubble(
     with(sharedTransitionScope) {
         Card(
             modifier =
-                modifier
-                    .fillMaxWidth()
-                    .sharedBounds(
-                        rememberSharedContentState(
-                            key =
-                                PostSharedElementKey(
-                                    postId = postId,
-                                    origin = PostOrigin.ExploreBubbles,
-                                    type = PostSharedElementType.Bounds,
-                                ),
-                        ),
-                        animatedVisibilityScope = animatedContentScope,
+            modifier
+                .fillMaxWidth()
+                .sharedBounds(
+                    rememberSharedContentState(
+                        key =
+                        PostSharedElementKey(
+                            postId = postId,
+                            origin = PostOrigin.ExploreBubbles,
+                            type = PostSharedElementType.Bounds
+                        )
                     ),
+                    animatedVisibilityScope = animatedContentScope
+                ),
             onClick = { onPostClick(postId, PostOrigin.ExploreBubbles) },
-            shape = MaterialTheme.shapes.medium,
+            shape = MaterialTheme.shapes.medium
         ) {
             ExploreHeader(
                 origin = PostOrigin.ExploreBubbles,
                 avatarResId = avatarResId,
                 id = postId,
                 username = username,
-                textColor = MaterialTheme.colorScheme.onSurface,
+                textColor = MaterialTheme.colorScheme.onSurface
             )
             Box(
                 modifier =
-                    Modifier.sharedBounds(
-                        rememberSharedContentState(
-                            key =
-                                PostSharedElementKey(
-                                    postId = postId,
-                                    origin = PostOrigin.ExploreBubbles,
-                                    type = PostSharedElementType.Bubble,
-                                ),
-                        ),
-                        animatedVisibilityScope = animatedContentScope,
+                Modifier.sharedBounds(
+                    rememberSharedContentState(
+                        key =
+                        PostSharedElementKey(
+                            postId = postId,
+                            origin = PostOrigin.ExploreBubbles,
+                            type = PostSharedElementType.Bubble
+                        )
                     ),
+                    animatedVisibilityScope = animatedContentScope
+                )
             ) {
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodySmall,
                     modifier =
-                        Modifier
-                            .padding(horizontal = 8.dp)
-                            .padding(bottom = 8.dp),
+                    Modifier
+                        .padding(horizontal = 8.dp)
+                        .padding(bottom = 8.dp)
                 )
             }
         }
@@ -437,7 +438,7 @@ private fun ExplorePostPreview() {
     MubbleTheme {
         ExplorePost(
             item = item,
-            onPostClick = { _, _ -> },
+            onPostClick = { _, _ -> }
         )
     }
 }
@@ -450,7 +451,7 @@ private fun ExploreBubblePreview() {
         Surface {
             ExploreBubble(
                 item = item,
-                onPostClick = { _, _ -> },
+                onPostClick = { _, _ -> }
             )
         }
     }

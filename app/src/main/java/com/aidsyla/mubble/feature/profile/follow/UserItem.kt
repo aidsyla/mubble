@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.dp
 import com.aidsyla.mubble.common.components.AlertDialog
 import com.aidsyla.mubble.common.components.CircleImage
 import com.aidsyla.mubble.model.FollowType
-import com.aidsyla.mubble.ui.theme.MubbleTheme
+import com.aidsyla.mubble.ui.theme.MubbleDesignSystem
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -49,7 +49,7 @@ fun UserItem(
     @DrawableRes profilePictureResId: Int,
     onUserClick: (String) -> Unit,
     onFollowClick: (String) -> Unit,
-    onMessageClick: (String) -> Unit,
+    onMessageClick: (String) -> Unit
 ) {
     var openDialog by remember { mutableStateOf(false) }
 
@@ -61,13 +61,13 @@ fun UserItem(
                     onConfirmation = {},
                     dialogTitle = "Remove follower?",
                     dialogText =
-                        buildAnnotatedString {
-                            withStyle(style = SpanStyle(fontWeight = FontWeight.SemiBold)) {
-                                append(username)
-                            }
-                            append(text = " will no longer see your posts in their feed.")
-                        },
-                    confirmButtonText = "Remove",
+                    buildAnnotatedString {
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.SemiBold)) {
+                            append(username)
+                        }
+                        append(text = " will no longer see your posts in their feed.")
+                    },
+                    confirmButtonText = "Remove"
                 )
             }
         }
@@ -79,17 +79,17 @@ fun UserItem(
                     onConfirmation = {},
                     dialogTitle = "Stop following?",
                     dialogText =
-                        buildAnnotatedString {
-                            append(text = "You won’t see")
-                            append(text = " ")
-                            withStyle(style = SpanStyle(fontWeight = FontWeight.SemiBold)) {
-                                append(username)
-                                append("'s")
-                            }
-                            append(text = " ")
-                            append(text = "updates anymore.")
-                        },
-                    confirmButtonText = "Unfollow",
+                    buildAnnotatedString {
+                        append(text = "You won’t see")
+                        append(text = " ")
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.SemiBold)) {
+                            append(username)
+                            append("'s")
+                        }
+                        append(text = " ")
+                        append(text = "updates anymore.")
+                    },
+                    confirmButtonText = "Unfollow"
                 )
             }
         }
@@ -97,66 +97,66 @@ fun UserItem(
 
     Row(
         modifier =
-            modifier
-                .fillMaxWidth()
-                .clickable { onUserClick(userId) }
-                .padding(start = 16.dp, end = 4.dp, top = 6.dp, bottom = 6.dp),
-        verticalAlignment = Alignment.CenterVertically,
+        modifier
+            .fillMaxWidth()
+            .clickable { onUserClick(userId) }
+            .padding(start = 16.dp, end = 4.dp, top = 6.dp, bottom = 6.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         CircleImage(
             painter = painterResource(profilePictureResId),
-            borderWidth = 0.1.dp,
+            borderWidth = 0.1.dp
         )
         Spacer(modifier = Modifier.width(12.dp))
         Text(
             text = username,
-            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
+            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold)
         )
         if (isCurrentUser) {
             Spacer(modifier = Modifier.weight(1f))
             FilledIconButton(
                 onClick = { onMessageClick(userId) },
                 modifier =
-                    modifier
-                        .minimumInteractiveComponentSize()
-                        .size(
-                            IconButtonDefaults.extraSmallContainerSize(
-                                IconButtonDefaults.IconButtonWidthOption.Wide,
-                            ),
-                        ),
-                shapes =
-                    IconButtonDefaults.shapes(
-                        shape = IconButtonDefaults.extraSmallRoundShape,
-                        pressedShape = IconButtonDefaults.extraSmallPressedShape,
+                modifier
+                    .minimumInteractiveComponentSize()
+                    .size(
+                        IconButtonDefaults.extraSmallContainerSize(
+                            IconButtonDefaults.IconButtonWidthOption.Wide
+                        )
                     ),
+                shapes =
+                IconButtonDefaults.shapes(
+                    shape = IconButtonDefaults.extraSmallRoundShape,
+                    pressedShape = IconButtonDefaults.extraSmallPressedShape
+                )
             ) {
                 Icon(
                     modifier =
-                        Modifier.size(
-                            IconButtonDefaults.extraSmallIconSize,
-                        ),
-                    painter = MubbleTheme.Icons.Message,
-                    contentDescription = null,
+                    Modifier.size(
+                        IconButtonDefaults.extraSmallIconSize
+                    ),
+                    painter = MubbleDesignSystem.Icons.Message,
+                    contentDescription = null
                 )
             }
             IconButton(
                 onClick = { openDialog = true },
                 modifier =
-                    modifier
-                        .minimumInteractiveComponentSize()
-                        .size(
-                            IconButtonDefaults.extraSmallContainerSize(
-                                IconButtonDefaults.IconButtonWidthOption.Uniform,
-                            ),
-                        ),
+                modifier
+                    .minimumInteractiveComponentSize()
+                    .size(
+                        IconButtonDefaults.extraSmallContainerSize(
+                            IconButtonDefaults.IconButtonWidthOption.Uniform
+                        )
+                    )
             ) {
                 Icon(
                     modifier =
-                        Modifier.size(
-                            IconButtonDefaults.extraSmallIconSize,
-                        ),
-                    painter = MubbleTheme.Icons.Close,
-                    contentDescription = null,
+                    Modifier.size(
+                        IconButtonDefaults.extraSmallIconSize
+                    ),
+                    painter = MubbleDesignSystem.Icons.Close,
+                    contentDescription = null
                 )
             }
         } else {
@@ -166,12 +166,12 @@ fun UserItem(
                 onClick = { onFollowClick(userId) },
                 modifier = Modifier.heightIn(size),
                 shapes = ButtonDefaults.shapes(),
-                contentPadding = ButtonDefaults.contentPaddingFor(size),
+                contentPadding = ButtonDefaults.contentPaddingFor(size)
             ) {
                 Icon(
-                    painter = MubbleTheme.Icons.PersonAdd,
+                    painter = MubbleDesignSystem.Icons.PersonAdd,
                     contentDescription = "Localized description",
-                    modifier = Modifier.size(ButtonDefaults.iconSizeFor(size)),
+                    modifier = Modifier.size(ButtonDefaults.iconSizeFor(size))
                 )
                 Spacer(Modifier.size(ButtonDefaults.iconSpacingFor(size)))
                 Text("Follow")

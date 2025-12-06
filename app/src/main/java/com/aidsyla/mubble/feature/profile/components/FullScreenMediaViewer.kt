@@ -45,19 +45,19 @@ import com.aidsyla.mubble.app.LocalDarkTheme
 import com.aidsyla.mubble.common.components.post.detectTransformGesturesCustom
 import com.aidsyla.mubble.common.navigation.LocalNavAnimatedVisibilityScope
 import com.aidsyla.mubble.common.navigation.LocalSharedTransitionScope
-import com.aidsyla.mubble.ui.theme.MubbleTheme
+import com.aidsyla.mubble.ui.theme.MubbleDesignSystem
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlin.math.max
 
 data class FullScreenMediaSharedElementKey(
     val imgId: Int,
-    val fullScreenMediaType: FullScreenMediaType,
+    val fullScreenMediaType: FullScreenMediaType
 )
 
 enum class FullScreenMediaType {
     AVATAR,
-    BANNER,
+    BANNER
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
@@ -66,7 +66,7 @@ fun FullScreenMediaViewer(
     modifier: Modifier = Modifier,
     type: FullScreenMediaType,
     @DrawableRes imageId: Int,
-    onBackClick: () -> Unit,
+    onBackClick: () -> Unit
 ) {
     val sharedTransitionScope =
         LocalSharedTransitionScope.current
@@ -78,17 +78,19 @@ fun FullScreenMediaViewer(
 
     val imageModifier =
         when (type) {
-            FullScreenMediaType.AVATAR ->
+            FullScreenMediaType.AVATAR -> {
                 Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f)
                     .clickable {}
+            }
 
-            FullScreenMediaType.BANNER ->
+            FullScreenMediaType.BANNER -> {
                 Modifier
                     .fillMaxWidth()
                     .aspectRatio(2.25f)
                     .clickable {}
+            }
         }
 
     val contentScale =
@@ -102,48 +104,48 @@ fun FullScreenMediaViewer(
     with(sharedTransitionScope) {
         Box(
             modifier =
-                modifier
-                    .clickable {
-                        onBackClick()
-                    }.fillMaxSize()
-                    .background(color = backgroundColor),
-            contentAlignment = Alignment.Center,
+            modifier
+                .clickable {
+                    onBackClick()
+                }.fillMaxSize()
+                .background(color = backgroundColor),
+            contentAlignment = Alignment.Center
         ) {
             Box(
                 modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .statusBarsPadding()
-                        .height(TopAppBarDefaults.TopAppBarExpandedHeight)
-                        .padding(start = 4.dp)
-                        .align(Alignment.TopStart),
-                contentAlignment = Alignment.CenterStart,
+                Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding()
+                    .height(TopAppBarDefaults.TopAppBarExpandedHeight)
+                    .padding(start = 4.dp)
+                    .align(Alignment.TopStart),
+                contentAlignment = Alignment.CenterStart
             ) {
                 IconButton(
-                    onClick = onBackClick,
+                    onClick = onBackClick
                 ) {
                     Icon(
-                        painter = MubbleTheme.Icons.Close,
-                        contentDescription = "Close",
+                        painter = MubbleDesignSystem.Icons.Close,
+                        contentDescription = "Close"
                     )
                 }
             }
             ZoomableMedia(
                 modifier =
-                    imageModifier
-                        .sharedElement(
-                            rememberSharedContentState(
-                                key =
-                                    FullScreenMediaSharedElementKey(
-                                        imgId = imageId,
-                                        fullScreenMediaType = type,
-                                    ),
-                            ),
-                            animatedVisibilityScope = animatedContentScope,
+                imageModifier
+                    .sharedElement(
+                        rememberSharedContentState(
+                            key =
+                            FullScreenMediaSharedElementKey(
+                                imgId = imageId,
+                                fullScreenMediaType = type
+                            )
                         ),
+                        animatedVisibilityScope = animatedContentScope
+                    ),
                 imageId = imageId,
                 contentScale = contentScale,
-                type = type,
+                type = type
             )
         }
     }
@@ -154,7 +156,7 @@ fun ZoomableMedia(
     modifier: Modifier = Modifier,
     @DrawableRes imageId: Int,
     contentScale: ContentScale,
-    type: FullScreenMediaType,
+    type: FullScreenMediaType
 ) {
     val coroutineScope = rememberCoroutineScope()
     var isAnimatingBack by remember { mutableStateOf(false) }
@@ -175,7 +177,7 @@ fun ZoomableMedia(
         } else {
             Offset(
                 x = (initialSize.width / 2f) * (zoom - 1) - offset.x * zoom,
-                y = (initialSize.height / 2f) * (zoom - 1) - offset.y * zoom,
+                y = (initialSize.height / 2f) * (zoom - 1) - offset.y * zoom
             )
         }
 
@@ -204,10 +206,10 @@ fun ZoomableMedia(
                     zoomAnimatable.animateTo(
                         targetValue = 1f,
                         animationSpec =
-                            tween(
-                                durationMillis = 300,
-                                easing = FastOutSlowInEasing,
-                            ),
+                        tween(
+                            durationMillis = 300,
+                            easing = FastOutSlowInEasing
+                        )
                     )
                     zoom = 1f
                 }
@@ -218,10 +220,10 @@ fun ZoomableMedia(
                     centerOffsetAnimatable.animateTo(
                         targetValue = Offset.Zero,
                         animationSpec =
-                            tween(
-                                durationMillis = 300,
-                                easing = FastOutSlowInEasing,
-                            ),
+                        tween(
+                            durationMillis = 300,
+                            easing = FastOutSlowInEasing
+                        )
                     )
                     centerOffset = Offset.Zero
                 }
@@ -246,7 +248,7 @@ fun ZoomableMedia(
                         detectTransformGesturesCustom(
                             onGestureEnd = {
                                 resetToCenter()
-                            },
+                            }
                         ) { centroid, pan, gestureZoom ->
                             val oldZoom = zoom
                             val newZoom = max(zoom * gestureZoom, 0.7f)
@@ -256,15 +258,15 @@ fun ZoomableMedia(
                             zoom = newZoom
                         }
                     }
-                },
+                }
             ).graphicsLayer(
                 scaleX = zoomAnimatable.value,
                 scaleY = zoomAnimatable.value,
                 translationX = centerOffsetAnimatable.value.x,
-                translationY = centerOffsetAnimatable.value.y,
+                translationY = centerOffsetAnimatable.value.y
             ).then(
-                if (type == FullScreenMediaType.AVATAR) Modifier.clip(shape = CircleShape) else Modifier,
+                if (type == FullScreenMediaType.AVATAR) Modifier.clip(shape = CircleShape) else Modifier
             ),
-        contentScale = contentScale,
+        contentScale = contentScale
     )
 }

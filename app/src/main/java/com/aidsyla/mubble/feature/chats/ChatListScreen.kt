@@ -45,6 +45,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aidsyla.mubble.common.components.CircleImage
 import com.aidsyla.mubble.data.ChatPreview
 import com.aidsyla.mubble.ui.LocalBottomBarPadding
+import com.aidsyla.mubble.ui.theme.MubbleDesignSystem
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,7 +53,7 @@ import com.aidsyla.mubble.ui.theme.MubbleTheme
 fun ChatListScreen(
     modifier: Modifier = Modifier,
     onChatClick: (chatId: String, otherUserId: String) -> Unit,
-    viewModel: ChatListViewModel = hiltViewModel(),
+    viewModel: ChatListViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val editUiState by viewModel.editUiState.collectAsStateWithLifecycle()
@@ -64,19 +65,19 @@ fun ChatListScreen(
             CenterAlignedTopAppBar(
                 title = {
                     AnimatedContent(
-                        targetState = editUiState.isEditing,
+                        targetState = editUiState.isEditing
                     ) {
                         if (it) Text(text = "0 Selected") else Text(text = "Chats")
                     }
                 },
                 navigationIcon = {
                     AnimatedContent(
-                        targetState = editUiState.isEditing,
+                        targetState = editUiState.isEditing
                     ) {
                         IconButton(onClick = { viewModel.editModeSwitch() }) {
                             Icon(
-                                painter = if (it) MubbleTheme.Icons.ArrowBack else MubbleTheme.Icons.EditFilled,
-                                contentDescription = null,
+                                painter = if (it) MubbleDesignSystem.Icons.ArrowBack else MubbleDesignSystem.Icons.EditFilled,
+                                contentDescription = null
                             )
                         }
                     }
@@ -86,45 +87,46 @@ fun ChatListScreen(
                         if (it) {
                             IconButton(onClick = { }) {
                                 Icon(
-                                    painter = MubbleTheme.Icons.Delete,
-                                    contentDescription = null,
+                                    painter = MubbleDesignSystem.Icons.Delete,
+                                    contentDescription = null
                                 )
                             }
                         } else {
                             IconButton(onClick = { }) {
                                 Icon(
-                                    painter = MubbleTheme.Icons.Search,
-                                    contentDescription = null,
+                                    painter = MubbleDesignSystem.Icons.Search,
+                                    contentDescription = null
                                 )
                             }
                         }
                     }
                 },
-                scrollBehavior = scrollState,
+                scrollBehavior = scrollState
             )
-        },
+        }
     ) { innerPadding ->
         val bottomPadding = LocalBottomBarPadding.current
         LazyColumn(
             modifier =
-                Modifier
-                    .padding(
-                        top = innerPadding.calculateTopPadding(),
-                        bottom = bottomPadding,
-                    ).nestedScroll(scrollState.nestedScrollConnection),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+            Modifier
+                .padding(
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = bottomPadding
+                ).nestedScroll(scrollState.nestedScrollConnection),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             when (val state = uiState) {
                 ChatListUiState.Loading -> {}
+
                 is ChatListUiState.Success -> {
                     items(
                         items = state.chatPreviews,
-                        key = { it.chatId },
+                        key = { it.chatId }
                     ) { chatPreview ->
                         ChatListItem(
                             isEditing = editUiState.isEditing,
                             chatPreview = chatPreview,
-                            onChatClick = onChatClick,
+                            onChatClick = onChatClick
                         )
                     }
                 }
@@ -139,7 +141,7 @@ fun ChatListItem(
     isEditing: Boolean,
     chatPreview: ChatPreview,
     onChatClick: (chatId: String, otherUserId: String) -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     val dotColor = MaterialTheme.colorScheme.primary
     var isSelected by remember { mutableStateOf(false) }
@@ -156,7 +158,7 @@ fun ChatListItem(
             modifier.clickable {
                 onChatClick(
                     chatPreview.chatId,
-                    chatPreview.otherUserId,
+                    chatPreview.otherUserId
                 )
             }
         } else {
@@ -170,81 +172,81 @@ fun ChatListItem(
     }
 
     CompositionLocalProvider(
-        value = LocalRippleConfiguration provides if (isEditing) null else LocalRippleConfiguration.current,
+        value = LocalRippleConfiguration provides if (isEditing) null else LocalRippleConfiguration.current
     ) {
         Box(
             modifier =
-                Modifier
-                    .padding(horizontal = 8.dp)
-                    .clip(MaterialTheme.shapes.largeIncreased)
-                    .background(backgroundColor),
+            Modifier
+                .padding(horizontal = 8.dp)
+                .clip(MaterialTheme.shapes.largeIncreased)
+                .background(backgroundColor)
         ) {
             Row(
                 modifier =
-                    chatModifier
-                        .fillMaxWidth()
-                        .padding(vertical = 6.dp, horizontal = 8.dp),
+                chatModifier
+                    .fillMaxWidth()
+                    .padding(vertical = 6.dp, horizontal = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalAlignment = Alignment.Top,
+                verticalAlignment = Alignment.Top
             ) {
                 CircleImage(
                     painter = painterResource(id = chatPreview.otherUserProfilePicResId),
                     contentDescription = "${chatPreview.otherUserName} profile picture",
-                    borderWidth = 0.dp,
+                    borderWidth = 0.dp
                 )
                 Column(
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f)
                 ) {
                     Text(
                         text = chatPreview.otherUserName,
                         style =
-                            if (chatPreview.isUnread) {
-                                MaterialTheme.typography.titleMedium.copy(
-                                    fontWeight = FontWeight.Bold,
-                                )
-                            } else {
-                                MaterialTheme.typography.titleMedium
-                            },
+                        if (chatPreview.isUnread) {
+                            MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.Bold
+                            )
+                        } else {
+                            MaterialTheme.typography.titleMedium
+                        }
                     )
                     Text(
                         text = chatPreview.lastMessage,
                         style =
-                            if (chatPreview.isUnread) {
-                                MaterialTheme.typography.bodyMedium.copy(
-                                    fontWeight = FontWeight.Bold,
-                                )
-                            } else {
-                                MaterialTheme.typography.bodyMedium
-                            },
+                        if (chatPreview.isUnread) {
+                            MaterialTheme.typography.bodyMedium.copy(
+                                fontWeight = FontWeight.Bold
+                            )
+                        } else {
+                            MaterialTheme.typography.bodyMedium
+                        },
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         overflow = TextOverflow.Ellipsis,
-                        maxLines = 1,
+                        maxLines = 1
                     )
                 }
                 if (chatPreview.isUnread) {
                     Canvas(
                         modifier =
-                            Modifier
-                                .size(8.dp)
-                                .align(Alignment.CenterVertically),
-                        onDraw = { drawCircle(color = dotColor) },
+                        Modifier
+                            .size(8.dp)
+                            .align(Alignment.CenterVertically),
+                        onDraw = { drawCircle(color = dotColor) }
                     )
                 }
                 Column(
                     modifier = Modifier.align(Alignment.CenterVertically),
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         text = chatPreview.timestamp,
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     if (chatPreview.notificationsOff) {
                         Icon(
-                            painter = MubbleTheme.Icons.NotificationsOff,
+                            painter = MubbleDesignSystem.Icons.NotificationsOff,
                             contentDescription = "Notifications Off",
                             modifier = Modifier.size(16.dp),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -258,7 +260,7 @@ fun ChatListItem(
 private fun ChatPreview() {
     MubbleTheme {
         ChatListScreen(
-            onChatClick = { _, _ -> },
+            onChatClick = { _, _ -> }
         )
     }
 }

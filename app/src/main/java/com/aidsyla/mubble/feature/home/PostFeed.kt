@@ -6,7 +6,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.aidsyla.mubble.common.components.post.BasePostLayout
-import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
+import com.aidsyla.mubble.common.navigation.sharedelements.PostOrigin
 import com.aidsyla.mubble.data.BubbleFeedItem
 import com.aidsyla.mubble.data.ImagePostFeedItem
 
@@ -16,7 +16,7 @@ fun LazyListScope.postFeed(
     isCircleScreen: Boolean = false,
     onUserClick: (String) -> Unit,
     onMoreClick: (postId: String) -> Unit,
-    onPostClick: (index: Int, postId: String, origin: PostOrigin) -> Unit,
+    onPostClick: (index: Int, postId: String, origin: PostOrigin) -> Unit
 ) {
     itemsIndexed(
         items = uiState.items,
@@ -26,7 +26,7 @@ fun LazyListScope.postFeed(
                 is ImagePostFeedItem -> "Image_Post"
                 is BubbleFeedItem -> "Bubble_Post"
             }
-        },
+        }
     ) { index, item ->
         val modifier = if (isCircleScreen) Modifier.padding(horizontal = 8.dp) else Modifier
         BasePostLayout(
@@ -36,7 +36,7 @@ fun LazyListScope.postFeed(
             useCard = true,
             onUserClick = onUserClick,
             onMoreClick = onMoreClick,
-            onPostClick = { onPostClick(index, it, origin) },
+            onPostClick = { onPostClick(index, it, origin) }
         )
     }
 }

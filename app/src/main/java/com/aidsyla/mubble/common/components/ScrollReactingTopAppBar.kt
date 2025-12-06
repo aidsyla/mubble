@@ -44,7 +44,7 @@ import com.aidsyla.mubble.common.navigation.LocalNavAnimatedVisibilityScope
 import com.aidsyla.mubble.common.navigation.LocalSharedTransitionScope
 import com.aidsyla.mubble.feature.profile.components.STICKY_HEADER
 import com.aidsyla.mubble.feature.profile.components.STICKY_HEADER_INDEX
-import com.aidsyla.mubble.ui.theme.MubbleTheme
+import com.aidsyla.mubble.ui.theme.MubbleDesignSystem
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
@@ -58,7 +58,7 @@ fun ScrollReactingTopAppBar(
     onNavigateToSettings: () -> Unit,
     onMoreClick: () -> Unit,
     onEditClick: () -> Unit,
-    onBackClick: () -> Unit,
+    onBackClick: () -> Unit
 ) {
     val sharedTransitionScope =
         LocalSharedTransitionScope.current
@@ -75,7 +75,7 @@ fun ScrollReactingTopAppBar(
     val targetAlpha by rememberTargetAlpha(
         lazyListState = lazyListState,
         transitionLength = transitionLength,
-        offsetAmount = offsetAmount,
+        offsetAmount = offsetAmount
     )
     val topAppBarBackgroundColor = surface.copy(alpha = targetAlpha)
 
@@ -120,148 +120,148 @@ fun ScrollReactingTopAppBar(
 
     Column(
         modifier =
-            modifier
-                .background(color = topAppBarBackgroundColor)
-                .windowInsetsPadding(TopAppBarDefaults.windowInsets),
+        modifier
+            .background(color = topAppBarBackgroundColor)
+            .windowInsetsPadding(TopAppBarDefaults.windowInsets)
     ) {
         with(sharedTransitionScope) {
             with(animatedContentScope) {
                 Row(
                     modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .height(TopAppBarDefaults.TopAppBarExpandedHeight)
-                            .renderInSharedTransitionScopeOverlay(
-                                zIndexInOverlay = 1f,
-                            ).animateEnterExit()
-                            .padding(horizontal = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically,
+                    Modifier
+                        .fillMaxWidth()
+                        .height(TopAppBarDefaults.TopAppBarExpandedHeight)
+                        .renderInSharedTransitionScopeOverlay(
+                            zIndexInOverlay = 1f
+                        ).animateEnterExit()
+                        .padding(horizontal = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (!isCurrentUser) {
                         IconButton(
                             onClick = onBackClick,
                             colors =
-                                IconButtonDefaults.iconButtonColors(
-                                    contentColor = iconColor,
-                                ),
+                            IconButtonDefaults.iconButtonColors(
+                                contentColor = iconColor
+                            )
                         ) {
                             Icon(
-                                painter = MubbleTheme.Icons.ArrowBack,
+                                painter = MubbleDesignSystem.Icons.ArrowBack,
                                 contentDescription = null,
                                 modifier =
-                                    Modifier
-                                        .offset(x = 1.dp, y = 1.dp)
-                                        .alpha(shadowAlpha)
-                                        .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
-                                tint = shadowColor,
+                                Modifier
+                                    .offset(x = 1.dp, y = 1.dp)
+                                    .alpha(shadowAlpha)
+                                    .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
+                                tint = shadowColor
                             )
                             Icon(
-                                painter = MubbleTheme.Icons.ArrowBack,
-                                contentDescription = "Back",
+                                painter = MubbleDesignSystem.Icons.ArrowBack,
+                                contentDescription = "Back"
                             )
                         }
                     }
                     Text(
                         text = title,
                         modifier =
-                            Modifier
-                                .padding(start = 12.dp)
-                                .alpha(targetAlpha),
+                        Modifier
+                            .padding(start = 12.dp)
+                            .alpha(targetAlpha),
                         style = MaterialTheme.typography.titleLarge,
-                        color = onSurface,
+                        color = onSurface
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     Row(
-                        verticalAlignment = Alignment.CenterVertically,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         if (isCurrentUser) {
                             IconButton(
                                 onClick = onEditClick,
                                 colors =
-                                    IconButtonDefaults.iconButtonColors(
-                                        contentColor = iconVariantColor,
-                                    ),
+                                IconButtonDefaults.iconButtonColors(
+                                    contentColor = iconVariantColor
+                                )
                             ) {
                                 Icon(
-                                    painter = MubbleTheme.Icons.Edit,
+                                    painter = MubbleDesignSystem.Icons.Edit,
                                     contentDescription = null,
                                     modifier =
-                                        Modifier
-                                            .offset(x = 1.dp, y = 1.dp)
-                                            .alpha(shadowAlpha)
-                                            .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
-                                    tint = shadowColor,
+                                    Modifier
+                                        .offset(x = 1.dp, y = 1.dp)
+                                        .alpha(shadowAlpha)
+                                        .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
+                                    tint = shadowColor
                                 )
                                 Icon(
-                                    painter = MubbleTheme.Icons.Edit,
-                                    contentDescription = "Edit",
+                                    painter = MubbleDesignSystem.Icons.Edit,
+                                    contentDescription = "Edit"
                                 )
                             }
                             IconButton(
                                 onClick = {},
                                 colors =
-                                    IconButtonDefaults.iconButtonColors(
-                                        contentColor = iconVariantColor,
-                                    ),
+                                IconButtonDefaults.iconButtonColors(
+                                    contentColor = iconVariantColor
+                                )
                             ) {
                                 Icon(
-                                    painter = MubbleTheme.Icons.Save,
+                                    painter = MubbleDesignSystem.Icons.Save,
                                     contentDescription = null,
                                     modifier =
-                                        Modifier
-                                            .offset(x = 1.dp, y = 1.dp)
-                                            .alpha(shadowAlpha)
-                                            .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
-                                    tint = shadowColor,
+                                    Modifier
+                                        .offset(x = 1.dp, y = 1.dp)
+                                        .alpha(shadowAlpha)
+                                        .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
+                                    tint = shadowColor
                                 )
                                 Icon(
-                                    painter = MubbleTheme.Icons.Save,
-                                    contentDescription = "Saved",
+                                    painter = MubbleDesignSystem.Icons.Save,
+                                    contentDescription = "Saved"
                                 )
                             }
                             IconButton(
                                 onClick = onNavigateToSettings,
                                 colors =
-                                    IconButtonDefaults.iconButtonColors(
-                                        contentColor = iconVariantColor,
-                                    ),
+                                IconButtonDefaults.iconButtonColors(
+                                    contentColor = iconVariantColor
+                                )
                             ) {
                                 Icon(
-                                    imageVector = MubbleTheme.Icons.Settings,
+                                    imageVector = MubbleDesignSystem.Icons.Settings,
                                     contentDescription = null,
                                     modifier =
-                                        Modifier
-                                            .offset(x = 1.dp, y = 1.dp)
-                                            .alpha(shadowAlpha)
-                                            .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
-                                    tint = shadowColor,
+                                    Modifier
+                                        .offset(x = 1.dp, y = 1.dp)
+                                        .alpha(shadowAlpha)
+                                        .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
+                                    tint = shadowColor
                                 )
                                 Icon(
-                                    imageVector = MubbleTheme.Icons.Settings,
-                                    contentDescription = "Settings",
+                                    imageVector = MubbleDesignSystem.Icons.Settings,
+                                    contentDescription = "Settings"
                                 )
                             }
                         } else {
                             IconButton(
                                 onClick = onMoreClick,
                                 colors =
-                                    IconButtonDefaults.iconButtonColors(
-                                        contentColor = iconVariantColor,
-                                    ),
+                                IconButtonDefaults.iconButtonColors(
+                                    contentColor = iconVariantColor
+                                )
                             ) {
                                 Icon(
-                                    painter = MubbleTheme.Icons.MoreHorizontal,
+                                    painter = MubbleDesignSystem.Icons.MoreHorizontal,
                                     contentDescription = null,
                                     modifier =
-                                        Modifier
-                                            .offset(x = 1.dp, y = 1.dp)
-                                            .alpha(shadowAlpha)
-                                            .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
-                                    tint = shadowColor,
+                                    Modifier
+                                        .offset(x = 1.dp, y = 1.dp)
+                                        .alpha(shadowAlpha)
+                                        .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
+                                    tint = shadowColor
                                 )
                                 Icon(
-                                    painter = MubbleTheme.Icons.MoreHorizontal,
-                                    contentDescription = "More",
+                                    painter = MubbleDesignSystem.Icons.MoreHorizontal,
+                                    contentDescription = "More"
                                 )
                             }
                         }
@@ -276,7 +276,7 @@ fun ScrollReactingTopAppBar(
 private fun rememberTargetAlpha(
     lazyListState: LazyListState,
     transitionLength: Dp,
-    offsetAmount: Dp,
+    offsetAmount: Dp
 ): State<Float> {
     val density = LocalDensity.current
     val alphaTransitionLengthPx =
@@ -295,8 +295,14 @@ private fun rememberTargetAlpha(
                 val scrollOffsetPxRelativeToDock =
                     header.offset.toFloat() - stickyKeyItemDockingOffsetPx
                 when {
-                    scrollOffsetPxRelativeToDock <= 0f || alphaTransitionLengthPx <= 0f -> 1f
-                    scrollOffsetPxRelativeToDock >= alphaTransitionLengthPx -> 0f
+                    scrollOffsetPxRelativeToDock <= 0f || alphaTransitionLengthPx <= 0f -> {
+                        1f
+                    }
+
+                    scrollOffsetPxRelativeToDock >= alphaTransitionLengthPx -> {
+                        0f
+                    }
+
                     else -> {
                         val progressTowardsOpaque =
                             alphaTransitionLengthPx - scrollOffsetPxRelativeToDock

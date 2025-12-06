@@ -83,6 +83,7 @@ import com.aidsyla.mubble.feature.videos.components.buttons.ExpandButton
 import com.aidsyla.mubble.feature.videos.components.buttons.VideoActionButtons
 import com.aidsyla.mubble.feature.videos.utils.formatMsToMinutesSeconds
 import com.aidsyla.mubble.feature.videos.utils.initializePlayerForVideo
+import com.aidsyla.mubble.ui.theme.MubbleDesignSystem
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 import com.aidsyla.mubble.ui.theme.surfaceDark
 import java.util.UUID
@@ -93,12 +94,12 @@ import java.util.UUID
 fun VideosScreen(
     modifier: Modifier = Modifier,
     viewModel: VideoViewModel = hiltViewModel(),
-    onBackClick: () -> Unit,
+    onBackClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var uiVisible by remember { mutableStateOf(true) }
     val topAppBarAlpha by animateFloatAsState(
-        targetValue = if (uiVisible) 1f else 0f,
+        targetValue = if (uiVisible) 1f else 0f
     )
 
     val view = LocalView.current
@@ -124,35 +125,35 @@ fun VideosScreen(
         topBar = {
             TopAppBar(
                 modifier =
-                    Modifier
-                        .zIndex(3f)
-                        .alpha(topAppBarAlpha),
+                Modifier
+                    .zIndex(3f)
+                    .alpha(topAppBarAlpha),
                 title = {
                     Icon(
-                        painter = MubbleTheme.Icons.MubbleIcon,
+                        painter = MubbleDesignSystem.Icons.MubbleIcon,
                         contentDescription = null,
-                        tint = Color.White,
+                        tint = Color.White
                     )
                 },
                 actions = {
                     IconButton(
-                        onClick = {},
+                        onClick = {}
                     ) {
                         Icon(
-                            painter = MubbleTheme.Icons.Search,
+                            painter = MubbleDesignSystem.Icons.Search,
                             contentDescription = null,
-                            tint = Color.White,
+                            tint = Color.White
                         )
                     }
                 },
                 colors =
-                    TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.Transparent,
-                    ),
+                TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent
+                )
             )
         },
         containerColor = surfaceDark,
-        contentWindowInsets = WindowInsets(0.dp),
+        contentWindowInsets = WindowInsets(0.dp)
     ) {
         AnimatedContent(
             transitionSpec = {
@@ -163,7 +164,7 @@ fun VideosScreen(
                         targetContentZIndex = if (goingBack) 2f else -2f
                     }
             },
-            targetState = uiState,
+            targetState = uiState
         ) { videoUiState ->
             when (videoUiState) {
                 VideoScreenUiState.Loading -> {
@@ -177,14 +178,14 @@ fun VideosScreen(
                         modifier = Modifier.fillMaxSize(),
                         state = pagerState,
                         beyondViewportPageCount = 2,
-                        key = { index -> videos[index] },
+                        key = { index -> videos[index] }
                     ) { pageIndex ->
                         VideoContent(
                             videoUrl = videos[pageIndex],
                             pagerState = pagerState,
                             pageIndex = pageIndex,
                             uiVisibilityChanged = { uiVisible = it },
-                            onBackClick = onBackClick,
+                            onBackClick = onBackClick
                         )
                     }
                 }
@@ -202,7 +203,7 @@ fun VideoContent(
     pageIndex: Int,
     pagerState: PagerState,
     uiVisibilityChanged: (Boolean) -> Unit,
-    onBackClick: () -> Unit,
+    onBackClick: () -> Unit
 ) {
     var openCommentSheet by rememberSaveable { mutableStateOf(false) }
     var openSharePostSheet by rememberSaveable { mutableStateOf(false) }
@@ -224,10 +225,10 @@ fun VideoContent(
     }
 
     val gradientAlpha by animateFloatAsState(
-        targetValue = if (shouldUiBeVisible) 1f else 0f,
+        targetValue = if (shouldUiBeVisible) 1f else 0f
     )
     val draggedPagerAlpha by animateFloatAsState(
-        targetValue = if (isBeingDragged) 0.25f else 1f,
+        targetValue = if (isBeingDragged) 0.25f else 1f
     )
 
     var isScrubbing by remember { mutableStateOf(false) }
@@ -235,7 +236,7 @@ fun VideoContent(
 
     var isCaptionExpanded by remember { mutableStateOf(false) }
     val captionScrimAlpha by animateFloatAsState(
-        targetValue = if (isCaptionExpanded && shouldUiBeVisible) 1f else 0f,
+        targetValue = if (isCaptionExpanded && shouldUiBeVisible) 1f else 0f
     )
 
     LifecycleStartEffect(Unit) {
@@ -271,11 +272,11 @@ fun VideoContent(
             sizeAnim.snapTo(0f)
             sizeAnim.animateTo(
                 targetValue = 5f,
-                animationSpec = tween(durationMillis = 300, easing = EaseOutQuad),
+                animationSpec = tween(durationMillis = 300, easing = EaseOutQuad)
             )
             sizeAnim.animateTo(
                 targetValue = 0f,
-                animationSpec = tween(durationMillis = 300, easing = EaseInOutCubic),
+                animationSpec = tween(durationMillis = 300, easing = EaseInOutCubic)
             )
             showLike = false
         } else {
@@ -285,85 +286,85 @@ fun VideoContent(
 
     Box(
         modifier =
-            modifier
-                .fillMaxSize()
-                .pointerInput(Unit) {
-                    this.detectTapGestures(
-                        onDoubleTap = {
-                            isLiked = true
-                            likes.add(Like(id = UUID.randomUUID(), offset = it))
-                        },
-                    )
-                },
+        modifier
+            .fillMaxSize()
+            .pointerInput(Unit) {
+                this.detectTapGestures(
+                    onDoubleTap = {
+                        isLiked = true
+                        likes.add(Like(id = UUID.randomUUID(), offset = it))
+                    }
+                )
+            }
     ) {
         Box(
             modifier =
-                Modifier
-                    .zIndex(2f)
-                    .fillMaxSize(),
+            Modifier
+                .zIndex(2f)
+                .fillMaxSize()
         ) {
             Box(
                 modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .alpha(gradientAlpha)
-                        .background(
-                            MubbleTheme.Gradients.fadingBlackGradient,
-                        ),
+                Modifier
+                    .fillMaxSize()
+                    .alpha(gradientAlpha)
+                    .background(
+                        MubbleDesignSystem.Gradients.fadingBlackGradient
+                    )
             )
             Box(
                 modifier =
-                    Modifier
-                        .rotate(180f)
-                        .fillMaxSize()
-                        .alpha(gradientAlpha)
-                        .background(
-                            MubbleTheme.Gradients.fadingBlackGradient,
-                        ),
+                Modifier
+                    .rotate(180f)
+                    .fillMaxSize()
+                    .alpha(gradientAlpha)
+                    .background(
+                        MubbleDesignSystem.Gradients.fadingBlackGradient
+                    )
             )
             Box(
                 modifier =
-                    Modifier
-                        .rotate(180f)
-                        .fillMaxSize()
-                        .alpha(captionScrimAlpha)
-                        .background(
-                            MubbleTheme.Gradients.captionScrimGradient,
-                        ),
+                Modifier
+                    .rotate(180f)
+                    .fillMaxSize()
+                    .alpha(captionScrimAlpha)
+                    .background(
+                        MubbleDesignSystem.Gradients.captionScrimGradient
+                    )
             )
         }
         Box(
             modifier =
-                Modifier
-                    .fillMaxSize()
-                    .navigationBarsPadding()
-                    .padding(bottom = 8.dp)
-                    .zIndex(4f)
-                    .graphicsLayer {
-                        this.alpha = draggedPagerAlpha
-                    },
-            contentAlignment = Alignment.BottomCenter,
+            Modifier
+                .fillMaxSize()
+                .navigationBarsPadding()
+                .padding(bottom = 8.dp)
+                .zIndex(4f)
+                .graphicsLayer {
+                    this.alpha = draggedPagerAlpha
+                },
+            contentAlignment = Alignment.BottomCenter
         ) {
             Column(
                 modifier =
-                    Modifier
-                        .alpha(gradientAlpha)
-                        .then(
-                            if (!shouldUiBeVisible) {
-                                Modifier
-                                    .pointerInput(Unit) {
-                                        awaitPointerEventScope {
-                                            while (true) {
-                                                val event = awaitPointerEvent(PointerEventPass.Initial)
-                                                event.changes.forEach { it.consume() }
-                                            }
+                Modifier
+                    .alpha(gradientAlpha)
+                    .then(
+                        if (!shouldUiBeVisible) {
+                            Modifier
+                                .pointerInput(Unit) {
+                                    awaitPointerEventScope {
+                                        while (true) {
+                                            val event = awaitPointerEvent(PointerEventPass.Initial)
+                                            event.changes.forEach { it.consume() }
                                         }
                                     }
-                            } else {
-                                Modifier
-                            },
-                        ),
-                horizontalAlignment = Alignment.End,
+                                }
+                        } else {
+                            Modifier
+                        }
+                    ),
+                horizontalAlignment = Alignment.End
             ) {
                 VideoActionButtons(
                     isPostLiked = isLiked,
@@ -371,46 +372,46 @@ fun VideoContent(
                     onLikeClick = { isLiked = !isLiked },
                     onCommentClick = { openCommentSheet = !openCommentSheet },
                     onSendClick = { openSharePostSheet = !openSharePostSheet },
-                    onSaveClick = {},
+                    onSaveClick = {}
                 )
                 VideoPostDetails(
                     isCaptionExpanded = isCaptionExpanded,
-                    onCaptionExpandChange = { isCaptionExpanded = it },
+                    onCaptionExpandChange = { isCaptionExpanded = it }
                 )
                 VideoControls(
                     onBackClick = onBackClick,
-                    player = player,
+                    player = player
                 )
             }
             AnimatedVisibility(
                 modifier =
-                    Modifier
-                        .matchParentSize()
-                        .padding(horizontal = 12.dp)
-                        .padding(bottom = 0.dp),
+                Modifier
+                    .matchParentSize()
+                    .padding(horizontal = 12.dp)
+                    .padding(bottom = 0.dp),
                 visible = !isZooming,
                 enter = fadeIn(),
-                exit = fadeOut(),
+                exit = fadeOut()
             ) {
                 Box(
                     modifier = Modifier,
-                    contentAlignment = Alignment.BottomEnd,
+                    contentAlignment = Alignment.BottomEnd
                 ) {
                     ExpandButton(
                         checked = isUiVisible,
-                        onCheckedChange = { isUiVisible = it },
+                        onCheckedChange = { isUiVisible = it }
                     ) {
                         AnimatedContent(
-                            targetState = isUiVisible,
+                            targetState = isUiVisible
                         ) {
                             Icon(
                                 modifier =
-                                    Modifier.size(
-                                        IconButtonDefaults.extraSmallIconSize,
-                                    ),
-                                painter = if (it) MubbleTheme.Icons.ExpandContent else MubbleTheme.Icons.CollapseContent,
+                                Modifier.size(
+                                    IconButtonDefaults.extraSmallIconSize
+                                ),
+                                painter = if (it) MubbleDesignSystem.Icons.ExpandContent else MubbleDesignSystem.Icons.CollapseContent,
                                 contentDescription = null,
-                                tint = Color.White,
+                                tint = Color.White
                             )
                         }
                     }
@@ -420,25 +421,25 @@ fun VideoContent(
 
         VideoSurface(
             player = player,
-            isZooming = { isZooming = it },
+            isZooming = { isZooming = it }
         )
 
         player?.let {
             Box(
                 modifier =
-                    Modifier
-                        .zIndex(3f)
-                        .navigationBarsPadding()
-                        .padding(bottom = 4.dp)
-                        .alpha(gradientAlpha)
-                        .align(Alignment.BottomCenter),
+                Modifier
+                    .zIndex(3f)
+                    .navigationBarsPadding()
+                    .padding(bottom = 4.dp)
+                    .alpha(gradientAlpha)
+                    .align(Alignment.BottomCenter)
             ) {
                 VideoProgressBar(
                     player = it,
                     onScrubbingInfoChange = { p1, p2 ->
                         isScrubbing = p1
                         currentScrubPosition = p2
-                    },
+                    }
                 )
             }
         }
@@ -449,13 +450,13 @@ fun VideoContent(
                 enter = fadeIn(),
                 exit = fadeOut(),
                 modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .zIndex(5f),
+                Modifier
+                    .fillMaxSize()
+                    .zIndex(5f)
             ) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center,
+                    contentAlignment = Alignment.Center
                 ) {
                     val formattedCurrentTime =
                         formatMsToMinutesSeconds(currentScrubPosition)
@@ -463,15 +464,15 @@ fun VideoContent(
                     Text(
                         "$formattedCurrentTime / $formattedTotalDuration",
                         style =
-                            MaterialTheme.typography.displaySmall.copy(
-                                fontWeight = FontWeight.Medium,
-                                shadow =
-                                    Shadow(
-                                        color = Color.Black.copy(alpha = 0.4f),
-                                        blurRadius = 12f,
-                                    ),
-                            ),
-                        color = Color.White,
+                        MaterialTheme.typography.displaySmall.copy(
+                            fontWeight = FontWeight.Medium,
+                            shadow =
+                            Shadow(
+                                color = Color.Black.copy(alpha = 0.4f),
+                                blurRadius = 12f
+                            )
+                        ),
+                        color = Color.White
                     )
                 }
             }
@@ -483,19 +484,19 @@ fun VideoContent(
                     offset = like.offset,
                     onAnimationFinished = {
                         likes.remove(like)
-                    },
+                    }
                 )
             }
         }
 
         CommentsBottomSheet(
             openBottomSheet = openCommentSheet,
-            onOpenChange = { openCommentSheet = it },
+            onOpenChange = { openCommentSheet = it }
         )
 
         SharePostBottomSheet(
             openSheet = openSharePostSheet,
-            onOpenChange = { openSharePostSheet = it },
+            onOpenChange = { openSharePostSheet = it }
         )
     }
 }
@@ -505,7 +506,7 @@ fun VideoContent(
 private fun VideosScreenPreview() {
     MubbleTheme {
         VideosScreen(
-            onBackClick = {},
+            onBackClick = {}
         )
     }
 }

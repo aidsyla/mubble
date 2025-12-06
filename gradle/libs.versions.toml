@@ -21,6 +21,7 @@ navigationRuntimeKtx = "2.9.1"
 uiTextGoogleFonts = "1.8.3"
 navigationCompose = "2.9.1"
 material3 = "1.4.0-alpha17"
+ktlint = "1.8.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -57,3 +58,4 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+spotless = "com.diffplug.spotless:8.1.0"

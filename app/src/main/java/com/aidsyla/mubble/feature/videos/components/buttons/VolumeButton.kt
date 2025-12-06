@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.media3.common.Player
 import androidx.media3.common.listen
-import com.aidsyla.mubble.ui.theme.MubbleTheme
+import com.aidsyla.mubble.ui.theme.MubbleDesignSystem
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -24,16 +24,16 @@ internal fun VolumeButton(modifier: Modifier = Modifier) {
     VideoControlIconToggleButton(
         modifier = modifier,
         checked = false,
-        onCheckedChange = {},
+        onCheckedChange = {}
     ) {
         Icon(
             modifier =
-                Modifier.size(
-                    IconButtonDefaults.extraSmallIconSize,
-                ),
-            painter = MubbleTheme.Icons.VolumeUp,
+            Modifier.size(
+                IconButtonDefaults.extraSmallIconSize
+            ),
+            painter = MubbleDesignSystem.Icons.VolumeUp,
             contentDescription = null,
-            tint = Color.White,
+            tint = Color.White
         )
     }
 }
@@ -42,25 +42,25 @@ internal fun VolumeButton(modifier: Modifier = Modifier) {
 @Composable
 internal fun VolumeButton(
     modifier: Modifier = Modifier,
-    player: Player,
+    player: Player
 ) {
     val volumeButtonState = rememberVolumeButtonState(player)
     VideoControlIconToggleButton(
         modifier = modifier,
         checked = volumeButtonState.isMuted,
-        onCheckedChange = { volumeButtonState.onClick() },
+        onCheckedChange = { volumeButtonState.onClick() }
     ) {
         AnimatedContent(
-            targetState = volumeButtonState.isMuted,
+            targetState = volumeButtonState.isMuted
         ) {
             Icon(
                 modifier =
-                    Modifier.size(
-                        IconButtonDefaults.extraSmallIconSize,
-                    ),
-                painter = if (it) MubbleTheme.Icons.VolumeOff else MubbleTheme.Icons.VolumeUp,
+                Modifier.size(
+                    IconButtonDefaults.extraSmallIconSize
+                ),
+                painter = if (it) MubbleDesignSystem.Icons.VolumeOff else MubbleDesignSystem.Icons.VolumeUp,
                 contentDescription = null,
-                tint = Color.White,
+                tint = Color.White
             )
         }
     }
@@ -76,7 +76,7 @@ fun rememberVolumeButtonState(player: Player): VolumeButtonState {
 }
 
 class VolumeButtonState(
-    private val player: Player,
+    private val player: Player
 ) {
     private var volumeBeforeMute by mutableFloatStateOf(player.volume)
 
@@ -96,18 +96,17 @@ class VolumeButtonState(
         }
     }
 
-    suspend fun observe(): Nothing =
-        player.listen { events ->
-            if (events.contains(Player.EVENT_AVAILABLE_COMMANDS_CHANGED)) {
-                isEnabled = player.isCommandAvailable(Player.COMMAND_SET_VOLUME)
-            }
+    suspend fun observe(): Nothing = player.listen { events ->
+        if (events.contains(Player.EVENT_AVAILABLE_COMMANDS_CHANGED)) {
+            isEnabled = player.isCommandAvailable(Player.COMMAND_SET_VOLUME)
+        }
 
-            if (events.contains(Player.EVENT_VOLUME_CHANGED)) {
-                val newVolume = player.volume
-                isMuted = newVolume == 0f
-                if (!isMuted) {
-                    volumeBeforeMute = newVolume
-                }
+        if (events.contains(Player.EVENT_VOLUME_CHANGED)) {
+            val newVolume = player.volume
+            isMuted = newVolume == 0f
+            if (!isMuted) {
+                volumeBeforeMute = newVolume
             }
         }
+    }
 }

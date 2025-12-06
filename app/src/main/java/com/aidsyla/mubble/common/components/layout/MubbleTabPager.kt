@@ -49,7 +49,7 @@ fun MubbleListTabPager(
     secondPage: @Composable (LazyListState) -> Unit,
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
-    appBarTitle: @Composable () -> Unit,
+    appBarTitle: @Composable () -> Unit
 ) {
     val sharedTransitionScope =
         LocalSharedTransitionScope.current
@@ -66,16 +66,16 @@ fun MubbleListTabPager(
             scrollBehavior,
             pagerState,
             isAtTopFirst,
-            isAtTopSecond,
+            isAtTopSecond
         )
 
     val dividerAlpha by animateFloatAsState(
         targetValue = state.targetDividerAlpha,
-        label = "dividerAlpha",
+        label = "dividerAlpha"
     )
     val appBarAlpha by animateFloatAsState(
         targetValue = state.targetAppBarAlpha,
-        label = "appBarAlpha",
+        label = "appBarAlpha"
     )
 
     val animatedAppBarColor = MaterialTheme.colorScheme.surface.copy(alpha = appBarAlpha)
@@ -87,36 +87,36 @@ fun MubbleListTabPager(
                 with(sharedTransitionScope) {
                     Surface(
                         modifier =
-                            Modifier
-                                .renderInSharedTransitionScopeOverlay(
-                                    zIndexInOverlay = 1f,
-                                ).animateEnterExit(),
-                        color = animatedAppBarColor,
+                        Modifier
+                            .renderInSharedTransitionScopeOverlay(
+                                zIndexInOverlay = 1f
+                            ).animateEnterExit(),
+                        color = animatedAppBarColor
                     ) {
                         Box {
                             CenterAlignedTopAppBar(
                                 colors =
-                                    TopAppBarDefaults.topAppBarColors(
-                                        containerColor = Color.Transparent,
-                                        scrolledContainerColor = Color.Transparent,
-                                        navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
-                                        titleContentColor = MaterialTheme.colorScheme.onSurface,
-                                        actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    ),
+                                TopAppBarDefaults.topAppBarColors(
+                                    containerColor = Color.Transparent,
+                                    scrolledContainerColor = Color.Transparent,
+                                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+                                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                                    actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                                ),
                                 navigationIcon = navigationIcon,
                                 title = appBarTitle,
                                 actions = actions,
-                                scrollBehavior = scrollBehavior,
+                                scrollBehavior = scrollBehavior
                             )
                             SubtleHorizontalDivider(
-                                modifier = Modifier.align(Alignment.BottomCenter).alpha(dividerAlpha),
+                                modifier = Modifier.align(Alignment.BottomCenter).alpha(dividerAlpha)
                             )
                         }
                     }
                 }
             }
         },
-        contentWindowInsets = WindowInsets(0.dp),
+        contentWindowInsets = WindowInsets(0.dp)
     ) {
         val topInset = it.calculateTopPadding()
         val pagerTopPadding: Dp =
@@ -130,9 +130,9 @@ fun MubbleListTabPager(
             state = pagerState,
             verticalAlignment = Alignment.Top,
             modifier =
-                modifier
-                    .fillMaxSize()
-                    .padding(top = pagerTopPadding),
+            modifier
+                .fillMaxSize()
+                .padding(top = pagerTopPadding)
         ) { pageIndex ->
             when (pageIndex) {
                 0 -> firstPage(firstPageListState)
@@ -152,7 +152,7 @@ fun MubbleGridTabPager(
     thirdPage: @Composable (LazyStaggeredGridState) -> Unit,
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
-    appBarTitle: @Composable () -> Unit,
+    appBarTitle: @Composable () -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
@@ -170,18 +170,18 @@ fun MubbleGridTabPager(
             pagerState,
             isAtTopFirst,
             isAtTopSecond,
-            isAtTopThird,
+            isAtTopThird
         )
 
     Log.d("TEST", "MubbleGridTabPager: $isAtTopFirst")
 
     val dividerAlpha by animateFloatAsState(
         targetValue = state.targetDividerAlpha,
-        label = "dividerAlpha",
+        label = "dividerAlpha"
     )
     val appBarAlpha by animateFloatAsState(
         targetValue = state.targetAppBarAlpha,
-        label = "appBarAlpha",
+        label = "appBarAlpha"
     )
 
     val animatedAppBarColor = MaterialTheme.colorScheme.surface.copy(alpha = appBarAlpha)
@@ -190,30 +190,30 @@ fun MubbleGridTabPager(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             Surface(
-                color = animatedAppBarColor,
+                color = animatedAppBarColor
             ) {
                 Box {
                     CenterAlignedTopAppBar(
                         colors =
-                            TopAppBarDefaults.topAppBarColors(
-                                containerColor = Color.Transparent,
-                                scrolledContainerColor = Color.Transparent,
-                                navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
-                                titleContentColor = MaterialTheme.colorScheme.onSurface,
-                                actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            ),
+                        TopAppBarDefaults.topAppBarColors(
+                            containerColor = Color.Transparent,
+                            scrolledContainerColor = Color.Transparent,
+                            navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
+                            titleContentColor = MaterialTheme.colorScheme.onSurface,
+                            actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        ),
                         navigationIcon = navigationIcon,
                         title = appBarTitle,
                         actions = actions,
-                        scrollBehavior = scrollBehavior,
+                        scrollBehavior = scrollBehavior
                     )
                     SubtleHorizontalDivider(
-                        modifier = Modifier.align(Alignment.BottomCenter).alpha(dividerAlpha),
+                        modifier = Modifier.align(Alignment.BottomCenter).alpha(dividerAlpha)
                     )
                 }
             }
         },
-        contentWindowInsets = WindowInsets(0.dp),
+        contentWindowInsets = WindowInsets(0.dp)
     ) {
         val topInset = it.calculateTopPadding()
         val pagerTopPadding: Dp =
@@ -227,9 +227,9 @@ fun MubbleGridTabPager(
             state = pagerState,
             verticalAlignment = Alignment.Top,
             modifier =
-                modifier
-                    .fillMaxSize()
-                    .padding(top = pagerTopPadding),
+            modifier
+                .fillMaxSize()
+                .padding(top = pagerTopPadding)
         ) { pageIndex ->
             when (pageIndex) {
                 0 -> firstPage(firstPageGridState)
@@ -246,7 +246,7 @@ class CollapsingTopBarScreenState(
     private val pagerState: PagerState,
     private val isAtTopFirst: Boolean,
     private val isAtTopSecond: Boolean,
-    private val isAtTopThird: Boolean?,
+    private val isAtTopThird: Boolean?
 ) {
     val collapsedFraction: Float
         get() = scrollBehavior.state.collapsedFraction
@@ -282,38 +282,34 @@ private fun rememberCollapsingTopBarScreenState(
     pagerState: PagerState,
     isAtTopFirst: Boolean,
     isAtTopSecond: Boolean,
-    isAtTopThird: Boolean? = null,
-): CollapsingTopBarScreenState =
-    remember(scrollBehavior, pagerState, isAtTopFirst, isAtTopSecond) {
-        CollapsingTopBarScreenState(
-            scrollBehavior,
-            pagerState,
-            isAtTopFirst,
-            isAtTopSecond,
-            isAtTopThird,
-        )
+    isAtTopThird: Boolean? = null
+): CollapsingTopBarScreenState = remember(scrollBehavior, pagerState, isAtTopFirst, isAtTopSecond) {
+    CollapsingTopBarScreenState(
+        scrollBehavior,
+        pagerState,
+        isAtTopFirst,
+        isAtTopSecond,
+        isAtTopThird
+    )
+}
+
+@Composable
+fun LazyListState.rememberIsAtTop(): Boolean = remember {
+    derivedStateOf {
+        firstVisibleItemIndex == 0 && firstVisibleItemScrollOffset == 0
     }
+}.value
 
 @Composable
-fun LazyListState.rememberIsAtTop(): Boolean =
-    remember {
-        derivedStateOf {
-            firstVisibleItemIndex == 0 && firstVisibleItemScrollOffset == 0
-        }
-    }.value
+fun LazyGridState.rememberIsAtTop(): Boolean = remember {
+    derivedStateOf {
+        firstVisibleItemIndex == 0 && firstVisibleItemScrollOffset == 0
+    }
+}.value
 
 @Composable
-fun LazyGridState.rememberIsAtTop(): Boolean =
-    remember {
-        derivedStateOf {
-            firstVisibleItemIndex == 0 && firstVisibleItemScrollOffset == 0
-        }
-    }.value
-
-@Composable
-fun LazyStaggeredGridState.rememberIsAtTop(): Boolean =
-    remember {
-        derivedStateOf {
-            firstVisibleItemIndex == 0 && firstVisibleItemScrollOffset == 0
-        }
-    }.value
+fun LazyStaggeredGridState.rememberIsAtTop(): Boolean = remember {
+    derivedStateOf {
+        firstVisibleItemIndex == 0 && firstVisibleItemScrollOffset == 0
+    }
+}.value

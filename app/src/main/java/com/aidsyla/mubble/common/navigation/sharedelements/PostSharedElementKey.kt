@@ -1,9 +1,9 @@
-package com.aidsyla.mubble.common.navigation.shared_elements
+package com.aidsyla.mubble.common.navigation.sharedelements
 
 data class PostSharedElementKey(
     val postId: String,
     val origin: PostOrigin,
-    val type: PostSharedElementType,
+    val type: PostSharedElementType
 )
 
 enum class PostOrigin {
@@ -14,7 +14,7 @@ enum class PostOrigin {
     ExploreMedia,
     ExploreBubbles,
     ProfileMedia,
-    ProfileBubbles,
+    ProfileBubbles
 }
 
 enum class PostSharedElementType {
@@ -23,5 +23,5 @@ enum class PostSharedElementType {
     DisplayName,
     Image,
     Video,
-    Bubble,
+    Bubble
 }

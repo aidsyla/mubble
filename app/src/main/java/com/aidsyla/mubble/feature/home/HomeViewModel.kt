@@ -14,28 +14,28 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel
-    @Inject
-    constructor(
-        private val savedStateHandle: SavedStateHandle,
-    ) : ViewModel() {
-        var firstPageClickedIndex: Int = -1
-        var secondPageClickedIndex: Int = -1
+@Inject
+constructor(
+    private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
+    var firstPageClickedIndex: Int = -1
+    var secondPageClickedIndex: Int = -1
 
-        val uiState: StateFlow<PostListUiState> =
-            flowOf(
-                PostListUiState(items = DummyPostRepository.dummyFeedItems),
-            ).stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
-                initialValue = PostListUiState(isLoading = true),
-            )
+    val uiState: StateFlow<PostListUiState> =
+        flowOf(
+            PostListUiState(items = DummyPostRepository.dummyFeedItems)
+        ).stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = PostListUiState(isLoading = true)
+        )
 
-        fun onMoreClick(postId: String) {
-            println("More clicked on post: $postId")
-        }
+    fun onMoreClick(postId: String) {
+        println("More clicked on post: $postId")
     }
+}
 
 data class PostListUiState(
     val items: List<FeedItem> = emptyList(),
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = false
 )

@@ -29,7 +29,7 @@ import kotlin.time.Duration.Companion.seconds
 internal fun VideoProgressBar(
     player: Player,
     modifier: Modifier = Modifier,
-    onScrubbingInfoChange: (isScrubbing: Boolean, currentScrubPositionMs: Long) -> Unit,
+    onScrubbingInfoChange: (isScrubbing: Boolean, currentScrubPositionMs: Long) -> Unit
 ) {
     var sliderPosition by remember { mutableFloatStateOf(0f) }
     var isPlaying by remember { mutableStateOf(false) }
@@ -46,7 +46,7 @@ internal fun VideoProgressBar(
                 override fun onPositionDiscontinuity(
                     oldPosition: Player.PositionInfo,
                     newPosition: Player.PositionInfo,
-                    reason: Int,
+                    reason: Int
                 ) {
                     if (!isScrubbing && player.duration > 0) {
                         sliderPosition = player.currentPosition / player.duration.toFloat()
@@ -77,58 +77,58 @@ internal fun VideoProgressBar(
 
     Box(
         modifier =
-            modifier
-                .fillMaxWidth()
-                .height(48.dp)
-                .onSizeChanged { size ->
-                    progressBarWidthPx = size.width.toFloat()
-                }.pointerInput(player, progressBarWidthPx) {
-                    detectDragGestures(
-                        onDragStart = { offset ->
-                            isScrubbing = true
-                            val newSliderPos = (offset.x / progressBarWidthPx).coerceIn(0f, 1f)
-                            sliderPosition = newSliderPos
-                            val dragPositionMs = (newSliderPos * player.duration).toLong()
-                            onScrubbingInfoChange(true, dragPositionMs)
-                        },
-                        onDragEnd = {
-                            val targetPositionMs = (sliderPosition * player.duration).toLong()
-                            player.seekTo(targetPositionMs)
-                            isScrubbing = false
-                            onScrubbingInfoChange(
-                                false,
-                                targetPositionMs,
-                            )
-                        },
-                        onDragCancel = {
-                            val targetPositionMs = (sliderPosition * player.duration).toLong()
-                            player.seekTo(targetPositionMs)
-                            isScrubbing = false
-                            onScrubbingInfoChange(
-                                false,
-                                targetPositionMs,
-                            )
-                        },
-                        onDrag = { change, _ ->
-                            val newSliderPos = (change.position.x / progressBarWidthPx).coerceIn(0f, 1f)
-                            sliderPosition = newSliderPos
-                            val dragPositionMs = (newSliderPos * player.duration).toLong()
-                            onScrubbingInfoChange(true, dragPositionMs)
-                            change.consume()
-                        },
-                    )
-                },
-        contentAlignment = Alignment.BottomCenter,
+        modifier
+            .fillMaxWidth()
+            .height(48.dp)
+            .onSizeChanged { size ->
+                progressBarWidthPx = size.width.toFloat()
+            }.pointerInput(player, progressBarWidthPx) {
+                detectDragGestures(
+                    onDragStart = { offset ->
+                        isScrubbing = true
+                        val newSliderPos = (offset.x / progressBarWidthPx).coerceIn(0f, 1f)
+                        sliderPosition = newSliderPos
+                        val dragPositionMs = (newSliderPos * player.duration).toLong()
+                        onScrubbingInfoChange(true, dragPositionMs)
+                    },
+                    onDragEnd = {
+                        val targetPositionMs = (sliderPosition * player.duration).toLong()
+                        player.seekTo(targetPositionMs)
+                        isScrubbing = false
+                        onScrubbingInfoChange(
+                            false,
+                            targetPositionMs
+                        )
+                    },
+                    onDragCancel = {
+                        val targetPositionMs = (sliderPosition * player.duration).toLong()
+                        player.seekTo(targetPositionMs)
+                        isScrubbing = false
+                        onScrubbingInfoChange(
+                            false,
+                            targetPositionMs
+                        )
+                    },
+                    onDrag = { change, _ ->
+                        val newSliderPos = (change.position.x / progressBarWidthPx).coerceIn(0f, 1f)
+                        sliderPosition = newSliderPos
+                        val dragPositionMs = (newSliderPos * player.duration).toLong()
+                        onScrubbingInfoChange(true, dragPositionMs)
+                        change.consume()
+                    }
+                )
+            },
+        contentAlignment = Alignment.BottomCenter
     ) {
         LinearProgressIndicator(
             progress = { sliderPosition },
             modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .height(3.dp)
-                    .padding(horizontal = 12.dp),
+            Modifier
+                .fillMaxWidth()
+                .height(3.dp)
+                .padding(horizontal = 12.dp),
             color = primaryDark,
-            trackColor = Color.White,
+            trackColor = Color.White
         )
     }
 }

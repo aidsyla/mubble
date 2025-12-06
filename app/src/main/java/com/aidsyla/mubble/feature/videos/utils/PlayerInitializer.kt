@@ -17,7 +17,7 @@ private const val BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS = 2_000
 @androidx.annotation.OptIn(UnstableApi::class)
 internal fun initializePlayerForVideo(
     context: Context,
-    videoUrl: String,
+    videoUrl: String
 ): Player {
     val loadControl =
         DefaultLoadControl
@@ -27,7 +27,7 @@ internal fun initializePlayerForVideo(
                 MIN_BUFFER_MS,
                 MAX_BUFFER_MS,
                 BUFFER_FOR_PLAYBACK_MS,
-                BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS,
+                BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS
             ).setTargetBufferBytes(C.LENGTH_UNSET)
             .setPrioritizeTimeOverSizeThresholds(true)
             .build()

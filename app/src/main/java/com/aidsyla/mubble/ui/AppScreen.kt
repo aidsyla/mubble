@@ -50,9 +50,9 @@ fun AppScreen() {
             currentTopLevelDestination != null ||
                 currentDestination.isRouteInSettingsHierarchy() ||
                 currentDestination.isRouteInHierarchy(
-                    FollowScreenRoute::class,
+                    FollowScreenRoute::class
                 )
-        ) &&
+            ) &&
             !isVideoScreen
 
     val navBarVisibilityState =
@@ -69,12 +69,12 @@ fun AppScreen() {
             AnimatedVisibility(
                 visibleState = navBarVisibilityState,
                 enter = fadeIn(animationSpec = tween(300)),
-                exit = fadeOut(animationSpec = tween(300)),
+                exit = fadeOut(animationSpec = tween(300))
             ) {
                 Box {
                     NavigationBar(
                         modifier = Modifier.height(80.dp),
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow
                     ) {
                         appState.topLevelDestinations.forEach { destination ->
                             val selected =
@@ -83,7 +83,7 @@ fun AppScreen() {
                                         currentDestination.isRouteInHierarchy(TopLevelDestination.PROFILE.route) ||
                                             currentDestination.isRouteInSettingsHierarchy() ||
                                             currentDestination.isRouteInHierarchy(
-                                                FollowScreenRoute::class,
+                                                FollowScreenRoute::class
                                             )
                                     }
 
@@ -98,9 +98,9 @@ fun AppScreen() {
                                         (
                                             currentDestination.isRouteInSettingsHierarchy() ||
                                                 currentDestination.isRouteInHierarchy(
-                                                    FollowScreenRoute::class,
+                                                    FollowScreenRoute::class
                                                 )
-                                        )
+                                            )
                                     ) {
                                         appState.navigateToProfileFromSettings()
                                     } else {
@@ -112,25 +112,25 @@ fun AppScreen() {
                                         if (selected) destination.selectedIcon else destination.unselectedIcon
                                     Icon(
                                         painterResource(icon),
-                                        contentDescription = destination.iconText,
+                                        contentDescription = destination.iconText
                                     )
-                                },
+                                }
                             )
                         }
                     }
                     SubtleHorizontalDivider(
-                        modifier = Modifier.align(Alignment.TopCenter),
+                        modifier = Modifier.align(Alignment.TopCenter)
                     )
                 }
             }
-        },
+        }
     ) {
         val bottomPadding = it.calculateBottomPadding()
         CompositionLocalProvider(LocalBottomBarPadding provides bottomPadding) {
             AppNavHost(
                 modifier = Modifier,
                 appState = appState,
-                startDestination = HomeRoute,
+                startDestination = HomeRoute
             )
         }
     }
@@ -142,12 +142,11 @@ private fun NavDestination?.isRouteInSettingsHierarchy(): Boolean {
             SettingsStartRoute::class.qualifiedName,
             SettingsNotificationsRoute::class.qualifiedName,
             SettingsDevicePermissionsRoute::class.qualifiedName,
-            SettingsManageAccountRoute::class.qualifiedName,
+            SettingsManageAccountRoute::class.qualifiedName
         )
     return this?.hierarchy?.any { navDest -> navDest.route in settingsRoutes } ?: false
 }
 
-private fun NavDestination?.isRouteInHierarchy(route: KClass<*>) =
-    this?.hierarchy?.any {
-        it.hasRoute(route)
-    } ?: false
+private fun NavDestination?.isRouteInHierarchy(route: KClass<*>) = this?.hierarchy?.any {
+    it.hasRoute(route)
+} ?: false

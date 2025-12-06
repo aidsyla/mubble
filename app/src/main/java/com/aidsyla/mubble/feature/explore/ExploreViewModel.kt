@@ -15,27 +15,27 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExploreViewModel
-    @Inject
-    constructor(
-        private val savedStateHandle: SavedStateHandle,
-    ) : ViewModel() {
-        private val postId: String = savedStateHandle.get<String>("postId") ?: ""
+@Inject
+constructor(
+    private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
+    private val postId: String = savedStateHandle.get<String>("postId") ?: ""
 
-        val uiState: StateFlow<ExploreUiState> =
-            flowOf(
-                ExploreUiState(
-                    media = DummyPostRepository.dummyFeedItems.filterIsInstance<ImagePostFeedItem>(),
-                    bubbles = DummyPostRepository.dummyFeedItems.filterIsInstance<BubbleFeedItem>(),
-                ),
-            ).stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
-                initialValue = ExploreUiState(isLoading = true),
+    val uiState: StateFlow<ExploreUiState> =
+        flowOf(
+            ExploreUiState(
+                media = DummyPostRepository.dummyFeedItems.filterIsInstance<ImagePostFeedItem>(),
+                bubbles = DummyPostRepository.dummyFeedItems.filterIsInstance<BubbleFeedItem>()
             )
-    }
+        ).stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = ExploreUiState(isLoading = true)
+        )
+}
 
 data class ExploreUiState(
     val media: List<ImagePostFeedItem> = emptyList(),
     val bubbles: List<BubbleFeedItem> = emptyList(),
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = false
 )

@@ -9,7 +9,7 @@ data class Circle(
     val name: String,
     val memberCount: Int,
     @param:DrawableRes
-    val bannerResId: Int,
+    val bannerResId: Int
 )
 
 object CircleRepo {
@@ -18,32 +18,32 @@ object CircleRepo {
             Circle(
                 name = "Nature",
                 memberCount = 1254,
-                bannerResId = R.drawable.circle_1,
+                bannerResId = R.drawable.circle_1
             ),
             Circle(
                 name = "Art",
                 memberCount = 843,
-                bannerResId = R.drawable.circle_2,
+                bannerResId = R.drawable.circle_2
             ),
             Circle(
                 name = "Photography",
                 memberCount = 1920,
-                bannerResId = R.drawable.circle_3,
+                bannerResId = R.drawable.circle_3
             ),
             Circle(
                 name = "Food",
                 memberCount = 1478,
-                bannerResId = R.drawable.circle_4,
+                bannerResId = R.drawable.circle_4
             ),
             Circle(
                 name = "Cars",
                 memberCount = 1083,
-                bannerResId = R.drawable.circle_5,
+                bannerResId = R.drawable.circle_5
             ),
             Circle(
                 name = "Travel",
                 memberCount = 2034,
-                bannerResId = R.drawable.circle_6,
-            ),
+                bannerResId = R.drawable.circle_6
+            )
         )
 }

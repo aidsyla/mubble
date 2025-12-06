@@ -38,6 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aidsyla.mubble.common.components.Tab
 import com.aidsyla.mubble.data.UserRepo
 import com.aidsyla.mubble.model.FollowType
+import com.aidsyla.mubble.ui.theme.MubbleDesignSystem
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 import kotlinx.coroutines.launch
 
@@ -49,7 +50,7 @@ fun FollowScreen(
     type: FollowType,
     onUserClick: (String) -> Unit,
     onMessageClick: (String) -> Unit,
-    onBackClick: () -> Unit,
+    onBackClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -80,35 +81,35 @@ fun FollowScreen(
                         fadeIn() +
                             expandIn(
                                 expandFrom = Alignment.Center,
-                                clip = false,
+                                clip = false
                             ) togetherWith fadeOut() +
                             shrinkOut(
                                 shrinkTowards = Alignment.Center,
-                                clip = false,
+                                clip = false
                             )
-                    },
+                    }
                 ) { targetSearchBarValue ->
                     when (targetSearchBarValue) {
                         SearchBarValue.Expanded -> {
                             IconButton(
-                                onClick = { coroutineScope.launch { searchBarState.animateToCollapsed() } },
+                                onClick = { coroutineScope.launch { searchBarState.animateToCollapsed() } }
                             ) {
                                 Icon(
-                                    painter = MubbleTheme.Icons.ArrowBack,
-                                    contentDescription = "Back",
+                                    painter = MubbleDesignSystem.Icons.ArrowBack,
+                                    contentDescription = "Back"
                                 )
                             }
                         }
 
                         SearchBarValue.Collapsed -> {
                             Icon(
-                                painter = MubbleTheme.Icons.Search,
-                                contentDescription = "Search",
+                                painter = MubbleDesignSystem.Icons.Search,
+                                contentDescription = "Search"
                             )
                         }
                     }
                 }
-            },
+            }
         )
     }
 
@@ -117,46 +118,47 @@ fun FollowScreen(
             Column {
                 CenterAlignedTopAppBar(title = { Text("alex_smith") }, navigationIcon = {
                     IconButton(
-                        onClick = onBackClick,
+                        onClick = onBackClick
                     ) {
                         Icon(
-                            painter = MubbleTheme.Icons.ArrowBack,
-                            contentDescription = null,
+                            painter = MubbleDesignSystem.Icons.ArrowBack,
+                            contentDescription = null
                         )
                     }
                 })
                 Tab(
                     pagerState = pagerState,
-                    tabs = tabs,
+                    tabs = tabs
                 )
                 ExpandedFullScreenSearchBar(
                     state = searchBarState,
                     inputField = inputField,
-                    windowInsets = { WindowInsets.statusBars },
+                    windowInsets = { WindowInsets.statusBars }
                 ) {
                     SearchResults(
                         onResultClick = { result ->
                             textFieldState.setTextAndPlaceCursorAtEnd(result)
                             coroutineScope.launch { searchBarState.animateToCollapsed() }
-                        },
+                        }
                     )
                 }
             }
-        },
+        }
     ) { padding ->
         when (val state = uiState) {
             FollowScreenUiState.Loading -> {}
+
             is FollowScreenUiState.Success -> {
                 HorizontalPager(
                     state = pagerState,
                     verticalAlignment = Alignment.Top,
                     modifier =
-                        Modifier
-                            .fillMaxSize()
-                            .padding(top = padding.calculateTopPadding()),
+                    Modifier
+                        .fillMaxSize()
+                        .padding(top = padding.calculateTopPadding())
                 ) { pageIndex ->
                     when (pageIndex) {
-                        0 ->
+                        0 -> {
                             FollowList(
                                 isCurrentUser = isCurrentUser,
                                 listType = FollowType.FOLLOWERS,
@@ -165,10 +167,11 @@ fun FollowScreen(
                                 inputField = inputField,
                                 onUserClick = onUserClick,
                                 onFollowClick = {},
-                                onMessageClick = onMessageClick,
+                                onMessageClick = onMessageClick
                             )
+                        }
 
-                        1 ->
+                        1 -> {
                             FollowList(
                                 isCurrentUser = isCurrentUser,
                                 listType = FollowType.FOLLOWING,
@@ -177,8 +180,9 @@ fun FollowScreen(
                                 inputField = inputField,
                                 onUserClick = onUserClick,
                                 onFollowClick = {},
-                                onMessageClick = onMessageClick,
+                                onMessageClick = onMessageClick
                             )
+                        }
                     }
                 }
             }
@@ -200,7 +204,7 @@ private fun FollowUserItemPreview() {
                 profilePictureResId = user.profilePictureResId,
                 onUserClick = {},
                 onFollowClick = {},
-                onMessageClick = {},
+                onMessageClick = {}
             )
         }
     }

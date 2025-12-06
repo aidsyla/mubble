@@ -49,7 +49,7 @@ private val lightScheme =
         surfaceContainerLow = surfaceContainerLowLight,
         surfaceContainer = surfaceContainerLight,
         surfaceContainerHigh = surfaceContainerHighLight,
-        surfaceContainerHighest = surfaceContainerHighestLight,
+        surfaceContainerHighest = surfaceContainerHighestLight
     )
 
 private val darkScheme =
@@ -88,7 +88,7 @@ private val darkScheme =
         surfaceContainerLow = surfaceContainerLowDark,
         surfaceContainer = surfaceContainerDark,
         surfaceContainerHigh = surfaceContainerHighDark,
-        surfaceContainerHighest = surfaceContainerHighestDark,
+        surfaceContainerHighest = surfaceContainerHighestDark
     )
 
 private val mediumContrastLightColorScheme =
@@ -127,7 +127,7 @@ private val mediumContrastLightColorScheme =
         surfaceContainerLow = surfaceContainerLowLightMediumContrast,
         surfaceContainer = surfaceContainerLightMediumContrast,
         surfaceContainerHigh = surfaceContainerHighLightMediumContrast,
-        surfaceContainerHighest = surfaceContainerHighestLightMediumContrast,
+        surfaceContainerHighest = surfaceContainerHighestLightMediumContrast
     )
 
 private val highContrastLightColorScheme =
@@ -166,7 +166,7 @@ private val highContrastLightColorScheme =
         surfaceContainerLow = surfaceContainerLowLightHighContrast,
         surfaceContainer = surfaceContainerLightHighContrast,
         surfaceContainerHigh = surfaceContainerHighLightHighContrast,
-        surfaceContainerHighest = surfaceContainerHighestLightHighContrast,
+        surfaceContainerHighest = surfaceContainerHighestLightHighContrast
     )
 
 private val mediumContrastDarkColorScheme =
@@ -205,7 +205,7 @@ private val mediumContrastDarkColorScheme =
         surfaceContainerLow = surfaceContainerLowDarkMediumContrast,
         surfaceContainer = surfaceContainerDarkMediumContrast,
         surfaceContainerHigh = surfaceContainerHighDarkMediumContrast,
-        surfaceContainerHighest = surfaceContainerHighestDarkMediumContrast,
+        surfaceContainerHighest = surfaceContainerHighestDarkMediumContrast
     )
 
 private val highContrastDarkColorScheme =
@@ -244,7 +244,7 @@ private val highContrastDarkColorScheme =
         surfaceContainerLow = surfaceContainerLowDarkHighContrast,
         surfaceContainer = surfaceContainerDarkHighContrast,
         surfaceContainerHigh = surfaceContainerHighDarkHighContrast,
-        surfaceContainerHighest = surfaceContainerHighestDarkHighContrast,
+        surfaceContainerHighest = surfaceContainerHighestDarkHighContrast
     )
 
 @Immutable
@@ -252,7 +252,7 @@ data class ColorFamily(
     val color: Color,
     val onColor: Color,
     val colorContainer: Color,
-    val onColorContainer: Color,
+    val onColorContainer: Color
 )
 
 val unspecified_scheme =
@@ -260,7 +260,7 @@ val unspecified_scheme =
         Color.Unspecified,
         Color.Unspecified,
         Color.Unspecified,
-        Color.Unspecified,
+        Color.Unspecified
     )
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -270,8 +270,8 @@ fun MubbleTheme(
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
     content:
-        @Composable()
-        () -> Unit,
+    @Composable()
+    () -> Unit
 ) {
     val colorScheme =
         when {
@@ -280,8 +280,13 @@ fun MubbleTheme(
                 if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
             }
 
-            darkTheme -> darkScheme
-            else -> lightScheme
+            darkTheme -> {
+                darkScheme
+            }
+
+            else -> {
+                lightScheme
+            }
         }
 //    val view = LocalView.current
 //    if (!view.isInEditMode) {
@@ -293,6 +298,6 @@ fun MubbleTheme(
 //    }
     MaterialExpressiveTheme(
         colorScheme = colorScheme,
-        content = content,
+        content = content
     )
 }

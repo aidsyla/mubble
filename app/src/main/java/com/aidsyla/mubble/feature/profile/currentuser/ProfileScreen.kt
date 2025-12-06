@@ -1,4 +1,4 @@
-package com.aidsyla.mubble.feature.profile.current_user
+package com.aidsyla.mubble.feature.profile.currentuser
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
+import com.aidsyla.mubble.common.navigation.sharedelements.PostOrigin
 import com.aidsyla.mubble.data.BubbleFeedItem
 import com.aidsyla.mubble.data.ImagePostFeedItem
 import com.aidsyla.mubble.feature.explore.exploreBubblesFeed
@@ -34,7 +34,7 @@ fun ProfileScreen(
     onPostClick: (postId: String, origin: PostOrigin) -> Unit,
     onMediaClick: (Int, FullScreenMediaType) -> Unit,
     onFollowersClick: () -> Unit,
-    onFollowingClick: () -> Unit,
+    onFollowingClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -57,7 +57,7 @@ fun ProfileScreen(
                         onHasBeenClickedChange = { isClicked = it },
                         onMediaClick = onMediaClick,
                         onFollowersClick = onFollowersClick,
-                        onFollowingClick = onFollowingClick,
+                        onFollowingClick = onFollowingClick
                     )
                 },
                 firstPage = {
@@ -66,16 +66,16 @@ fun ProfileScreen(
                         onPostClick = { p1, p2 ->
                             isClicked = false
                             onPostClick(p1, p2)
-                        },
+                        }
                     )
                 },
                 secondPage = {
                     ProfileBubbleGrid(
                         items = state.bubbles,
-                        onPostClick = onPostClick,
+                        onPostClick = onPostClick
                     )
                 },
-                onNavigateToSettings = onNavigateToSettings,
+                onNavigateToSettings = onNavigateToSettings
             )
         }
     }
@@ -85,25 +85,25 @@ fun ProfileScreen(
 fun ProfilePostGrid(
     modifier: Modifier = Modifier,
     items: List<ImagePostFeedItem>,
-    onPostClick: (postId: String, origin: PostOrigin) -> Unit,
+    onPostClick: (postId: String, origin: PostOrigin) -> Unit
 ) {
     val bottomPadding = LocalBottomBarPadding.current
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = modifier.fillMaxSize(),
         contentPadding =
-            PaddingValues(
-                top = 4.dp,
-                start = 8.dp,
-                end = 8.dp,
-                bottom = bottomPadding + 8.dp,
-            ),
+        PaddingValues(
+            top = 4.dp,
+            start = 8.dp,
+            end = 8.dp,
+            bottom = bottomPadding + 8.dp
+        ),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
+        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)
     ) {
         postGrid(
             items = items,
-            onPostClick = onPostClick,
+            onPostClick = onPostClick
         )
     }
 }
@@ -112,26 +112,26 @@ fun ProfilePostGrid(
 fun ProfileBubbleGrid(
     modifier: Modifier = Modifier,
     items: List<BubbleFeedItem>,
-    onPostClick: (postId: String, origin: PostOrigin) -> Unit,
+    onPostClick: (postId: String, origin: PostOrigin) -> Unit
 ) {
     val bottomPadding = LocalBottomBarPadding.current
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Fixed(2),
         contentPadding =
-            PaddingValues(
-                top = 4.dp,
-                start = 8.dp,
-                end = 8.dp,
-                bottom = bottomPadding + 8.dp,
-            ),
+        PaddingValues(
+            top = 4.dp,
+            start = 8.dp,
+            end = 8.dp,
+            bottom = bottomPadding + 8.dp
+        ),
         verticalItemSpacing = 8.dp,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize()
     ) {
         exploreBubblesFeed(
             items = items,
             onProfileClick = {},
-            onPostClick = onPostClick,
+            onPostClick = onPostClick
         )
     }
 }

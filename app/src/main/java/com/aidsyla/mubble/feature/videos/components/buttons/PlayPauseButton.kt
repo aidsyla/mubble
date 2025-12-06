@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.compose.state.rememberPlayPauseButtonState
-import com.aidsyla.mubble.ui.theme.MubbleTheme
+import com.aidsyla.mubble.ui.theme.MubbleDesignSystem
 
 @androidx.annotation.OptIn(UnstableApi::class)
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
@@ -20,16 +20,16 @@ internal fun PlayPauseButton(modifier: Modifier = Modifier) {
     VideoControlIconToggleButton(
         modifier = modifier,
         checked = false,
-        onCheckedChange = {},
+        onCheckedChange = {}
     ) {
         Icon(
             modifier =
-                Modifier.size(
-                    IconButtonDefaults.extraSmallIconSize,
-                ),
-            painter = MubbleTheme.Icons.Pause,
+            Modifier.size(
+                IconButtonDefaults.extraSmallIconSize
+            ),
+            painter = MubbleDesignSystem.Icons.Pause,
             contentDescription = null,
-            tint = Color.White,
+            tint = Color.White
         )
     }
 }
@@ -39,25 +39,25 @@ internal fun PlayPauseButton(modifier: Modifier = Modifier) {
 @Composable
 internal fun PlayPauseButton(
     modifier: Modifier = Modifier,
-    player: Player,
+    player: Player
 ) {
     val playPauseButtonState = rememberPlayPauseButtonState(player)
     VideoControlIconToggleButton(
         modifier = modifier,
         checked = playPauseButtonState.showPlay,
-        onCheckedChange = { playPauseButtonState.onClick() },
+        onCheckedChange = { playPauseButtonState.onClick() }
     ) {
         AnimatedContent(
-            targetState = playPauseButtonState.showPlay,
+            targetState = playPauseButtonState.showPlay
         ) {
             Icon(
                 modifier =
-                    Modifier.size(
-                        IconButtonDefaults.extraSmallIconSize,
-                    ),
-                painter = if (it) MubbleTheme.Icons.Resume else MubbleTheme.Icons.Pause,
+                Modifier.size(
+                    IconButtonDefaults.extraSmallIconSize
+                ),
+                painter = if (it) MubbleDesignSystem.Icons.Resume else MubbleDesignSystem.Icons.Pause,
                 contentDescription = null,
-                tint = Color.White,
+                tint = Color.White
             )
         }
     }

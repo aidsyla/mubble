@@ -28,11 +28,11 @@ fun TabButtons(
     selectedIcons: List<Painter>,
     unselectedIcons: List<Painter>,
     selectedIndex: Int,
-    onTabSelected: (Int) -> Unit,
+    onTabSelected: (Int) -> Unit
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(spaceBetween),
+        horizontalArrangement = Arrangement.spacedBy(spaceBetween)
     ) {
         val modifiers = List(options.size) { Modifier.weight(1f) }
         val last = options.lastIndex
@@ -44,22 +44,22 @@ fun TabButtons(
                 },
                 modifier = modifiers[index].semantics { role = Role.Tab },
                 shapes =
-                    when (index) {
-                        0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                        last -> ButtonGroupDefaults.connectedTrailingButtonShapes()
-                        else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
-                    },
+                when (index) {
+                    0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                    last -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                    else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                },
                 colors =
-                    ToggleButtonDefaults.toggleButtonColors(
-                        checkedContainerColor = MaterialTheme.colorScheme.primary,
-                        checkedContentColor = MaterialTheme.colorScheme.onPrimary,
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    ),
+                ToggleButtonDefaults.toggleButtonColors(
+                    checkedContainerColor = MaterialTheme.colorScheme.primary,
+                    checkedContentColor = MaterialTheme.colorScheme.onPrimary,
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                )
             ) {
                 Icon(
                     painter = if (selectedIndex == index) selectedIcons[index] else unselectedIcons[index],
-                    contentDescription = "Localized description",
+                    contentDescription = "Localized description"
                 )
                 Spacer(Modifier.size(ToggleButtonDefaults.IconSpacing))
                 Text(option)
@@ -76,11 +76,11 @@ fun TabButtons(
     selectedIcons: List<Painter>,
     unselectedIcons: List<Painter>,
     selectedIndex: Int,
-    onTabSelected: (Int) -> Unit,
+    onTabSelected: (Int) -> Unit
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(spaceBetween),
+        horizontalArrangement = Arrangement.spacedBy(spaceBetween)
     ) {
         val modifiers = listOf(Modifier.weight(1f), Modifier.weight(1f))
 
@@ -92,21 +92,21 @@ fun TabButtons(
                 },
                 modifier = modifiers[index].semantics { role = Role.Tab },
                 shapes =
-                    when (index) {
-                        0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                        else -> ButtonGroupDefaults.connectedTrailingButtonShapes()
-                    },
+                when (index) {
+                    0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                    else -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                },
                 colors =
-                    ToggleButtonDefaults.toggleButtonColors(
-                        checkedContainerColor = MaterialTheme.colorScheme.secondary,
-                        checkedContentColor = MaterialTheme.colorScheme.onSecondary,
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    ),
+                ToggleButtonDefaults.toggleButtonColors(
+                    checkedContainerColor = MaterialTheme.colorScheme.secondary,
+                    checkedContentColor = MaterialTheme.colorScheme.onSecondary,
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                )
             ) {
                 Icon(
                     painter = if (selectedIndex == index) selectedIcons[index] else icon,
-                    contentDescription = "Localized description",
+                    contentDescription = "Localized description"
                 )
             }
         }

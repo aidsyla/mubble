@@ -24,27 +24,26 @@ fun Modifier.clickableWithScaleIndication(
     onClickLabel: String? = null,
     role: Role? = null,
     indicationType: IndicationType = IndicationType.ICONS,
-    onClick: () -> Unit,
-): Modifier =
-    composed {
-        val interactionSource = remember { MutableInteractionSource() }
-        this.clickable(
-            interactionSource = interactionSource,
-            indication = ScaleIndicationNodeFactory(indicationType),
-            enabled = enabled,
-            onClickLabel = onClickLabel,
-            role = role,
-            onClick = onClick,
-        )
-    }
+    onClick: () -> Unit
+): Modifier = composed {
+    val interactionSource = remember { MutableInteractionSource() }
+    this.clickable(
+        interactionSource = interactionSource,
+        indication = ScaleIndicationNodeFactory(indicationType),
+        enabled = enabled,
+        onClickLabel = onClickLabel,
+        role = role,
+        onClick = onClick
+    )
+}
 
 enum class IndicationType {
     ICONS,
-    CARDS,
+    CARDS
 }
 
 class ScaleIndicationNodeFactory(
-    val indicationType: IndicationType,
+    val indicationType: IndicationType
 ) : IndicationNodeFactory {
     override fun create(interactionSource: InteractionSource): DelegatableNode = ScaleIndicationNode(interactionSource, indicationType)
 
@@ -55,7 +54,7 @@ class ScaleIndicationNodeFactory(
 
 private class ScaleIndicationNode(
     private val interactionSource: InteractionSource,
-    private val indicationType: IndicationType,
+    private val indicationType: IndicationType
 ) : Modifier.Node(),
     DrawModifierNode {
     var currentPressPosition: Offset = Offset.Zero
@@ -90,7 +89,7 @@ private class ScaleIndicationNode(
     override fun ContentDrawScope.draw() {
         scale(
             scale = animatedScalePercent.value,
-            pivot = currentPressPosition,
+            pivot = currentPressPosition
         ) {
             this@draw.drawContent()
         }

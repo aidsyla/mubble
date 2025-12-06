@@ -70,7 +70,7 @@ fun PagerIndicator(
     dotHeight: Dp = 8.dp,
     circleSpacing: Dp = 4.dp,
     activeIndicatorColor: Color = MaterialTheme.colorScheme.primary,
-    inactiveIndicatorColor: Color = MaterialTheme.colorScheme.surfaceVariant,
+    inactiveIndicatorColor: Color = MaterialTheme.colorScheme.surfaceVariant
 ) {
     val totalWidth =
         remember(count, activeLineWidth, dotWidth, circleSpacing) {
@@ -86,7 +86,7 @@ fun PagerIndicator(
     Canvas(
         modifier
             .width(totalWidth)
-            .wrapContentHeight(),
+            .wrapContentHeight()
     ) {
         val spacing = circleSpacing.toPx()
         val dotW = dotWidth.toPx()
@@ -126,7 +126,7 @@ private fun DrawScope.drawIndicator(
     width: Float,
     height: Float,
     radius: CornerRadius,
-    color: Color,
+    color: Color
 ) {
     val rect =
         RoundRect(
@@ -135,7 +135,7 @@ private fun DrawScope.drawIndicator(
             right = x + width,
             bottom = y + height / 2,
             radiusX = radius.x,
-            radiusY = radius.y,
+            radiusY = radius.y
         )
     val path = Path().apply { addRoundRect(rect) }
     drawPath(path = path, color = color)
@@ -152,7 +152,7 @@ fun WelcomeScreen(modifier: Modifier = Modifier) {
         object : PageSize {
             override fun Density.calculateMainAxisPageSize(
                 availableSpace: Int,
-                pageSpacing: Int,
+                pageSpacing: Int
             ): Int = ((availableSpace - 2 * pageSpacing) * 0.8).toInt()
         }
 
@@ -170,7 +170,7 @@ fun WelcomeScreen(modifier: Modifier = Modifier) {
             if (pagerState.currentPage == 2) {
                 pagerState.animateScrollToPage(
                     nextPage,
-                    animationSpec = spring(stiffness = Spring.StiffnessLow),
+                    animationSpec = spring(stiffness = Spring.StiffnessLow)
                 )
             } else {
                 pagerState.animateScrollToPage(nextPage)
@@ -185,17 +185,17 @@ fun WelcomeScreen(modifier: Modifier = Modifier) {
                 title = {},
                 actions = {
                     TextButton(
-                        onClick = {},
+                        onClick = {}
                     ) {
                         Text("Skip")
                     }
-                },
+                }
             )
-        },
+        }
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(it),
+            modifier = Modifier.padding(it)
         ) {
             HorizontalPager(
                 pageSize = customPageSize,
@@ -203,88 +203,96 @@ fun WelcomeScreen(modifier: Modifier = Modifier) {
                 pageSpacing = 8.dp,
                 state = pagerState,
                 verticalAlignment = Alignment.Top,
-                modifier = Modifier,
+                modifier = Modifier
             ) { page ->
                 when (page) {
-                    0 ->
+                    0 -> {
                         Image(
                             painter = painterResource(R.drawable.ic_launcher_background),
                             contentDescription = null,
                             modifier =
-                                Modifier
-                                    .aspectRatio(9 / 16f)
-                                    .clip(shape = MaterialTheme.shapes.medium),
-                            contentScale = ContentScale.FillHeight,
+                            Modifier
+                                .aspectRatio(9 / 16f)
+                                .clip(shape = MaterialTheme.shapes.medium),
+                            contentScale = ContentScale.FillHeight
                         )
+                    }
 
-                    1 ->
+                    1 -> {
                         Image(
                             painter = painterResource(R.drawable.ic_launcher_background),
                             contentDescription = null,
                             modifier =
-                                Modifier
-                                    .aspectRatio(9 / 16f)
-                                    .clip(shape = MaterialTheme.shapes.medium),
-                            contentScale = ContentScale.FillHeight,
+                            Modifier
+                                .aspectRatio(9 / 16f)
+                                .clip(shape = MaterialTheme.shapes.medium),
+                            contentScale = ContentScale.FillHeight
                         )
+                    }
 
-                    2 ->
+                    2 -> {
                         Image(
                             painter = painterResource(R.drawable.ic_launcher_background),
                             contentDescription = null,
                             modifier =
-                                Modifier
-                                    .aspectRatio(9 / 16f)
-                                    .clip(shape = MaterialTheme.shapes.medium),
-                            contentScale = ContentScale.FillHeight,
+                            Modifier
+                                .aspectRatio(9 / 16f)
+                                .clip(shape = MaterialTheme.shapes.medium),
+                            contentScale = ContentScale.FillHeight
                         )
+                    }
 
-                    3 ->
+                    3 -> {
                         Image(
                             painter = painterResource(R.drawable.ic_launcher_background),
                             contentDescription = null,
                             modifier =
-                                Modifier
-                                    .aspectRatio(9 / 16f)
-                                    .clip(shape = MaterialTheme.shapes.medium),
-                            contentScale = ContentScale.FillHeight,
+                            Modifier
+                                .aspectRatio(9 / 16f)
+                                .clip(shape = MaterialTheme.shapes.medium),
+                            contentScale = ContentScale.FillHeight
                         )
+                    }
                 }
             }
             Spacer(modifier = Modifier.weight(1f))
             Crossfade(targetState = pagerState.currentPage) { page ->
                 Box(modifier = Modifier.wrapContentSize()) {
                     when (page) {
-                        0 ->
+                        0 -> {
                             ScreenDescription(
                                 title = "Welcome to Mubble",
-                                subtitle = "A place to connect, share, and stay in touch.",
+                                subtitle = "A place to connect, share, and stay in touch."
                             )
+                        }
 
-                        1 ->
+                        1 -> {
                             ScreenDescription(
                                 title = "Share Your Moments",
-                                subtitle = "Big moments or quick updates—post it your way.",
+                                subtitle = "Big moments or quick updates—post it your way."
                             )
+                        }
 
-                        2 ->
+                        2 -> {
                             ScreenDescription(
                                 title = "Join the Conversation",
-                                subtitle = "Circles connect you with communities that share your interests.",
+                                subtitle = "Circles connect you with communities that share your interests."
                             )
+                        }
 
-                        3 ->
+                        3 -> {
                             ScreenDescription(
                                 title = "Stay Connected",
-                                subtitle = "Chat, share images, and keep conversations going effortlessly.",
+                                subtitle = "Chat, share images, and keep conversations going effortlessly."
                             )
+                        }
                     }
                 }
             }
             Spacer(modifier = Modifier.height(32.dp))
             PagerIndicator(
                 pagerState = pagerState,
-                count = 4,
+                count = 4
             )
             Spacer(modifier = Modifier.weight(1f))
             val coroutineScope = rememberCoroutineScope()
@@ -303,12 +311,12 @@ fun WelcomeScreen(modifier: Modifier = Modifier) {
                         }
                     },
                     modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 36.dp)
-                            .padding(bottom = 36.dp)
-                            .height(56.dp),
-                    shape = MaterialTheme.shapes.medium,
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 36.dp)
+                        .padding(bottom = 36.dp)
+                        .height(56.dp),
+                    shape = MaterialTheme.shapes.medium
                 ) {
                     Text(text)
                 }
@@ -321,25 +329,25 @@ fun WelcomeScreen(modifier: Modifier = Modifier) {
 fun ScreenDescription(
     modifier: Modifier = Modifier,
     title: String,
-    subtitle: String,
+    subtitle: String
 ) {
     Column(
         modifier =
-            modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+        modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             title,
-            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
         )
         Text(
             subtitle,
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
-            minLines = 2,
+            minLines = 2
         )
     }
 }

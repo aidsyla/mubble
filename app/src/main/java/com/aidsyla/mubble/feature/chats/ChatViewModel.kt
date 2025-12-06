@@ -16,39 +16,39 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChatViewModel
-    @Inject
-    constructor(
-        private val savedStateHandle: SavedStateHandle,
-        private val userRepo: UserRepo,
-        private val chatRepo: ChatRepo,
-    ) : ViewModel() {
-        private val chatId: String =
-            savedStateHandle.get<String>("chatId") ?: ""
-        private val otherUserId: String =
-            savedStateHandle.get<String>("otherUserId") ?: ""
+@Inject
+constructor(
+    private val savedStateHandle: SavedStateHandle,
+    private val userRepo: UserRepo,
+    private val chatRepo: ChatRepo
+) : ViewModel() {
+    private val chatId: String =
+        savedStateHandle.get<String>("chatId") ?: ""
+    private val otherUserId: String =
+        savedStateHandle.get<String>("otherUserId") ?: ""
 
-        private val _uiState = MutableStateFlow<ChatScreenUiState>(ChatScreenUiState.Loading)
-        val uiState: StateFlow<ChatScreenUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<ChatScreenUiState>(ChatScreenUiState.Loading)
+    val uiState: StateFlow<ChatScreenUiState> = _uiState.asStateFlow()
 
-        init {
-            loadChat()
-        }
+    init {
+        loadChat()
+    }
 
-        private fun loadChat() {
-            viewModelScope.launch {
-                val currentUserId = UserRepo.dummyUsers.component1().id
-                val otherUser = userRepo.getUser(otherUserId)
-                val messages = chatRepo.getMessagesForChat(chatId)
+    private fun loadChat() {
+        viewModelScope.launch {
+            val currentUserId = UserRepo.dummyUsers.component1().id
+            val otherUser = userRepo.getUser(otherUserId)
+            val messages = chatRepo.getMessagesForChat(chatId)
 
-                _uiState.value =
-                    ChatScreenUiState.Success(
-                        currentUserId = currentUserId,
-                        otherUser = otherUser!!,
-                        messages = messages,
-                    )
-            }
+            _uiState.value =
+                ChatScreenUiState.Success(
+                    currentUserId = currentUserId,
+                    otherUser = otherUser!!,
+                    messages = messages
+                )
         }
     }
+}
 
 sealed interface ChatScreenUiState {
     data object Loading : ChatScreenUiState
@@ -56,6 +56,6 @@ sealed interface ChatScreenUiState {
     data class Success(
         val currentUserId: String,
         val otherUser: User,
-        val messages: List<ChatMessage>,
+        val messages: List<ChatMessage>
     ) : ChatScreenUiState
 }

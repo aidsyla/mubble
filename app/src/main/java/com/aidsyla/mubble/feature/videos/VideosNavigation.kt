@@ -12,7 +12,7 @@ fun NavController.navigateToVideos(navOptions: NavOptions) = navigate(route = Vi
 fun NavGraphBuilder.videosScreen(onBackClick: () -> Unit) {
     composable<VideosRoute> {
         VideosScreen(
-            onBackClick = { if (it.lifecycleIsResumed()) onBackClick() },
+            onBackClick = { if (it.lifecycleIsResumed()) onBackClick() }
         )
     }
 }

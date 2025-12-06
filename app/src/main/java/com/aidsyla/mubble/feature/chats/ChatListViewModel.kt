@@ -13,54 +13,55 @@ import kotlin.random.Random
 
 @HiltViewModel
 class ChatListViewModel
-    @Inject
-    constructor() : ViewModel() {
-        private val _uiState = MutableStateFlow<ChatListUiState>(ChatListUiState.Loading)
-        val uiState: StateFlow<ChatListUiState> = _uiState.asStateFlow()
+@Inject
+constructor() : ViewModel() {
+    private val _uiState = MutableStateFlow<ChatListUiState>(ChatListUiState.Loading)
+    val uiState: StateFlow<ChatListUiState> = _uiState.asStateFlow()
 
-        private val _editUiState =
-            MutableStateFlow(Edit(isEditing = false))
-        val editUiState: StateFlow<Edit> = _editUiState.asStateFlow()
+    private val _editUiState =
+        MutableStateFlow(Edit(isEditing = false))
+    val editUiState: StateFlow<Edit> = _editUiState.asStateFlow()
 
-        init {
-            val chatPreviews = getChatPreviewsForUser(UserRepo.dummyUsers.component1().id)
-            _uiState.value = ChatListUiState.Success(chatPreviews = chatPreviews)
-        }
+    init {
+        val chatPreviews = getChatPreviewsForUser(UserRepo.dummyUsers.component1().id)
+        _uiState.value = ChatListUiState.Success(chatPreviews = chatPreviews)
+    }
 
-        private fun getChatPreviewsForUser(currentUserId: String): List<ChatPreview> {
-            val userChats = allSampleChats.filter { it.participantIds.contains(currentUserId) }
+    private fun getChatPreviewsForUser(currentUserId: String): List<ChatPreview> {
+        val userChats = allSampleChats.filter { it.participantIds.contains(currentUserId) }
 
-            return userChats.mapNotNull { chat ->
-                val otherUserId =
-                    chat.participantIds.firstOrNull { it != currentUserId } ?: return@mapNotNull null
-                val otherUser = UserRepo.getUser(otherUserId) ?: return@mapNotNull null
-                val lastMessage = chat.messages.lastOrNull()
-                ChatPreview(
-                    chatId = chat.chatId,
-                    otherUserId = otherUserId,
-                    otherUserName = otherUser.displayName,
-                    otherUserProfilePicResId = otherUser.profilePictureResId,
-                    lastMessage = lastMessage?.message ?: "No messages yet",
-                    timestamp = lastMessage?.timestamp ?: "",
-                    isUnread = Random.nextBoolean(),
-                    notificationsOff = Random.nextBoolean() && Random.nextBoolean(),
-                )
-            }
-        }
-
-        fun editModeSwitch() {
-            _editUiState.value = Edit(isEditing = !_editUiState.value.isEditing)
+        return userChats.mapNotNull { chat ->
+            val otherUserId =
+                chat.participantIds.firstOrNull { it != currentUserId }
+                    ?: return@mapNotNull null
+            val otherUser = UserRepo.getUser(otherUserId) ?: return@mapNotNull null
+            val lastMessage = chat.messages.lastOrNull()
+            ChatPreview(
+                chatId = chat.chatId,
+                otherUserId = otherUserId,
+                otherUserName = otherUser.displayName,
+                otherUserProfilePicResId = otherUser.profilePictureResId,
+                lastMessage = lastMessage?.message ?: "No messages yet",
+                timestamp = lastMessage?.timestamp ?: "",
+                isUnread = Random.nextBoolean(),
+                notificationsOff = Random.nextBoolean() && Random.nextBoolean()
+            )
         }
     }
+
+    fun editModeSwitch() {
+        _editUiState.value = Edit(isEditing = !_editUiState.value.isEditing)
+    }
+}
 
 sealed interface ChatListUiState {
     data object Loading : ChatListUiState
 
     data class Success(
-        val chatPreviews: List<ChatPreview>,
+        val chatPreviews: List<ChatPreview>
     ) : ChatListUiState
 }
 
 data class Edit(
-    val isEditing: Boolean,
+    val isEditing: Boolean
 )

@@ -63,11 +63,11 @@ fun NavBackStackEntry.lifecycleIsResumed() = this.lifecycle.currentState == Life
 fun AppNavHost(
     appState: AppState,
     modifier: Modifier = Modifier,
-    startDestination: Any = HomeRoute,
+    startDestination: Any = HomeRoute
 ) {
     val navController = appState.navController
     SharedTransitionLayout(
-        modifier = modifier,
+        modifier = modifier
     ) {
         CompositionLocalProvider(LocalSharedTransitionScope provides this) {
             NavHost(
@@ -77,45 +77,45 @@ fun AppNavHost(
                 enterTransition = {
                     fadeIn(
                         animationSpec =
-                            tween(
-                                durationMillis = 300,
-                                easing = FastOutSlowInEasing,
-                            ),
+                        tween(
+                            durationMillis = 300,
+                            easing = FastOutSlowInEasing
+                        )
                     )
                 },
                 exitTransition = {
                     fadeOut(
                         animationSpec =
-                            tween(
-                                durationMillis = 300,
-                                easing = FastOutSlowInEasing,
-                            ),
+                        tween(
+                            durationMillis = 300,
+                            easing = FastOutSlowInEasing
+                        )
                     )
                 },
                 popEnterTransition = {
                     fadeIn(
                         animationSpec =
-                            tween(
-                                durationMillis = 300,
-                                easing = FastOutSlowInEasing,
-                            ),
+                        tween(
+                            durationMillis = 300,
+                            easing = FastOutSlowInEasing
+                        )
                     )
                 },
                 popExitTransition = {
                     fadeOut(
                         animationSpec =
-                            tween(
-                                durationMillis = 300,
-                                easing = FastOutSlowInEasing,
-                            ),
+                        tween(
+                            durationMillis = 300,
+                            easing = FastOutSlowInEasing
+                        )
                     )
-                },
+                }
             ) {
                 homeScreen(
                     onCircleClick = { circleId, origin ->
                         navController.navigateToCircle(
                             circleId = circleId,
-                            origin = origin,
+                            origin = origin
                         )
                     },
                     onUserClick = { userId ->
@@ -124,40 +124,40 @@ fun AppNavHost(
                     onPostClick = { postId, origin ->
                         navController.navigateToPostDetails(
                             postId,
-                            origin,
+                            origin
                         )
-                    },
+                    }
                 )
                 exploreScreen(
                     onPostClick = { postId, origin ->
                         navController.navigateToPostDetails(
                             postId,
-                            origin,
+                            origin
                         )
                     },
                     onCircleClick = { circleId, origin ->
                         navController.navigateToCircle(
                             circleId = circleId,
-                            origin = origin,
+                            origin = origin
                         )
-                    },
+                    }
                 )
                 videosScreen(
-                    onBackClick = navController::popBackStack,
+                    onBackClick = navController::popBackStack
                 )
                 chatListScreen(
                     onChatClick = { chatId, otherUserId ->
                         navController.navigateToChat(chatId = chatId, otherUserId = otherUserId)
-                    },
+                    }
                 )
                 chatScreen(
                     onBackClick = navController::popBackStack,
                     onProfileClick = {},
-                    onMoreClick = { navController.navigateToChatDetails(it) },
+                    onMoreClick = { navController.navigateToChatDetails(it) }
                 )
                 chatDetailsScreen(
                     onBackClick = navController::popBackStack,
-                    onProfileClick = {},
+                    onProfileClick = {}
                 )
 
                 profileScreen(
@@ -165,17 +165,17 @@ fun AppNavHost(
                     onPostClick = { postId, origin ->
                         navController.navigateToPostDetails(
                             postId,
-                            origin,
+                            origin
                         )
                     },
                     onMediaClick = { imageId, type ->
                         navController.navigateToFullScreenMediaViewer(
                             imageId = imageId,
-                            type = type,
+                            type = type
                         )
                     },
                     onFollowersClick = { navController.navigateToFollowScreen(type = FollowType.FOLLOWERS) },
-                    onFollowingClick = { navController.navigateToFollowScreen(type = FollowType.FOLLOWING) },
+                    onFollowingClick = { navController.navigateToFollowScreen(type = FollowType.FOLLOWING) }
                 )
 
                 otherUserProfileScreen(
@@ -183,21 +183,21 @@ fun AppNavHost(
                     onPostClick = { postId, origin ->
                         navController.navigateToPostDetails(
                             postId,
-                            origin,
+                            origin
                         )
                     },
                     onMediaClick = { imageId, type ->
                         navController.navigateToFullScreenMediaViewer(
                             imageId = imageId,
-                            type = type,
+                            type = type
                         )
                     },
                     onFollowersClick = { navController.navigateToOtherFollowScreen(type = FollowType.FOLLOWERS) },
-                    onFollowingClick = { navController.navigateToOtherFollowScreen(type = FollowType.FOLLOWING) },
+                    onFollowingClick = { navController.navigateToOtherFollowScreen(type = FollowType.FOLLOWING) }
                 )
 
                 fullScreenMediaViewer(
-                    onBackClick = navController::popBackStack,
+                    onBackClick = navController::popBackStack
                 )
 
                 postDetailsScreen(onUserClick = { userId ->
@@ -208,14 +208,14 @@ fun AppNavHost(
                     onUserClick = { userId ->
                         navController.navigateToOtherProfile(userId)
                     },
-                    onBackClick = navController::popBackStack,
+                    onBackClick = navController::popBackStack
                 )
 
                 otherFollowScreen(
                     onUserClick = { userId ->
                         navController.navigateToOtherProfile(userId)
                     },
-                    onBackClick = navController::popBackStack,
+                    onBackClick = navController::popBackStack
                 )
 
                 circleScreen(
@@ -225,16 +225,16 @@ fun AppNavHost(
                     onPostClick = { postId, origin ->
                         navController.navigateToPostDetails(
                             postId,
-                            origin,
+                            origin
                         )
                     },
                     onMediaClick = { imageId, type ->
                         navController.navigateToFullScreenMediaViewer(
                             imageId = imageId,
-                            type = type,
+                            type = type
                         )
                     },
-                    onBackClick = navController::popBackStack,
+                    onBackClick = navController::popBackStack
                 )
 
                 settingsStartScreen(
@@ -242,16 +242,16 @@ fun AppNavHost(
                     onNavigateToDevicePermissions = navController::navigateToSettingsDevicePermissions,
                     onNavigateToManageAccount = navController::navigateToSettingsManageAccount,
                     onLogoutClick = {},
-                    onBackClick = navController::popBackStack,
+                    onBackClick = navController::popBackStack
                 )
                 settingsNotificationsScreen(
-                    onBackClick = navController::popBackStack,
+                    onBackClick = navController::popBackStack
                 )
                 settingsDevicePermissionsScreen(
-                    onBackClick = navController::popBackStack,
+                    onBackClick = navController::popBackStack
                 )
                 settingsManageAccountScreen(
-                    onBackClick = navController::popBackStack,
+                    onBackClick = navController::popBackStack
                 )
             }
         }

@@ -43,31 +43,35 @@ class MainActivity : ComponentActivity() {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 combine(
                     isSystemInDarkThemeFlow(),
-                    viewModel.settingsUiState,
+                    viewModel.settingsUiState
                 ) { systemIsDark, uiState ->
                     when (uiState) {
-                        SettingsUiState.Loading -> systemIsDark
-                        is SettingsUiState.Success ->
+                        SettingsUiState.Loading -> {
+                            systemIsDark
+                        }
+
+                        is SettingsUiState.Success -> {
                             when (uiState.darkThemeConfig) {
                                 DarkThemeConfig.FOLLOW_SYSTEM -> systemIsDark
                                 DarkThemeConfig.LIGHT -> false
                                 DarkThemeConfig.DARK -> true
                             }
+                        }
                     }
                 }.distinctUntilChanged()
                     .collect { useDarkTheme ->
                         darkTheme = useDarkTheme
                         enableEdgeToEdge(
                             statusBarStyle =
-                                SystemBarStyle.auto(
-                                    Color.TRANSPARENT,
-                                    Color.TRANSPARENT,
-                                ) { useDarkTheme },
+                            SystemBarStyle.auto(
+                                Color.TRANSPARENT,
+                                Color.TRANSPARENT
+                            ) { useDarkTheme },
                             navigationBarStyle =
-                                SystemBarStyle.auto(
-                                    lightScrim,
-                                    darkScrim,
-                                ) { useDarkTheme },
+                            SystemBarStyle.auto(
+                                lightScrim,
+                                darkScrim
+                            ) { useDarkTheme }
                         )
                     }
             }

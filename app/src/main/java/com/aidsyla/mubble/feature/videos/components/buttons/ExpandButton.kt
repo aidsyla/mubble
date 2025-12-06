@@ -18,33 +18,33 @@ internal fun ExpandButton(
     modifier: Modifier = Modifier,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
-    content: @Composable () -> Unit,
+    content: @Composable () -> Unit
 ) {
     OutlinedIconToggleButton(
         checked = checked,
         onCheckedChange = onCheckedChange,
         modifier =
-            modifier
-                .minimumInteractiveComponentSize()
-                .size(
-                    IconButtonDefaults.extraSmallContainerSize(
-                        IconButtonDefaults.IconButtonWidthOption.Uniform,
-                    ),
-                ),
+        modifier
+            .minimumInteractiveComponentSize()
+            .size(
+                IconButtonDefaults.extraSmallContainerSize(
+                    IconButtonDefaults.IconButtonWidthOption.Uniform
+                )
+            ),
         shapes =
-            IconToggleButtonShapes(
-                shape = IconButtonDefaults.extraSmallRoundShape,
-                pressedShape = IconButtonDefaults.extraSmallPressedShape,
-                checkedShape = IconButtonDefaults.extraSmallSquareShape,
-            ),
+        IconToggleButtonShapes(
+            shape = IconButtonDefaults.extraSmallRoundShape,
+            pressedShape = IconButtonDefaults.extraSmallPressedShape,
+            checkedShape = IconButtonDefaults.extraSmallSquareShape
+        ),
         colors =
-            IconButtonDefaults.outlinedIconToggleButtonColors(
-                containerColor = Color.Black.copy(alpha = 0.4f),
-                contentColor = Color.White,
-                checkedContainerColor = Color.Black.copy(alpha = 0.25f),
-                checkedContentColor = Color.White,
-            ),
-        border = BorderStroke(1.dp, Color.Transparent),
+        IconButtonDefaults.outlinedIconToggleButtonColors(
+            containerColor = Color.Black.copy(alpha = 0.4f),
+            contentColor = Color.White,
+            checkedContainerColor = Color.Black.copy(alpha = 0.25f),
+            checkedContentColor = Color.White
+        ),
+        border = BorderStroke(1.dp, Color.Transparent)
     ) {
         content()
     }

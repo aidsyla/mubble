@@ -25,58 +25,56 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.aidsyla.mubble.R
 import com.aidsyla.mubble.common.components.CircleImage
-import com.aidsyla.mubble.ui.theme.MubbleTheme
+import com.aidsyla.mubble.ui.theme.MubbleDesignSystem
 
 @Composable
 internal fun VideoPostDetails(
     modifier: Modifier = Modifier,
     isCaptionExpanded: Boolean,
-    onCaptionExpandChange: (Boolean) -> Unit,
+    onCaptionExpandChange: (Boolean) -> Unit
 ) {
     Row(
-        modifier =
-            modifier
-                .animateContentSize()
-                .padding(start = 16.dp, end = 0.dp, top = 4.dp),
+        modifier = modifier
+            .animateContentSize()
+            .padding(start = 16.dp, end = 0.dp, top = 4.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalAlignment = if (isCaptionExpanded) Alignment.Top else Alignment.CenterVertically,
+        verticalAlignment = if (isCaptionExpanded) Alignment.Top else Alignment.CenterVertically
     ) {
         CircleImage(
             modifier =
-                Modifier.graphicsLayer {
-                    shadowElevation = 6f
-                    shape = CircleShape
-                },
+            Modifier.graphicsLayer {
+                shadowElevation = 6f
+                shape = CircleShape
+            },
             size = 36.dp,
             painter = painterResource(R.drawable.profile_12),
             borderWidth = 0.2.dp,
-            borderColor = Color.Black.copy(alpha = 0.25f),
+            borderColor = Color.Black.copy(alpha = 0.25f)
         )
         CompositionLocalProvider(LocalRippleConfiguration provides null) {
             Column(
-                modifier =
-                    Modifier
-                        .weight(1f)
-                        .clickable {
-                            onCaptionExpandChange(!isCaptionExpanded)
-                        },
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable {
+                        onCaptionExpandChange(!isCaptionExpanded)
+                    }
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
                         text = "john_smith",
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
                         style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
-                        color = Color.White,
+                        color = Color.White
                     )
                     Text(
                         text = "4h",
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.White,
+                        color = Color.White
                     )
                 }
                 Text(
@@ -84,18 +82,18 @@ internal fun VideoPostDetails(
                     overflow = TextOverflow.Ellipsis,
                     maxLines = if (isCaptionExpanded) Int.MAX_VALUE else 1,
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color.White,
+                    color = Color.White
                 )
             }
         }
         IconButton(
             modifier = Modifier.requiredHeight(36.dp),
-            onClick = {},
+            onClick = {}
         ) {
             Icon(
-                painter = MubbleTheme.Icons.MoreHorizontal,
+                painter = MubbleDesignSystem.Icons.MoreHorizontal,
                 contentDescription = null,
-                tint = Color.White,
+                tint = Color.White
             )
         }
     }

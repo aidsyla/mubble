@@ -21,15 +21,15 @@ fun LoadingPulse() {
             initialValue = MaterialTheme.colorScheme.surfaceContainerLow,
             targetValue = MaterialTheme.colorScheme.surfaceContainerHigh,
             animationSpec =
-                infiniteRepeatable(
-                    animation = tween(600),
-                    repeatMode = RepeatMode.Reverse,
-                ),
+            infiniteRepeatable(
+                animation = tween(600),
+                repeatMode = RepeatMode.Reverse
+            )
         )
     Box(
         modifier =
-            Modifier
-                .fillMaxSize()
-                .background(color = color),
+        Modifier
+            .fillMaxSize()
+            .background(color = color)
     )
 }

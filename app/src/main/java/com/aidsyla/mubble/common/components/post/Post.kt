@@ -88,13 +88,14 @@ import com.aidsyla.mubble.common.components.CircleImage
 import com.aidsyla.mubble.common.components.SharePostBottomSheet
 import com.aidsyla.mubble.common.navigation.LocalNavAnimatedVisibilityScope
 import com.aidsyla.mubble.common.navigation.LocalSharedTransitionScope
-import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
-import com.aidsyla.mubble.common.navigation.shared_elements.PostSharedElementKey
-import com.aidsyla.mubble.common.navigation.shared_elements.PostSharedElementType
+import com.aidsyla.mubble.common.navigation.sharedelements.PostOrigin
+import com.aidsyla.mubble.common.navigation.sharedelements.PostSharedElementKey
+import com.aidsyla.mubble.common.navigation.sharedelements.PostSharedElementType
 import com.aidsyla.mubble.data.BubbleFeedItem
 import com.aidsyla.mubble.data.DummyPostRepository
 import com.aidsyla.mubble.data.FeedItem
 import com.aidsyla.mubble.data.ImagePostFeedItem
+import com.aidsyla.mubble.ui.theme.MubbleDesignSystem
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 import com.aidsyla.mubble.util.IndicationType
 import com.aidsyla.mubble.util.ScaleIndicationNodeFactory
@@ -115,7 +116,7 @@ fun BasePostLayout(
     isInPostDetails: Boolean = false,
     onUserClick: (String) -> Unit,
     onMoreClick: (postId: String) -> Unit,
-    onPostClick: (postId: String) -> Unit,
+    onPostClick: (postId: String) -> Unit
 ) {
     val sharedTransitionScope =
         LocalSharedTransitionScope.current
@@ -132,23 +133,23 @@ fun BasePostLayout(
             with(sharedTransitionScope) {
                 PostHeader(
                     sharedElementModifier =
-                        Modifier.sharedElement(
-                            rememberSharedContentState(
-                                key =
-                                    PostSharedElementKey(
-                                        postId = item.id,
-                                        origin = origin,
-                                        type = PostSharedElementType.ProfileAvatar,
-                                    ),
-                            ),
-                            animatedVisibilityScope = animatedContentScope,
+                    Modifier.sharedElement(
+                        rememberSharedContentState(
+                            key =
+                            PostSharedElementKey(
+                                postId = item.id,
+                                origin = origin,
+                                type = PostSharedElementType.ProfileAvatar
+                            )
                         ),
+                        animatedVisibilityScope = animatedContentScope
+                    ),
                     name = item.displayName,
                     avatarResId = item.userAvatarResId,
                     circleName = item.circleName,
                     datePosted = item.datePosted,
                     onUserClick = { onUserClick(item.id) },
-                    onMoreClick = { onMoreClick(item.id) },
+                    onMoreClick = { onMoreClick(item.id) }
                 )
             }
         }
@@ -158,29 +159,29 @@ fun BasePostLayout(
                 item.postDescription?.let {
                     PostDescription(
                         modifier =
-                            Modifier
-                                .padding(bottom = 8.dp),
+                        Modifier
+                            .padding(bottom = 8.dp),
                         description = it,
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
                 with(sharedTransitionScope) {
                     ZoomablePostMedia(
                         modifier =
-                            Modifier
-                                .sharedElement(
-                                    rememberSharedContentState(
-                                        key =
-                                            PostSharedElementKey(
-                                                postId = item.id,
-                                                origin = origin,
-                                                type = PostSharedElementType.Image,
-                                            ),
-                                    ),
-                                    animatedVisibilityScope = animatedContentScope,
+                        Modifier
+                            .sharedElement(
+                                rememberSharedContentState(
+                                    key =
+                                    PostSharedElementKey(
+                                        postId = item.id,
+                                        origin = origin,
+                                        type = PostSharedElementType.Image
+                                    )
                                 ),
+                                animatedVisibilityScope = animatedContentScope
+                            ),
                         imageRes = item.postImageResId,
-                        isInPostDetails = isInPostDetails,
+                        isInPostDetails = isInPostDetails
                     )
                 }
                 PostActions(
@@ -191,7 +192,7 @@ fun BasePostLayout(
                     onFilledChange = { isLiked = it },
                     onShareClick = {
                         openSheet = true
-                    },
+                    }
                 )
             }
 
@@ -199,19 +200,19 @@ fun BasePostLayout(
                 with(sharedTransitionScope) {
                     PostDescription(
                         modifier =
-                            Modifier.sharedBounds(
-                                rememberSharedContentState(
-                                    key =
-                                        PostSharedElementKey(
-                                            postId = item.id,
-                                            origin = origin,
-                                            type = PostSharedElementType.Bubble,
-                                        ),
-                                ),
-                                animatedVisibilityScope = animatedContentScope,
+                        Modifier.sharedBounds(
+                            rememberSharedContentState(
+                                key =
+                                PostSharedElementKey(
+                                    postId = item.id,
+                                    origin = origin,
+                                    type = PostSharedElementType.Bubble
+                                )
                             ),
+                            animatedVisibilityScope = animatedContentScope
+                        ),
                         description = item.postDescription,
-                        style = MaterialTheme.typography.bodyLarge,
+                        style = MaterialTheme.typography.bodyLarge
                     )
                 }
                 PostActions(
@@ -220,7 +221,7 @@ fun BasePostLayout(
                     shareCount = item.shareCount,
                     isLiked = isLiked,
                     onFilledChange = { isLiked = it },
-                    onShareClick = {},
+                    onShareClick = {}
                 )
             }
         }
@@ -230,22 +231,22 @@ fun BasePostLayout(
     if (useCard) {
         Card(
             modifier =
-                modifier
-                    .combinedClickable(
-                        interactionSource = mutableInteractionSource,
-                        indication = ScaleIndicationNodeFactory(IndicationType.CARDS),
-                        onClick = { onPostClick(item.id) },
-                        onDoubleClick = { isLiked = !isLiked },
-                    ).border(
-                        width = 0.1.dp,
-                        color = MaterialTheme.colorScheme.outlineVariant,
-                        shape = MaterialTheme.shapes.large,
-                    ),
+            modifier
+                .combinedClickable(
+                    interactionSource = mutableInteractionSource,
+                    indication = ScaleIndicationNodeFactory(IndicationType.CARDS),
+                    onClick = { onPostClick(item.id) },
+                    onDoubleClick = { isLiked = !isLiked }
+                ).border(
+                    width = 0.1.dp,
+                    color = MaterialTheme.colorScheme.outlineVariant,
+                    shape = MaterialTheme.shapes.large
+                ),
             shape = MaterialTheme.shapes.large,
             colors =
-                CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
-                ),
+            CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainer
+            )
         ) {
             content()
         }
@@ -257,7 +258,7 @@ fun BasePostLayout(
 
     SharePostBottomSheet(
         openSheet = openSheet,
-        onOpenChange = { openSheet = it },
+        onOpenChange = { openSheet = it }
     )
 }
 
@@ -270,69 +271,69 @@ fun PostHeader(
     datePosted: String,
     circleName: String?,
     onUserClick: () -> Unit,
-    onMoreClick: () -> Unit,
+    onMoreClick: () -> Unit
 ) {
     Row(
         modifier =
-            modifier
-                .padding(start = 16.dp, end = 4.dp)
-                .padding(vertical = 8.dp)
-                .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
+        modifier
+            .padding(start = 16.dp, end = 4.dp)
+            .padding(vertical = 8.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier =
-                Modifier
-                    .clip(shape = MaterialTheme.shapes.extraLarge)
-                    .clickable { onUserClick() }
-                    .padding(end = 8.dp),
+            Modifier
+                .clip(shape = MaterialTheme.shapes.extraLarge)
+                .clickable { onUserClick() }
+                .padding(end = 8.dp)
         ) {
             CircleImage(
                 modifier = sharedElementModifier,
                 painter = painterResource(avatarResId),
                 contentDescription = "$name's avatar",
-                borderWidth = 0.2.dp,
+                borderWidth = 0.2.dp
             )
             Column {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     Text(
                         modifier =
-                            Modifier
-                                .alignByBaseline(),
+                        Modifier
+                            .alignByBaseline(),
                         text = name,
                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
-                        color = MaterialTheme.colorScheme.onSurface,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
                         modifier = Modifier.alignByBaseline(),
                         text = datePosted,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 circleName?.let {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            painter = MubbleTheme.Icons.InCircle,
+                            painter = MubbleDesignSystem.Icons.InCircle,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurface,
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                         CircleImage(
                             painter = painterResource(R.drawable.post_3),
                             size = 24.dp,
-                            borderWidth = 0.1.dp,
+                            borderWidth = 0.1.dp
                         )
                         Text(
                             text = it,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -340,7 +341,7 @@ fun PostHeader(
         }
         Spacer(Modifier.weight(1f))
         IconButton(onClick = onMoreClick) {
-            Icon(painter = MubbleTheme.Icons.MoreHorizontal, contentDescription = "More options")
+            Icon(painter = MubbleDesignSystem.Icons.MoreHorizontal, contentDescription = "More options")
         }
     }
 }
@@ -349,16 +350,16 @@ fun PostHeader(
 fun PostDescription(
     modifier: Modifier = Modifier,
     style: TextStyle,
-    description: String,
+    description: String
 ) {
     Box(modifier = modifier) {
         Text(
             modifier =
-                Modifier
-                    .padding(horizontal = 16.dp),
+            Modifier
+                .padding(horizontal = 16.dp),
             text = description,
             style = style,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = MaterialTheme.colorScheme.onSurface
         )
     }
 }
@@ -366,7 +367,7 @@ fun PostDescription(
 suspend fun PointerInputScope.detectTransformGesturesCustom(
     panZoomLock: Boolean = false,
     onGestureEnd: () -> Unit = {},
-    onGesture: (centroid: Offset, pan: Offset, zoom: Float) -> Unit,
+    onGesture: (centroid: Offset, pan: Offset, zoom: Float) -> Unit
 ) {
     awaitEachGesture {
         var totalZoom = 1f
@@ -436,7 +437,7 @@ suspend fun PointerInputScope.detectTransformGesturesCustom(
 fun ZoomablePostMedia(
     modifier: Modifier = Modifier,
     @DrawableRes imageRes: Int,
-    isInPostDetails: Boolean,
+    isInPostDetails: Boolean
 ) {
     val coroutineScope = rememberCoroutineScope()
     val imagePadding = if (isInPostDetails) 0.dp else 16.dp
@@ -463,7 +464,7 @@ fun ZoomablePostMedia(
         } else {
             Offset(
                 x = (initialSize.width / 2f) * (zoom - 1) - offset.x * zoom,
-                y = (initialSize.height / 2f) * (zoom - 1) - offset.y * zoom,
+                y = (initialSize.height / 2f) * (zoom - 1) - offset.y * zoom
             )
         }
 
@@ -491,10 +492,10 @@ fun ZoomablePostMedia(
                     zoomAnimatable.animateTo(
                         targetValue = 1f,
                         animationSpec =
-                            tween(
-                                durationMillis = 300,
-                                easing = FastOutSlowInEasing,
-                            ),
+                        tween(
+                            durationMillis = 300,
+                            easing = FastOutSlowInEasing
+                        )
                     ) {
                         zoom = value
                     }
@@ -505,10 +506,10 @@ fun ZoomablePostMedia(
                     centerOffsetAnimatable.animateTo(
                         targetValue = Offset.Zero,
                         animationSpec =
-                            tween(
-                                durationMillis = 300,
-                                easing = FastOutSlowInEasing,
-                            ),
+                        tween(
+                            durationMillis = 300,
+                            easing = FastOutSlowInEasing
+                        )
                     ) {
                         centerOffset = value
                     }
@@ -519,10 +520,10 @@ fun ZoomablePostMedia(
                     backgroundAlphaAnim.animateTo(
                         targetValue = 0f,
                         animationSpec =
-                            tween(
-                                durationMillis = 300,
-                                easing = FastOutSlowInEasing,
-                            ),
+                        tween(
+                            durationMillis = 300,
+                            easing = FastOutSlowInEasing
+                        )
                     )
                 }
             joinAll(zoomJob, offsetJob, bgJob)
@@ -553,10 +554,10 @@ fun ZoomablePostMedia(
         Dialog(
             onDismissRequest = {},
             properties =
-                DialogProperties(
-                    usePlatformDefaultWidth = false,
-                    decorFitsSystemWindows = false,
-                ),
+            DialogProperties(
+                usePlatformDefaultWidth = false,
+                decorFitsSystemWindows = false
+            )
         ) {
             val view = LocalView.current
             val dialogWindowProvider = view.parent as DialogWindowProvider
@@ -565,46 +566,46 @@ fun ZoomablePostMedia(
             LaunchedEffect(view) {
                 window.setFlags(
                     WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
                 )
             }
             Box(
                 modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .background(color = Color.Black.copy(alpha = backgroundAlphaAnim.value))
-                        .graphicsLayer {
-                            translationX = initialOffset.x
-                            translationY = initialOffset.y
-                        }.padding(end = imagePadding),
+                Modifier
+                    .fillMaxSize()
+                    .background(color = Color.Black.copy(alpha = backgroundAlphaAnim.value))
+                    .graphicsLayer {
+                        translationX = initialOffset.x
+                        translationY = initialOffset.y
+                    }.padding(end = imagePadding)
             ) {
                 Box(modifier = Modifier.wrapContentSize()) {
                     Box(
                         modifier =
-                            Modifier
-                                .matchParentSize(),
-                        contentAlignment = contentAlignment,
+                        Modifier
+                            .matchParentSize(),
+                        contentAlignment = contentAlignment
                     ) {
                         Box(
                             modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .height(imageHeight)
-                                    .background(MaterialTheme.colorScheme.surfaceContainerHighest),
+                            Modifier
+                                .fillMaxWidth()
+                                .height(imageHeight)
+                                .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                         )
                     }
                     Image(
                         painter = painterResource(imageRes),
                         contentDescription = null,
                         modifier =
-                            Modifier
-                                .graphicsLayer(
-                                    scaleX = zoomAnimatable.value,
-                                    scaleY = zoomAnimatable.value,
-                                    translationX = centerOffsetAnimatable.value.x,
-                                    translationY = centerOffsetAnimatable.value.y,
-                                ).fillMaxWidth(),
-                        contentScale = ContentScale.FillWidth,
+                        Modifier
+                            .graphicsLayer(
+                                scaleX = zoomAnimatable.value,
+                                scaleY = zoomAnimatable.value,
+                                translationX = centerOffsetAnimatable.value.x,
+                                translationY = centerOffsetAnimatable.value.y
+                            ).fillMaxWidth(),
+                        contentScale = ContentScale.FillWidth
                     )
                 }
             }
@@ -613,69 +614,69 @@ fun ZoomablePostMedia(
 
     Box(
         modifier = Modifier.wrapContentSize(),
-        contentAlignment = Alignment.Center,
+        contentAlignment = Alignment.Center
     ) {
         Image(
             painter = painterResource(imageRes),
             contentDescription = null,
             modifier =
-                modifier
-                    .onGloballyPositioned { coordinates ->
-                        layoutCoordinates = coordinates
-                        initialSize = coordinates.size
-                    }.then(
-                        if (isAnimatingBack) {
-                            Modifier
-                        } else {
-                            Modifier.pointerInput(Unit) {
-                                detectTransformGesturesCustom(
-                                    onGestureEnd = {
-                                        resetToCenter()
-                                    },
-                                ) { centroid, pan, gestureZoom ->
-                                    layoutCoordinates?.let { c ->
-                                        initialOffset = c.positionInWindow()
+            modifier
+                .onGloballyPositioned { coordinates ->
+                    layoutCoordinates = coordinates
+                    initialSize = coordinates.size
+                }.then(
+                    if (isAnimatingBack) {
+                        Modifier
+                    } else {
+                        Modifier.pointerInput(Unit) {
+                            detectTransformGesturesCustom(
+                                onGestureEnd = {
+                                    resetToCenter()
+                                }
+                            ) { centroid, pan, gestureZoom ->
+                                layoutCoordinates?.let { c ->
+                                    initialOffset = c.positionInWindow()
 
-                                        val boxTop = c.boundsInWindow().top
-                                        val boxBottom = c.boundsInWindow().bottom
+                                    val boxTop = c.boundsInWindow().top
+                                    val boxBottom = c.boundsInWindow().bottom
 
-                                        val visibleTop = boxTop.coerceIn(0f, screenHeightPx)
-                                        val visibleBottom = boxBottom.coerceIn(0f, screenHeightPx)
+                                    val visibleTop = boxTop.coerceIn(0f, screenHeightPx)
+                                    val visibleBottom = boxBottom.coerceIn(0f, screenHeightPx)
 
-                                        val visibleHeight = visibleBottom - visibleTop
+                                    val visibleHeight = visibleBottom - visibleTop
 
-                                        imageSize = visibleHeight
-                                    }
-                                    hasLaunched = true
-                                    val oldZoom = zoom
-                                    val newZoom = max(zoom * gestureZoom, 0.7f)
+                                    imageSize = visibleHeight
+                                }
+                                hasLaunched = true
+                                val oldZoom = zoom
+                                val newZoom = max(zoom * gestureZoom, 0.7f)
 
-                                    offset = (offset + centroid / oldZoom) -
-                                        (centroid / newZoom + pan / oldZoom)
-                                    zoom = newZoom
+                                offset = (offset + centroid / oldZoom) -
+                                    (centroid / newZoom + pan / oldZoom)
+                                zoom = newZoom
 
-                                    val maxScale = 1.6f
-                                    val t = ((newZoom - 1f) / (maxScale - 1f)).coerceIn(0f, 1f)
+                                val maxScale = 1.6f
+                                val t = ((newZoom - 1f) / (maxScale - 1f)).coerceIn(0f, 1f)
 
-                                    coroutineScope.launch {
-                                        if (backgroundAlphaAnim.value == 0f) {
-                                            backgroundAlphaAnim.animateTo(
-                                                targetValue = 0.2f,
-                                                animationSpec =
-                                                    tween(
-                                                        durationMillis = 100,
-                                                        easing = FastOutSlowInEasing,
-                                                    ),
+                                coroutineScope.launch {
+                                    if (backgroundAlphaAnim.value == 0f) {
+                                        backgroundAlphaAnim.animateTo(
+                                            targetValue = 0.2f,
+                                            animationSpec =
+                                            tween(
+                                                durationMillis = 100,
+                                                easing = FastOutSlowInEasing
                                             )
-                                        } else if (!backgroundAlphaAnim.isRunning) {
-                                            backgroundAlphaAnim.snapTo(lerp(0.2f, 0.7f, t))
-                                        }
+                                        )
+                                    } else if (!backgroundAlphaAnim.isRunning) {
+                                        backgroundAlphaAnim.snapTo(lerp(0.2f, 0.7f, t))
                                     }
                                 }
                             }
-                        },
-                    ).fillMaxWidth(),
-            contentScale = ContentScale.FillWidth,
+                        }
+                    }
+                ).fillMaxWidth(),
+            contentScale = ContentScale.FillWidth
         )
     }
 }
@@ -686,13 +687,13 @@ fun BouncingHeartIcon(
     isPostLiked: Boolean,
     onLikeChange: (Boolean) -> Unit,
     count: Int,
-    onClick: () -> Unit,
+    onClick: () -> Unit
 ) {
     val sizeAnim = remember { Animatable(0f) }
     val offsetAnim = remember { Animatable(Offset.Zero, Offset.VectorConverter) }
 
     val alpha by animateFloatAsState(
-        targetValue = if (sizeAnim.value != 0f) 0f else 1f,
+        targetValue = if (sizeAnim.value != 0f) 0f else 1f
     )
 
     LaunchedEffect(isPostLiked) {
@@ -702,13 +703,13 @@ fun BouncingHeartIcon(
                 launch {
                     sizeAnim.animateTo(
                         targetValue = 2.1f,
-                        animationSpec = tween(durationMillis = 250, easing = EaseOutQuad),
+                        animationSpec = tween(durationMillis = 250, easing = EaseOutQuad)
                     )
                 }
                 launch {
                     offsetAnim.animateTo(
                         targetValue = Offset(x = 0f, y = -100f),
-                        animationSpec = tween(250),
+                        animationSpec = tween(250)
                     )
                 }
             }
@@ -717,13 +718,13 @@ fun BouncingHeartIcon(
                 launch {
                     sizeAnim.animateTo(
                         targetValue = 1f,
-                        animationSpec = tween(durationMillis = 200, easing = EaseInOutCubic),
+                        animationSpec = tween(durationMillis = 200, easing = EaseInOutCubic)
                     )
                 }
                 launch {
                     offsetAnim.animateTo(
                         targetValue = Offset.Zero,
-                        animationSpec = tween(250),
+                        animationSpec = tween(250)
                     )
                 }
             }
@@ -735,7 +736,7 @@ fun BouncingHeartIcon(
                 launch {
                     offsetAnim.animateTo(
                         targetValue = Offset.Zero,
-                        animationSpec = tween(250),
+                        animationSpec = tween(250)
                     )
                 }
             }
@@ -743,39 +744,39 @@ fun BouncingHeartIcon(
     }
     Row(
         modifier =
-            Modifier
-                .height(48.dp)
-                .clickableWithScaleIndication {
-                    onClick()
-                    onLikeChange(!isPostLiked)
-                },
+        Modifier
+            .height(48.dp)
+            .clickableWithScaleIndication {
+                onClick()
+                onLikeChange(!isPostLiked)
+            },
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(7.dp),
+        horizontalArrangement = Arrangement.spacedBy(7.dp)
     ) {
         Box {
             Icon(
                 modifier =
-                    Modifier
-                        .size(26.dp)
-                        .alpha(alpha),
-                painter = MubbleTheme.Icons.Favorite,
+                Modifier
+                    .size(26.dp)
+                    .alpha(alpha),
+                painter = MubbleDesignSystem.Icons.Favorite,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurface,
+                tint = MaterialTheme.colorScheme.onSurface
             )
             if (sizeAnim.value > 0f) {
                 Icon(
                     modifier =
-                        Modifier
-                            .size(26.dp)
-                            .graphicsLayer {
-                                translationX = offsetAnim.value.x
-                                translationY = offsetAnim.value.y
-                                scaleX = sizeAnim.value
-                                scaleY = sizeAnim.value
-                            },
-                    painter = MubbleTheme.Icons.Heart,
+                    Modifier
+                        .size(26.dp)
+                        .graphicsLayer {
+                            translationX = offsetAnim.value.x
+                            translationY = offsetAnim.value.y
+                            scaleX = sizeAnim.value
+                            scaleY = sizeAnim.value
+                        },
+                    painter = MubbleDesignSystem.Icons.Heart,
                     contentDescription = null,
-                    tint = Color.Unspecified,
+                    tint = Color.Unspecified
                 )
             }
         }
@@ -784,9 +785,9 @@ fun BouncingHeartIcon(
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
             style =
-                MaterialTheme.typography.labelMedium.copy(
-                    fontWeight = FontWeight.Medium,
-                ),
+            MaterialTheme.typography.labelMedium.copy(
+                fontWeight = FontWeight.Medium
+            )
         )
     }
 }
@@ -799,32 +800,32 @@ fun PostActions(
     likeCount: Int,
     commentCount: Int,
     shareCount: Int,
-    onShareClick: () -> Unit,
+    onShareClick: () -> Unit
 ) {
     Row(
         modifier =
-            modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+        modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         BouncingHeartIcon(
             count = likeCount,
             isPostLiked = isLiked,
             onLikeChange = onFilledChange,
-            onClick = {},
+            onClick = {}
         )
         ActionItem(
-            painter = MubbleTheme.Icons.Comment,
+            painter = MubbleDesignSystem.Icons.Comment,
             count = commentCount,
-            onClick = {},
+            onClick = {}
         )
         Spacer(modifier = Modifier.weight(1f))
         ActionItem(
-            painter = MubbleTheme.Icons.SendNew,
+            painter = MubbleDesignSystem.Icons.SendNew,
             count = shareCount,
-            onClick = onShareClick,
+            onClick = onShareClick
         )
     }
 }
@@ -835,26 +836,26 @@ fun ActionItem(
     modifier: Modifier = Modifier,
     painter: Painter,
     count: Int,
-    onClick: () -> Unit,
+    onClick: () -> Unit
 ) {
     Row(
         modifier =
-            modifier
-                .height(48.dp)
-                .wrapContentWidth()
-                .clickableWithScaleIndication { onClick() },
+        modifier
+            .height(48.dp)
+            .wrapContentWidth()
+            .clickableWithScaleIndication { onClick() },
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(7.dp),
+        horizontalArrangement = Arrangement.spacedBy(7.dp)
     ) {
         Icon(
             modifier = Modifier.size(26.dp),
             painter = painter,
-            contentDescription = null,
+            contentDescription = null
         )
         if (count > 0) {
             Text(
                 count.toString(),
-                style = MaterialTheme.typography.labelMediumEmphasized,
+                style = MaterialTheme.typography.labelMediumEmphasized
             )
         }
     }
@@ -880,7 +881,7 @@ private fun PostCardPreview() {
             useCard = true,
             onUserClick = {},
             onMoreClick = {},
-            onPostClick = {},
+            onPostClick = {}
         )
     }
 }
@@ -895,7 +896,7 @@ private fun PostDetailsPreview() {
                 useCard = false,
                 onUserClick = {},
                 onMoreClick = {},
-                onPostClick = {},
+                onPostClick = {}
             )
         }
     }
@@ -911,7 +912,7 @@ private fun BubbleCardPreview() {
             useCard = true,
             onUserClick = {},
             onMoreClick = {},
-            onPostClick = {},
+            onPostClick = {}
         )
     }
 }
@@ -926,7 +927,7 @@ private fun BubbleDetailsPreview() {
                 useCard = false,
                 onUserClick = {},
                 onMoreClick = {},
-                onPostClick = {},
+                onPostClick = {}
             )
         }
     }

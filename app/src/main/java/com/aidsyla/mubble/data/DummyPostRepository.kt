@@ -17,7 +17,7 @@ object DummyPostRepository {
                 likeCount = 15,
                 commentCount = 3,
                 shareCount = 1,
-                circleName = "Nature Lovers",
+                circleName = "Nature Lovers"
             ),
             ImagePostFeedItem(
                 id = "user_2",
@@ -30,7 +30,7 @@ object DummyPostRepository {
                 likeCount = 42,
                 commentCount = 8,
                 shareCount = 5,
-                circleName = "Travel Buddies",
+                circleName = "Travel Buddies"
             ),
             ImagePostFeedItem(
                 id = "user_3",
@@ -43,7 +43,7 @@ object DummyPostRepository {
                 likeCount = 78,
                 commentCount = 12,
                 shareCount = 9,
-                circleName = null,
+                circleName = null
             ),
             ImagePostFeedItem(
                 id = "user_4",
@@ -56,7 +56,7 @@ object DummyPostRepository {
                 likeCount = 23,
                 commentCount = 7,
                 shareCount = 2,
-                circleName = "Coffee Lovers",
+                circleName = "Coffee Lovers"
             ),
             ImagePostFeedItem(
                 id = "user_5",
@@ -69,7 +69,7 @@ object DummyPostRepository {
                 likeCount = 5,
                 commentCount = 1,
                 shareCount = 0,
-                circleName = null,
+                circleName = null
             ),
             ImagePostFeedItem(
                 id = "user_6",
@@ -82,7 +82,7 @@ object DummyPostRepository {
                 likeCount = 67,
                 commentCount = 14,
                 shareCount = 4,
-                circleName = "Night Owls",
+                circleName = "Night Owls"
             ),
             ImagePostFeedItem(
                 id = "user_7",
@@ -95,7 +95,7 @@ object DummyPostRepository {
                 likeCount = 34,
                 commentCount = 6,
                 shareCount = 3,
-                circleName = "Hikers Club",
+                circleName = "Hikers Club"
             ),
             ImagePostFeedItem(
                 id = "user_8",
@@ -108,7 +108,7 @@ object DummyPostRepository {
                 likeCount = 89,
                 commentCount = 20,
                 shareCount = 10,
-                circleName = null,
+                circleName = null
             ),
             ImagePostFeedItem(
                 id = "user_9",
@@ -121,7 +121,7 @@ object DummyPostRepository {
                 likeCount = 12,
                 commentCount = 4,
                 shareCount = 1,
-                circleName = "Photography",
+                circleName = "Photography"
             ),
             ImagePostFeedItem(
                 id = "user_10",
@@ -134,7 +134,7 @@ object DummyPostRepository {
                 likeCount = 55,
                 commentCount = 11,
                 shareCount = 6,
-                circleName = "Stargazers",
+                circleName = "Stargazers"
             ),
             ImagePostFeedItem(
                 id = "user_11",
@@ -147,7 +147,7 @@ object DummyPostRepository {
                 likeCount = 100,
                 commentCount = 25,
                 shareCount = 12,
-                circleName = null,
+                circleName = null
             ),
             ImagePostFeedItem(
                 id = "user_12",
@@ -160,7 +160,7 @@ object DummyPostRepository {
                 likeCount = 3,
                 commentCount = 0,
                 shareCount = 0,
-                circleName = "Classic Fans",
+                circleName = "Classic Fans"
             ),
             ImagePostFeedItem(
                 id = "user_13",
@@ -173,7 +173,7 @@ object DummyPostRepository {
                 likeCount = 77,
                 commentCount = 19,
                 shareCount = 8,
-                circleName = "Music Heads",
+                circleName = "Music Heads"
             ),
             ImagePostFeedItem(
                 id = "user_14",
@@ -186,7 +186,7 @@ object DummyPostRepository {
                 likeCount = 29,
                 commentCount = 5,
                 shareCount = 2,
-                circleName = null,
+                circleName = null
             ),
             ImagePostFeedItem(
                 id = "user_15",
@@ -199,7 +199,7 @@ object DummyPostRepository {
                 likeCount = 150,
                 commentCount = 35,
                 shareCount = 20,
-                circleName = "Rock Legends",
+                circleName = "Rock Legends"
             ),
             BubbleFeedItem(
                 id = "user_16",
@@ -211,7 +211,7 @@ object DummyPostRepository {
                 likeCount = 22,
                 commentCount = 5,
                 shareCount = 1,
-                circleName = "City Souls",
+                circleName = "City Souls"
             ),
             BubbleFeedItem(
                 id = "user_17",
@@ -223,7 +223,7 @@ object DummyPostRepository {
                 likeCount = 18,
                 commentCount = 3,
                 shareCount = 0,
-                circleName = null,
+                circleName = null
             ),
             BubbleFeedItem(
                 id = "user_18",
@@ -235,7 +235,7 @@ object DummyPostRepository {
                 likeCount = 30,
                 commentCount = 7,
                 shareCount = 2,
-                circleName = "Daily Wins",
+                circleName = "Daily Wins"
             ),
             BubbleFeedItem(
                 id = "user_19",
@@ -247,7 +247,7 @@ object DummyPostRepository {
                 likeCount = 12,
                 commentCount = 1,
                 shareCount = 0,
-                circleName = null,
+                circleName = null
             ),
             BubbleFeedItem(
                 id = "user_20",
@@ -259,7 +259,7 @@ object DummyPostRepository {
                 likeCount = 25,
                 commentCount = 4,
                 shareCount = 1,
-                circleName = "Growth Mindset",
+                circleName = "Growth Mindset"
             ),
             BubbleFeedItem(
                 id = "user_21",
@@ -271,7 +271,7 @@ object DummyPostRepository {
                 likeCount = 40,
                 commentCount = 10,
                 shareCount = 5,
-                circleName = null,
+                circleName = null
             ),
             BubbleFeedItem(
                 id = "user_22",
@@ -283,7 +283,7 @@ object DummyPostRepository {
                 likeCount = 33,
                 commentCount = 6,
                 shareCount = 2,
-                circleName = "Mindful Moments",
+                circleName = "Mindful Moments"
             ),
             BubbleFeedItem(
                 id = "user_23",
@@ -295,7 +295,7 @@ object DummyPostRepository {
                 likeCount = 5,
                 commentCount = 0,
                 shareCount = 0,
-                circleName = null,
+                circleName = null
             ),
             BubbleFeedItem(
                 id = "user_24",
@@ -307,7 +307,7 @@ object DummyPostRepository {
                 likeCount = 28,
                 commentCount = 3,
                 shareCount = 1,
-                circleName = "Adventurers",
+                circleName = "Adventurers"
             ),
             BubbleFeedItem(
                 id = "user_25",
@@ -319,7 +319,7 @@ object DummyPostRepository {
                 likeCount = 19,
                 commentCount = 2,
                 shareCount = 0,
-                circleName = null,
+                circleName = null
             ),
             BubbleFeedItem(
                 id = "user_26",
@@ -331,7 +331,7 @@ object DummyPostRepository {
                 likeCount = 14,
                 commentCount = 1,
                 shareCount = 0,
-                circleName = "Reflections",
+                circleName = "Reflections"
             ),
             BubbleFeedItem(
                 id = "user_27",
@@ -343,7 +343,7 @@ object DummyPostRepository {
                 likeCount = 11,
                 commentCount = 2,
                 shareCount = 0,
-                circleName = null,
+                circleName = null
             ),
             BubbleFeedItem(
                 id = "user_28",
@@ -355,7 +355,7 @@ object DummyPostRepository {
                 likeCount = 45,
                 commentCount = 9,
                 shareCount = 4,
-                circleName = "Night Owls",
+                circleName = "Night Owls"
             ),
             BubbleFeedItem(
                 id = "user_29",
@@ -367,7 +367,7 @@ object DummyPostRepository {
                 likeCount = 16,
                 commentCount = 3,
                 shareCount = 1,
-                circleName = null,
+                circleName = null
             ),
             BubbleFeedItem(
                 id = "user_30",
@@ -379,7 +379,7 @@ object DummyPostRepository {
                 likeCount = 52,
                 commentCount = 15,
                 shareCount = 6,
-                circleName = "Travel Buddies",
-            ),
+                circleName = "Travel Buddies"
+            )
         )
 }

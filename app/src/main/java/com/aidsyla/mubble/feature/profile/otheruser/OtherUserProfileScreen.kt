@@ -1,4 +1,4 @@
-package com.aidsyla.mubble.feature.profile.other_user
+package com.aidsyla.mubble.feature.profile.otheruser
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -8,12 +8,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
+import com.aidsyla.mubble.common.navigation.sharedelements.PostOrigin
 import com.aidsyla.mubble.feature.profile.components.FullScreenMediaType
 import com.aidsyla.mubble.feature.profile.components.MubbleProfileTabPager
 import com.aidsyla.mubble.feature.profile.components.ProfileHeader
-import com.aidsyla.mubble.feature.profile.current_user.ProfileBubbleGrid
-import com.aidsyla.mubble.feature.profile.current_user.ProfilePostGrid
+import com.aidsyla.mubble.feature.profile.currentuser.ProfileBubbleGrid
+import com.aidsyla.mubble.feature.profile.currentuser.ProfilePostGrid
 
 @Composable
 fun OtherUserProfileScreen(
@@ -22,7 +22,7 @@ fun OtherUserProfileScreen(
     onPostClick: (postId: String, origin: PostOrigin) -> Unit,
     onMediaClick: (Int, FullScreenMediaType) -> Unit,
     onFollowersClick: () -> Unit,
-    onFollowingClick: () -> Unit,
+    onFollowingClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -45,22 +45,22 @@ fun OtherUserProfileScreen(
                         onHasBeenClickedChange = { isClicked = it },
                         onMediaClick = onMediaClick,
                         onFollowersClick = onFollowersClick,
-                        onFollowingClick = onFollowingClick,
+                        onFollowingClick = onFollowingClick
                     )
                 },
                 firstPage = {
                     ProfilePostGrid(
                         items = state.posts,
-                        onPostClick = onPostClick,
+                        onPostClick = onPostClick
                     )
                 },
                 secondPage = {
                     ProfileBubbleGrid(
                         items = state.bubbles,
-                        onPostClick = onPostClick,
+                        onPostClick = onPostClick
                     )
                 },
-                onBackClick = onBackClick,
+                onBackClick = onBackClick
             )
         }
     }

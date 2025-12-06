@@ -1,7 +1,7 @@
 package com.aidsyla.mubble.common.navigation
 
 import androidx.annotation.DrawableRes
-import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
+import com.aidsyla.mubble.common.navigation.sharedelements.PostOrigin
 import com.aidsyla.mubble.feature.profile.components.FullScreenMediaType
 import com.aidsyla.mubble.model.FollowType
 import kotlinx.serialization.Serializable
@@ -19,38 +19,38 @@ import kotlinx.serialization.Serializable
 @Serializable object ProfileRoute
 
 @Serializable data class OtherProfileRoute(
-    val userId: String? = null,
+    val userId: String? = null
 )
 
 @Serializable data class CircleRoute(
     val circleId: String,
-    val origin: PostOrigin,
+    val origin: PostOrigin
 )
 
 @Serializable data class PostDetailsRoute(
     val postId: String,
-    val origin: PostOrigin,
+    val origin: PostOrigin
 )
 
 @Serializable data class UserProfileRoute(
-    val userId: String,
+    val userId: String
 )
 
 @Serializable data class UserPostsRoute(
-    val userId: String,
+    val userId: String
 )
 
 @Serializable data class FollowScreenRoute(
-    val type: FollowType,
+    val type: FollowType
 )
 
 @Serializable data class OtherFollowScreenRoute(
-    val type: FollowType,
+    val type: FollowType
 )
 
 @Serializable data class FullScreenMediaViewer(
     @param:DrawableRes val imageId: Int,
-    val type: FullScreenMediaType,
+    val type: FullScreenMediaType
 )
 
 @Serializable object SettingsStartRoute
@@ -64,9 +64,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ChatRoute(
     val chatId: String,
-    val otherUserId: String,
+    val otherUserId: String
 )
 
 @Serializable data class ChatDetailsRoute(
-    val otherUserId: String,
+    val otherUserId: String
 )

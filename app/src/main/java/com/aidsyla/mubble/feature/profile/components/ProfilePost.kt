@@ -22,9 +22,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.aidsyla.mubble.common.navigation.LocalNavAnimatedVisibilityScope
 import com.aidsyla.mubble.common.navigation.LocalSharedTransitionScope
-import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
-import com.aidsyla.mubble.common.navigation.shared_elements.PostSharedElementKey
-import com.aidsyla.mubble.common.navigation.shared_elements.PostSharedElementType
+import com.aidsyla.mubble.common.navigation.sharedelements.PostOrigin
+import com.aidsyla.mubble.common.navigation.sharedelements.PostSharedElementKey
+import com.aidsyla.mubble.common.navigation.sharedelements.PostSharedElementType
 import com.aidsyla.mubble.data.ImagePostFeedItem
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -32,7 +32,7 @@ import com.aidsyla.mubble.data.ImagePostFeedItem
 fun ProfilePost(
     modifier: Modifier = Modifier,
     item: ImagePostFeedItem,
-    onPostClick: (postId: String) -> Unit,
+    onPostClick: (postId: String) -> Unit
 ) {
     val sharedTransitionScope =
         LocalSharedTransitionScope.current
@@ -52,47 +52,47 @@ fun ProfilePost(
     with(sharedTransitionScope) {
         Box(
             modifier =
-                Modifier.sharedBounds(
-                    rememberSharedContentState(
-                        key =
-                            PostSharedElementKey(
-                                postId = item.id,
-                                origin = PostOrigin.ProfileMedia,
-                                type = PostSharedElementType.Bounds,
-                            ),
-                    ),
-                    resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds(contentScale = ContentScale.Crop),
-                    clipInOverlayDuringTransition =
-                        OverlayClip(
-                            RoundedCornerShape(
-                                roundedCornerAnimation,
-                            ),
-                        ),
-                    enter = EnterTransition.None,
-                    exit = ExitTransition.None,
-                    animatedVisibilityScope = animatedContentScope,
+            Modifier.sharedBounds(
+                rememberSharedContentState(
+                    key =
+                    PostSharedElementKey(
+                        postId = item.id,
+                        origin = PostOrigin.ProfileMedia,
+                        type = PostSharedElementType.Bounds
+                    )
                 ),
+                resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds(contentScale = ContentScale.Crop),
+                clipInOverlayDuringTransition =
+                OverlayClip(
+                    RoundedCornerShape(
+                        roundedCornerAnimation
+                    )
+                ),
+                enter = EnterTransition.None,
+                exit = ExitTransition.None,
+                animatedVisibilityScope = animatedContentScope
+            )
         ) {
             Image(
                 painter = painterResource(item.postImageResId),
                 contentDescription = null,
                 modifier =
-                    modifier
-                        .fillMaxWidth()
-                        .clickable { onPostClick(item.id) }
-                        .aspectRatio(1f)
-                        .sharedElement(
-                            rememberSharedContentState(
-                                key =
-                                    PostSharedElementKey(
-                                        postId = item.id,
-                                        origin = PostOrigin.ProfileMedia,
-                                        type = PostSharedElementType.Image,
-                                    ),
-                            ),
-                            animatedVisibilityScope = animatedContentScope,
-                        ).clip(shape = MaterialTheme.shapes.medium),
-                contentScale = ContentScale.Crop,
+                modifier
+                    .fillMaxWidth()
+                    .clickable { onPostClick(item.id) }
+                    .aspectRatio(1f)
+                    .sharedElement(
+                        rememberSharedContentState(
+                            key =
+                            PostSharedElementKey(
+                                postId = item.id,
+                                origin = PostOrigin.ProfileMedia,
+                                type = PostSharedElementType.Image
+                            )
+                        ),
+                        animatedVisibilityScope = animatedContentScope
+                    ).clip(shape = MaterialTheme.shapes.medium),
+                contentScale = ContentScale.Crop
             )
         }
     }

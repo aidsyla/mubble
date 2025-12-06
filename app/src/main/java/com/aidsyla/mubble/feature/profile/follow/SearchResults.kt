@@ -20,10 +20,10 @@ import com.aidsyla.mubble.data.UserRepo
 @Composable
 fun SearchResults(
     onResultClick: (String) -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize()
     ) {
         items(UserRepo.dummyUsers) {
             val resultText = it.username
@@ -33,15 +33,15 @@ fun SearchResults(
                 leadingContent = {
                     CircleImage(
                         painter = painterResource(it.profilePictureResId),
-                        borderWidth = 0.1.dp,
+                        borderWidth = 0.1.dp
                     )
                 },
                 colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                 modifier =
-                    Modifier
-                        .clickable { onResultClick(resultText) }
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 4.dp),
+                Modifier
+                    .clickable { onResultClick(resultText) }
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 4.dp)
             )
         }
     }

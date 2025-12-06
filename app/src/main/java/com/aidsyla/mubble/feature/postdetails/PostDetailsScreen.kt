@@ -59,10 +59,11 @@ import com.aidsyla.mubble.common.components.post.BasePostLayout
 import com.aidsyla.mubble.common.components.post.CommentItem
 import com.aidsyla.mubble.common.navigation.LocalNavAnimatedVisibilityScope
 import com.aidsyla.mubble.common.navigation.LocalSharedTransitionScope
-import com.aidsyla.mubble.common.navigation.shared_elements.PostOrigin
-import com.aidsyla.mubble.common.navigation.shared_elements.PostSharedElementKey
-import com.aidsyla.mubble.common.navigation.shared_elements.PostSharedElementType
+import com.aidsyla.mubble.common.navigation.sharedelements.PostOrigin
+import com.aidsyla.mubble.common.navigation.sharedelements.PostSharedElementKey
+import com.aidsyla.mubble.common.navigation.sharedelements.PostSharedElementType
 import com.aidsyla.mubble.data.DummyCommentRepository
+import com.aidsyla.mubble.ui.theme.MubbleDesignSystem
 import com.aidsyla.mubble.ui.theme.MubbleTheme
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
@@ -71,7 +72,7 @@ fun PostDetailsScreen(
     origin: PostOrigin,
     onUserClick: (String) -> Unit,
     onBackClick: () -> Unit,
-    viewModel: PostDetailsViewModel = hiltViewModel(),
+    viewModel: PostDetailsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -101,27 +102,27 @@ fun PostDetailsScreen(
             is PostDetailsUiState.Success -> {
                 Scaffold(
                     modifier =
-                        Modifier
-                            .sharedBounds(
-                                rememberSharedContentState(
-                                    key =
-                                        PostSharedElementKey(
-                                            postId = state.postItem.id,
-                                            origin = origin,
-                                            type = PostSharedElementType.Bounds,
-                                        ),
-                                ),
-                                resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds(contentScale = ContentScale.Crop),
-                                clipInOverlayDuringTransition =
-                                    OverlayClip(
-                                        RoundedCornerShape(
-                                            roundedCornerAnimation,
-                                        ),
-                                    ),
-                                enter = EnterTransition.None,
-                                exit = ExitTransition.None,
-                                animatedVisibilityScope = animatedContentScope,
+                    Modifier
+                        .sharedBounds(
+                            rememberSharedContentState(
+                                key =
+                                PostSharedElementKey(
+                                    postId = state.postItem.id,
+                                    origin = origin,
+                                    type = PostSharedElementType.Bounds
+                                )
                             ),
+                            resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds(contentScale = ContentScale.Crop),
+                            clipInOverlayDuringTransition =
+                            OverlayClip(
+                                RoundedCornerShape(
+                                    roundedCornerAnimation
+                                )
+                            ),
+                            enter = EnterTransition.None,
+                            exit = ExitTransition.None,
+                            animatedVisibilityScope = animatedContentScope
+                        ),
                     topBar = {
                         Box {
                             TopAppBar(
@@ -130,82 +131,82 @@ fun PostDetailsScreen(
                                         verticalAlignment = Alignment.CenterVertically,
                                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                                         modifier =
-                                            Modifier
-                                                .clip(shape = MaterialTheme.shapes.extraLarge)
-                                                .clickable {
-                                                    onUserClick(state.postItem.id)
-                                                }.padding(end = 8.dp),
+                                        Modifier
+                                            .clip(shape = MaterialTheme.shapes.extraLarge)
+                                            .clickable {
+                                                onUserClick(state.postItem.id)
+                                            }.padding(end = 8.dp)
                                     ) {
                                         with(sharedTransitionScope) {
                                             CircleImage(
                                                 modifier =
-                                                    Modifier.sharedElement(
-                                                        rememberSharedContentState(
-                                                            key =
-                                                                PostSharedElementKey(
-                                                                    postId = state.postItem.id,
-                                                                    origin = origin,
-                                                                    type = PostSharedElementType.ProfileAvatar,
-                                                                ),
-                                                        ),
-                                                        animatedVisibilityScope = animatedContentScope,
+                                                Modifier.sharedElement(
+                                                    rememberSharedContentState(
+                                                        key =
+                                                        PostSharedElementKey(
+                                                            postId = state.postItem.id,
+                                                            origin = origin,
+                                                            type = PostSharedElementType.ProfileAvatar
+                                                        )
                                                     ),
+                                                    animatedVisibilityScope = animatedContentScope
+                                                ),
                                                 painter = painterResource(state.postItem.userAvatarResId),
                                                 borderWidth = 0.1.dp,
-                                                contentDescription = "avatar",
+                                                contentDescription = "avatar"
                                             )
                                         }
                                         Column {
                                             Row(
-                                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                                horizontalArrangement = Arrangement.spacedBy(6.dp)
                                             ) {
                                                 Text(
                                                     modifier =
-                                                        Modifier
-                                                            .alignByBaseline()
-                                                            .sharedBounds(
-                                                                rememberSharedContentState(
-                                                                    PostSharedElementKey(
-                                                                        postId = state.postItem.id,
-                                                                        origin = origin,
-                                                                        type = PostSharedElementType.DisplayName,
-                                                                    ),
-                                                                ),
-                                                                animatedVisibilityScope = animatedContentScope,
+                                                    Modifier
+                                                        .alignByBaseline()
+                                                        .sharedBounds(
+                                                            rememberSharedContentState(
+                                                                PostSharedElementKey(
+                                                                    postId = state.postItem.id,
+                                                                    origin = origin,
+                                                                    type = PostSharedElementType.DisplayName
+                                                                )
                                                             ),
+                                                            animatedVisibilityScope = animatedContentScope
+                                                        ),
                                                     text = state.postItem.displayName,
                                                     style =
-                                                        MaterialTheme.typography.bodyMedium.copy(
-                                                            fontWeight = FontWeight.SemiBold,
-                                                        ),
-                                                    color = MaterialTheme.colorScheme.onSurface,
+                                                    MaterialTheme.typography.bodyMedium.copy(
+                                                        fontWeight = FontWeight.SemiBold
+                                                    ),
+                                                    color = MaterialTheme.colorScheme.onSurface
                                                 )
                                                 Text(
                                                     modifier = Modifier.alignByBaseline(),
                                                     text = state.postItem.datePosted,
                                                     style = MaterialTheme.typography.bodyMedium,
-                                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                                 )
                                             }
                                             state.postItem.circleName?.let {
                                                 Row(
                                                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    verticalAlignment = Alignment.CenterVertically
                                                 ) {
                                                     Icon(
-                                                        painter = MubbleTheme.Icons.InCircle,
+                                                        painter = MubbleDesignSystem.Icons.InCircle,
                                                         contentDescription = null,
-                                                        tint = MaterialTheme.colorScheme.onSurface,
+                                                        tint = MaterialTheme.colorScheme.onSurface
                                                     )
                                                     CircleImage(
                                                         painter = painterResource(R.drawable.post_3),
                                                         size = 24.dp,
-                                                        borderWidth = 0.5.dp,
+                                                        borderWidth = 0.5.dp
                                                     )
                                                     Text(
                                                         text = it,
                                                         style = MaterialTheme.typography.bodyMedium,
-                                                        color = MaterialTheme.colorScheme.onSurface,
+                                                        color = MaterialTheme.colorScheme.onSurface
                                                     )
                                                 }
                                             }
@@ -215,19 +216,19 @@ fun PostDetailsScreen(
                                 navigationIcon = {
                                     IconButton(onClick = onBackClick) {
                                         Icon(
-                                            painter = MubbleTheme.Icons.ArrowBack,
-                                            contentDescription = "Back",
+                                            painter = MubbleDesignSystem.Icons.ArrowBack,
+                                            contentDescription = "Back"
                                         )
                                     }
                                 },
                                 actions = {
                                     IconButton(onClick = { }) {
                                         Icon(
-                                            painter = MubbleTheme.Icons.MoreHorizontal,
-                                            contentDescription = "More",
+                                            painter = MubbleDesignSystem.Icons.MoreHorizontal,
+                                            contentDescription = "More"
                                         )
                                     }
-                                },
+                                }
                             )
                             if (!isAtTop) {
                                 SubtleHorizontalDivider(modifier = Modifier.align(Alignment.BottomCenter))
@@ -236,7 +237,7 @@ fun PostDetailsScreen(
                     },
                     bottomBar = {
                         CommentBottomBar()
-                    },
+                    }
                 ) {
                     val postId = state.postItem.id
                     val commentsForPost = DummyCommentRepository.getCommentsForPost(postId)
@@ -249,10 +250,10 @@ fun PostDetailsScreen(
 
                     LazyColumn(
                         modifier =
-                            Modifier
-                                .fillMaxSize()
-                                .padding(it),
-                        state = lazyListState,
+                        Modifier
+                            .fillMaxSize()
+                            .padding(it),
+                        state = lazyListState
                     ) {
                         item {
                             BasePostLayout(
@@ -263,14 +264,14 @@ fun PostDetailsScreen(
                                 isInPostDetails = true,
                                 onUserClick = { },
                                 onMoreClick = viewModel::onMoreClick,
-                                onPostClick = { },
+                                onPostClick = { }
                             )
                         }
                         item {
                             Text(
                                 modifier = Modifier.padding(horizontal = 16.dp),
                                 text = "Comments",
-                                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.SemiBold),
+                                style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.SemiBold)
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                         }
@@ -280,29 +281,29 @@ fun PostDetailsScreen(
                                 onViewRepliesClick = { commentId ->
                                     areRepliesOpen = !areRepliesOpen
                                     commentIdToFetchReplies = commentId
-                                },
+                                }
                             )
                             AnimatedVisibility(
                                 visible = comment.userId == commentIdToFetchReplies && areRepliesOpen,
                                 enter =
-                                    fadeIn(animationSpec = tween(durationMillis = 300)) +
-                                        expandIn(
-                                            expandFrom = Alignment.TopStart,
-                                            clip = false,
-                                        ),
+                                fadeIn(animationSpec = tween(durationMillis = 300)) +
+                                    expandIn(
+                                        expandFrom = Alignment.TopStart,
+                                        clip = false
+                                    ),
                                 exit =
-                                    shrinkOut(
-                                        animationSpec = tween(durationMillis = 300),
-                                        shrinkTowards = Alignment.TopStart,
-                                        clip = false,
-                                    ) + fadeOut(),
+                                shrinkOut(
+                                    animationSpec = tween(durationMillis = 300),
+                                    shrinkTowards = Alignment.TopStart,
+                                    clip = false
+                                ) + fadeOut()
                             ) {
                                 Column {
                                     replies.forEach { replies ->
                                         CommentItem(
                                             comment = replies,
                                             startPadding = 44.dp,
-                                            onViewRepliesClick = {},
+                                            onViewRepliesClick = {}
                                         )
                                     }
                                 }
@@ -318,45 +319,45 @@ fun PostDetailsScreen(
 @Composable
 fun CommentBottomBar(
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.surfaceContainerLow,
+    color: Color = MaterialTheme.colorScheme.surfaceContainerLow
 ) {
     Box(modifier = modifier) {
         Surface(
-            color = color,
+            color = color
         ) {
             Row(
                 modifier =
-                    Modifier
-                        .padding(horizontal = 16.dp, vertical = 12.dp)
-                        .navigationBarsPadding(),
+                Modifier
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                    .navigationBarsPadding(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 CircleImage(
                     painter = painterResource(R.drawable.profile_14),
                     size = 40.dp,
-                    borderWidth = 0.3.dp,
+                    borderWidth = 0.3.dp
                 )
                 Box(
                     modifier =
-                        Modifier
-                            .weight(1f)
-                            .height(40.dp)
-                            .clip(shape = RoundedCornerShape(100))
-                            .background(color = MaterialTheme.colorScheme.surfaceContainerHighest),
-                    contentAlignment = Alignment.CenterStart,
+                    Modifier
+                        .weight(1f)
+                        .height(40.dp)
+                        .clip(shape = RoundedCornerShape(100))
+                        .background(color = MaterialTheme.colorScheme.surfaceContainerHighest),
+                    contentAlignment = Alignment.CenterStart
                 ) {
                     Text(
                         modifier = Modifier.padding(start = 12.dp, end = 4.dp),
                         text = "Add a comment..",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
         }
         SubtleHorizontalDivider(
-            modifier = Modifier.align(Alignment.TopCenter),
+            modifier = Modifier.align(Alignment.TopCenter)
         )
     }
 }
