@@ -127,8 +127,7 @@ fun ScrollReactingTopAppBar(
         with(sharedTransitionScope) {
             with(animatedContentScope) {
                 Row(
-                    modifier =
-                    Modifier
+                    modifier = Modifier
                         .fillMaxWidth()
                         .height(TopAppBarDefaults.TopAppBarExpandedHeight)
                         .renderInSharedTransitionScopeOverlay(
@@ -140,16 +139,14 @@ fun ScrollReactingTopAppBar(
                     if (!isCurrentUser) {
                         IconButton(
                             onClick = onBackClick,
-                            colors =
-                            IconButtonDefaults.iconButtonColors(
+                            colors = IconButtonDefaults.iconButtonColors(
                                 contentColor = iconColor
                             )
                         ) {
                             Icon(
                                 painter = MubbleDesignSystem.Icons.ArrowBack,
                                 contentDescription = null,
-                                modifier =
-                                Modifier
+                                modifier = Modifier
                                     .offset(x = 1.dp, y = 1.dp)
                                     .alpha(shadowAlpha)
                                     .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
@@ -163,8 +160,7 @@ fun ScrollReactingTopAppBar(
                     }
                     Text(
                         text = title,
-                        modifier =
-                        Modifier
+                        modifier = Modifier
                             .padding(start = 12.dp)
                             .alpha(targetAlpha),
                         style = MaterialTheme.typography.titleLarge,
@@ -177,16 +173,14 @@ fun ScrollReactingTopAppBar(
                         if (isCurrentUser) {
                             IconButton(
                                 onClick = onEditClick,
-                                colors =
-                                IconButtonDefaults.iconButtonColors(
+                                colors = IconButtonDefaults.iconButtonColors(
                                     contentColor = iconVariantColor
                                 )
                             ) {
                                 Icon(
                                     painter = MubbleDesignSystem.Icons.Edit,
                                     contentDescription = null,
-                                    modifier =
-                                    Modifier
+                                    modifier = Modifier
                                         .offset(x = 1.dp, y = 1.dp)
                                         .alpha(shadowAlpha)
                                         .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
@@ -199,16 +193,14 @@ fun ScrollReactingTopAppBar(
                             }
                             IconButton(
                                 onClick = {},
-                                colors =
-                                IconButtonDefaults.iconButtonColors(
+                                colors = IconButtonDefaults.iconButtonColors(
                                     contentColor = iconVariantColor
                                 )
                             ) {
                                 Icon(
                                     painter = MubbleDesignSystem.Icons.Save,
                                     contentDescription = null,
-                                    modifier =
-                                    Modifier
+                                    modifier = Modifier
                                         .offset(x = 1.dp, y = 1.dp)
                                         .alpha(shadowAlpha)
                                         .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
@@ -221,16 +213,14 @@ fun ScrollReactingTopAppBar(
                             }
                             IconButton(
                                 onClick = onNavigateToSettings,
-                                colors =
-                                IconButtonDefaults.iconButtonColors(
+                                colors = IconButtonDefaults.iconButtonColors(
                                     contentColor = iconVariantColor
                                 )
                             ) {
                                 Icon(
                                     imageVector = MubbleDesignSystem.Icons.Settings,
                                     contentDescription = null,
-                                    modifier =
-                                    Modifier
+                                    modifier = Modifier
                                         .offset(x = 1.dp, y = 1.dp)
                                         .alpha(shadowAlpha)
                                         .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
@@ -252,8 +242,7 @@ fun ScrollReactingTopAppBar(
                                 Icon(
                                     painter = MubbleDesignSystem.Icons.MoreHorizontal,
                                     contentDescription = null,
-                                    modifier =
-                                    Modifier
+                                    modifier = Modifier
                                         .offset(x = 1.dp, y = 1.dp)
                                         .alpha(shadowAlpha)
                                         .blur(2.dp, BlurredEdgeTreatment(CircleShape)),
