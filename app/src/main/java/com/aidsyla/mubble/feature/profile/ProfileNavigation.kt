@@ -165,10 +165,14 @@ fun NavController.navigateToNewPostScreen(
     this.navigate(NewPostScreenRoute, navOptions)
 }
 
-fun NavGraphBuilder.newPostScreen() {
+fun NavGraphBuilder.newPostScreen(
+    onBackClick: () -> Unit
+) {
     composable<NewPostScreenRoute> {
         CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this) {
-            NewPostScreen()
+            NewPostScreen(
+                onBackClick = onBackClick
+            )
         }
     }
 }

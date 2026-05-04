@@ -68,10 +68,13 @@ object MubbleDesignSystem {
         val ExpandContent @Composable get() = painterResource(id = R.drawable.expand_content)
         val CollapseContent @Composable get() = painterResource(id = R.drawable.collapse_content)
 
+        val Gif @Composable get() = painterResource(id = R.drawable.gif)
+
         val MoreHorizontal @Composable get() = painterResource(id = R.drawable.more_horiz)
         val Sort @Composable get() = painterResource(id = R.drawable.sort)
         val Check @Composable get() = painterResource(id = R.drawable.check)
         val Add @Composable get() = painterResource(id = R.drawable.add)
+        val ExpandCircleDown @Composable get() = painterResource(id = R.drawable.expand_circle_down)
 
         val Reply @Composable get() = painterResource(id = R.drawable.reply)
 
@@ -83,6 +86,7 @@ object MubbleDesignSystem {
         val Save @Composable get() = painterResource(id = R.drawable.bookmark)
 
         val ArrowBack @Composable get() = painterResource(id = R.drawable.arrow_back)
+        val ArrowCircleRight @Composable get() = painterResource(id = R.drawable.arrow_circle_right)
         val Close @Composable get() = painterResource(id = R.drawable.close)
         val Search @Composable get() = painterResource(id = R.drawable.search)
         val EditFilled @Composable get() = painterResource(id = R.drawable.edit_filled)

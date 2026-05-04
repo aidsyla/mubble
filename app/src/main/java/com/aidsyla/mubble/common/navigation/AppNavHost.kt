@@ -221,7 +221,9 @@ fun AppNavHost(
                     onBackClick = navController::popBackStack
                 )
 
-                newPostScreen()
+                newPostScreen(
+                    onBackClick = navController::popBackStack
+                )
 
                 circleScreen(
                     onUserClick = { userId ->
