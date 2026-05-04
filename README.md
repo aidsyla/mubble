@@ -129,4 +129,4 @@ This project includes and adapts code from
 the [Now in Android](https://github.com/android/nowinandroid) project, which is also licensed under
 Apache License 2.0.
 
-Stock images used in this app are from [Unsplash](https://unsplash.com/). Used under the [Unsplash License](https://unsplash.com/license)
+Stock images used in this app are from [Unsplash](https://unsplash.com/). Used under the [Unsplash License](https://unsplash.com/license).
