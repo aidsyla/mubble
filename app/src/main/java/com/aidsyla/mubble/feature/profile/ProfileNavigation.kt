@@ -11,11 +11,13 @@ import androidx.navigation.toRoute
 import com.aidsyla.mubble.common.navigation.FollowScreenRoute
 import com.aidsyla.mubble.common.navigation.FullScreenMediaViewer
 import com.aidsyla.mubble.common.navigation.LocalNavAnimatedVisibilityScope
+import com.aidsyla.mubble.common.navigation.NewPostScreenRoute
 import com.aidsyla.mubble.common.navigation.OtherFollowScreenRoute
 import com.aidsyla.mubble.common.navigation.OtherProfileRoute
 import com.aidsyla.mubble.common.navigation.ProfileRoute
 import com.aidsyla.mubble.common.navigation.lifecycleIsResumed
 import com.aidsyla.mubble.common.navigation.sharedelements.PostOrigin
+import com.aidsyla.mubble.feature.post.NewPostScreen
 import com.aidsyla.mubble.feature.profile.components.FullScreenMediaType
 import com.aidsyla.mubble.feature.profile.components.FullScreenMediaViewer
 import com.aidsyla.mubble.feature.profile.currentuser.ProfileScreen
@@ -59,7 +61,8 @@ fun NavGraphBuilder.profileScreen(
     onPostClick: (postId: String, origin: PostOrigin) -> Unit,
     onMediaClick: (Int, FullScreenMediaType) -> Unit,
     onFollowersClick: () -> Unit,
-    onFollowingClick: () -> Unit
+    onFollowingClick: () -> Unit,
+    onNewPostClick: () -> Unit
 ) {
     composable<ProfileRoute> { backStack ->
         CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this) {
@@ -70,7 +73,8 @@ fun NavGraphBuilder.profileScreen(
                     if (backStack.lifecycleIsResumed()) onMediaClick(p1, p2)
                 },
                 onFollowersClick = onFollowersClick,
-                onFollowingClick = onFollowingClick
+                onFollowingClick = onFollowingClick,
+                onNewPostClick = onNewPostClick
             )
         }
     }
@@ -151,6 +155,20 @@ fun NavGraphBuilder.otherFollowScreen(
                 onMessageClick = {},
                 onBackClick = onBackClick
             )
+        }
+    }
+}
+
+fun NavController.navigateToNewPostScreen(
+    navOptions: NavOptions? = null
+) {
+    this.navigate(NewPostScreenRoute, navOptions)
+}
+
+fun NavGraphBuilder.newPostScreen() {
+    composable<NewPostScreenRoute> {
+        CompositionLocalProvider(LocalNavAnimatedVisibilityScope provides this) {
+            NewPostScreen()
         }
     }
 }

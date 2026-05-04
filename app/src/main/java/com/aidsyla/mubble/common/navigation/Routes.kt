@@ -18,6 +18,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable object ProfileRoute
 
+@Serializable object NewPostScreenRoute
+
 @Serializable data class OtherProfileRoute(
     val userId: String? = null
 )

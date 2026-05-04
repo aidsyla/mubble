@@ -1,5 +1,11 @@
 package com.aidsyla.mubble.feature.post
 
+import androidx.compose.animation.EnterExitState
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.animateDp
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,79 +31,122 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.aidsyla.mubble.R
+import com.aidsyla.mubble.common.navigation.LocalNavAnimatedVisibilityScope
+import com.aidsyla.mubble.common.navigation.LocalSharedTransitionScope
+import com.aidsyla.mubble.common.navigation.sharedelements.NewPostSharedElementKey
+import com.aidsyla.mubble.common.navigation.sharedelements.PostSharedElementKey
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Preview
 @Composable
 fun NewPostScreen(modifier: Modifier = Modifier) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp)
-    ) {
-        Column(
-            modifier = Modifier.weight(1f)
+    val sharedTransitionScope =
+        LocalSharedTransitionScope.current
+            ?: throw IllegalStateException("No SharedElementScope found")
+    val animatedContentScope =
+        LocalNavAnimatedVisibilityScope.current
+            ?: throw IllegalStateException("No AnimatedVisibility found")
+
+    val roundedCornerAnimation by animatedContentScope.transition.animateDp {
+        when (it) {
+            EnterExitState.PreEnter -> 0.dp
+            EnterExitState.Visible -> 12.dp
+            EnterExitState.PostExit -> 12.dp
+        }
+    }
+
+    with(sharedTransitionScope) {
+        Scaffold(
+            modifier = modifier
+                .sharedBounds(
+                    sharedContentState = rememberSharedContentState(
+                        key = NewPostSharedElementKey
+                    ),
+                    animatedVisibilityScope = animatedContentScope,
+                    resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds(contentScale = ContentScale.Crop),
+                    clipInOverlayDuringTransition =
+                    OverlayClip(
+                        RoundedCornerShape(
+                            roundedCornerAnimation
+                        )
+                    )
+                )
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(it)
+                    .padding(start = 16.dp)
             ) {
-                Image(
-                    painter = painterResource(R.drawable.ic_launcher_background),
-                    colorFilter = ColorFilter.tint(Color.Blue),
-                    contentDescription = null,
-                    modifier =
-                    Modifier
-                        .size(40.dp)
-                        .clip(CircleShape)
-                )
-                Button(
-                    onClick = {},
-                    modifier = Modifier.height(32.dp),
-                    contentPadding = PaddingValues(8.dp)
+                Column(
+                    modifier = Modifier.weight(1f)
                 ) {
-                    Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null)
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("My Profile", style = MaterialTheme.typography.labelMedium)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.ic_launcher_background),
+                            colorFilter = ColorFilter.tint(Color.Blue),
+                            contentDescription = null,
+                            modifier =
+                            Modifier
+                                .size(40.dp)
+                                .clip(CircleShape)
+                        )
+                        Button(
+                            onClick = {},
+                            modifier = Modifier.height(32.dp),
+                            contentPadding = PaddingValues(8.dp)
+                        ) {
+                            Icon(imageVector = Icons.Default.ArrowDropDown, contentDescription = null)
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text("My Profile", style = MaterialTheme.typography.labelMedium)
+                        }
+                        Card(
+                            shape = RoundedCornerShape(8.dp)
+                        ) {
+                            Text("0/300", modifier = Modifier.padding(4.dp))
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Box(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            "Obviously the Material You design doesn't improve branding, but you already know the point is for cohesion. Obviously the Material You design doesn't improve branding, but you already know the point is for cohesion. Obviously the Material You design doesn't improve branding, but you already know the "
+                        )
+                    }
                 }
                 Card(
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp)
                 ) {
-                    Text("0/300", modifier = Modifier.padding(4.dp))
+                    IconButton(
+                        onClick = {}
+                    ) {
+                        Icon(imageVector = Icons.Default.Call, contentDescription = null)
+                    }
+                    IconButton(
+                        onClick = {}
+                    ) {
+                        Icon(imageVector = Icons.Default.MailOutline, contentDescription = null)
+                    }
                 }
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            Box(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    "Obviously the Material You design doesn't improve branding, but you already know the point is for cohesion. Obviously the Material You design doesn't improve branding, but you already know the point is for cohesion. Obviously the Material You design doesn't improve branding, but you already know the "
-                )
-            }
-        }
-        Card(
-            shape = RoundedCornerShape(topStart = 12.dp, bottomStart = 12.dp)
-        ) {
-            IconButton(
-                onClick = {}
-            ) {
-                Icon(imageVector = Icons.Default.Call, contentDescription = null)
-            }
-            IconButton(
-                onClick = {}
-            ) {
-                Icon(imageVector = Icons.Default.MailOutline, contentDescription = null)
             }
         }
     }

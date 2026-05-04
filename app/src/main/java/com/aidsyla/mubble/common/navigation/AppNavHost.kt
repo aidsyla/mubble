@@ -30,8 +30,10 @@ import com.aidsyla.mubble.feature.profile.followScreen
 import com.aidsyla.mubble.feature.profile.fullScreenMediaViewer
 import com.aidsyla.mubble.feature.profile.navigateToFollowScreen
 import com.aidsyla.mubble.feature.profile.navigateToFullScreenMediaViewer
+import com.aidsyla.mubble.feature.profile.navigateToNewPostScreen
 import com.aidsyla.mubble.feature.profile.navigateToOtherFollowScreen
 import com.aidsyla.mubble.feature.profile.navigateToOtherProfile
+import com.aidsyla.mubble.feature.profile.newPostScreen
 import com.aidsyla.mubble.feature.profile.otherFollowScreen
 import com.aidsyla.mubble.feature.profile.otherUserProfileScreen
 import com.aidsyla.mubble.feature.profile.profileScreen
@@ -175,7 +177,8 @@ fun AppNavHost(
                         )
                     },
                     onFollowersClick = { navController.navigateToFollowScreen(type = FollowType.FOLLOWERS) },
-                    onFollowingClick = { navController.navigateToFollowScreen(type = FollowType.FOLLOWING) }
+                    onFollowingClick = { navController.navigateToFollowScreen(type = FollowType.FOLLOWING) },
+                    onNewPostClick = { navController.navigateToNewPostScreen() }
                 )
 
                 otherUserProfileScreen(
@@ -217,6 +220,8 @@ fun AppNavHost(
                     },
                     onBackClick = navController::popBackStack
                 )
+
+                newPostScreen()
 
                 circleScreen(
                     onUserClick = { userId ->
