@@ -42,8 +42,7 @@ import com.aidsyla.mubble.R
 fun NewPostScreen(modifier: Modifier = Modifier) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier =
-        Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(start = 16.dp)
     ) {
@@ -108,6 +107,7 @@ fun NewPostScreen(modifier: Modifier = Modifier) {
 @Composable
 fun SendScreen(modifier: Modifier = Modifier) {
     LazyVerticalGrid(
+        modifier = modifier,
         columns = GridCells.Fixed(2),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
