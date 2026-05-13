@@ -4,11 +4,13 @@ import androidx.compose.animation.EnterExitState
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,18 +32,29 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DropdownMenuGroup
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.DropdownMenuPopup
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.PlainTooltip
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TooltipAnchorPosition
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -60,6 +73,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastForEachIndexed
 import com.aidsyla.mubble.R
 import com.aidsyla.mubble.common.components.CircleImage
 import com.aidsyla.mubble.common.navigation.LocalNavAnimatedVisibilityScope
@@ -161,25 +175,7 @@ fun NewPostScreen(
                             painter = painterResource(R.drawable.profile_12),
                             size = 40.dp
                         )
-
-                        Box {
-                            Button(
-                                onClick = { expanded = !expanded },
-                                modifier = Modifier.height(32.dp),
-                                contentPadding = PaddingValues(8.dp)
-//                            colors = ButtonDefaults.filledTonalButtonColors()
-                            ) {
-                                Icon(
-                                    painter = MubbleDesignSystem.Icons.ExpandCircleDown,
-                                    contentDescription = null
-                                )
-                                Spacer(modifier = Modifier.width(4.dp))
-                                Text("My Profile", style = MaterialTheme.typography.labelMedium)
-                            }
-
-                            // TODO: dropdown menu goes here
-                        }
-
+                        PostDestinationSelect()
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(8.dp))
@@ -343,6 +339,108 @@ fun SendPostToPeople(modifier: Modifier = Modifier) {
                 contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp)
             ) {
                 Text("Send", style = MaterialTheme.typography.labelSmall)
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun PostDestinationSelect() {
+    val groupInteractionSource = remember { MutableInteractionSource() }
+
+    val headerLabel = "Where to post?"
+    val groupItemLabels = listOf("My Profile", "Cars", "Nature")
+    val icons = listOf(
+        R.drawable.profile_12,
+        R.drawable.circle_5,
+        R.drawable.circle_1
+    )
+
+    var expanded by remember { mutableStateOf(false) }
+    var selectedIndex by remember { mutableIntStateOf(0) }
+
+    Box {
+        TooltipBox(
+            positionProvider =
+                TooltipDefaults.rememberTooltipPositionProvider(TooltipAnchorPosition.Above),
+            tooltip = { PlainTooltip { Text("Localized description") } },
+            state = rememberTooltipState(),
+        ) {
+            Button(
+                onClick = { expanded = !expanded },
+                modifier = Modifier.height(32.dp),
+                contentPadding = PaddingValues(8.dp)
+//                colors = ButtonDefaults.filledTonalButtonColors()
+            ) {
+                if (selectedIndex == 0) {
+                    Icon(
+                        painter = painterResource(MubbleDesignSystem.TopLevelDestinationIcons.ProfileSelected),
+                        modifier = Modifier.size(MenuDefaults.LeadingIconSize),
+                        contentDescription = null
+                    )
+                } else {
+                    CircleImage(
+                        painter = painterResource(icons[selectedIndex]),
+                        modifier = Modifier.size(MenuDefaults.LeadingIconSize),
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = groupItemLabels[selectedIndex],
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.animateContentSize()
+                )
+            }
+        }
+        DropdownMenuPopup(expanded = expanded, onDismissRequest = { expanded = false }) {
+            DropdownMenuGroup(
+                shapes = MenuDefaults.groupShape(1, 1),
+                interactionSource = groupInteractionSource,
+            ) {
+                MenuDefaults.Label { Text(headerLabel) }
+                HorizontalDivider(
+                    modifier = Modifier.padding(MenuDefaults.HorizontalDividerPadding)
+                )
+                val count = groupItemLabels.size
+                groupItemLabels.fastForEachIndexed { i, string ->
+                    DropdownMenuItem(
+                        text = { Text(string) },
+                        shapes = MenuDefaults.itemShape(i, count),
+                        leadingIcon = {
+                            if (i == 0)
+                                Icon(
+                                    painter = painterResource(MubbleDesignSystem.TopLevelDestinationIcons.Profile),
+                                    modifier = Modifier.size(MenuDefaults.LeadingIconSize),
+                                    contentDescription = null
+                                )
+                            else
+                                CircleImage(
+                                    painter = painterResource(icons[i]),
+                                    modifier = Modifier.size(MenuDefaults.LeadingIconSize),
+                                )
+                        },
+                        checkedLeadingIcon = {
+                            if (i == 0)
+                                Icon(
+                                    painter = painterResource(MubbleDesignSystem.TopLevelDestinationIcons.ProfileSelected),
+                                    modifier = Modifier.size(MenuDefaults.LeadingIconSize),
+                                    contentDescription = null
+                                )
+                            else
+                                CircleImage(
+                                    painter = painterResource(icons[i]),
+                                    modifier = Modifier.size(MenuDefaults.LeadingIconSize),
+                                )
+                        },
+                        checked = selectedIndex == i,
+                        onCheckedChange = {
+                            if (it) selectedIndex = i
+                            expanded = false
+                        },
+                    )
+                }
             }
         }
     }
