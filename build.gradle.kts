@@ -10,7 +10,7 @@ plugins {
     id("com.google.dagger.hilt.android") version "2.59.2" apply false
 }
 
-val ktlintVersion = libs.versions.ktlint.get()
+val ktlintVersion = "1.8.0"
 
 subprojects {
     apply<SpotlessPlugin>()
