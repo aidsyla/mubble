@@ -61,7 +61,7 @@ fun ProfilePost(
                         type = PostSharedElementType.Bounds
                     )
                 ),
-                resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds(contentScale = ContentScale.Crop),
+                resizeMode = SharedTransitionScope.ResizeMode.scaleToBounds(contentScale = ContentScale.Crop),
                 clipInOverlayDuringTransition =
                 OverlayClip(
                     RoundedCornerShape(

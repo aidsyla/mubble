@@ -113,7 +113,7 @@ fun NewPostScreen(
                         key = NewPostSharedElementKey
                     ),
                     animatedVisibilityScope = animatedContentScope,
-                    resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds(contentScale = ContentScale.Crop),
+                    resizeMode = SharedTransitionScope.ResizeMode.scaleToBounds(contentScale = ContentScale.Crop),
                     clipInOverlayDuringTransition = OverlayClip(
                         RoundedCornerShape(
                             roundedCornerAnimation

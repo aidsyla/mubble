@@ -1,8 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    kotlin("plugin.serialization") version "2.2.0"
+    kotlin("plugin.serialization") version "2.2.10"
 
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
@@ -10,12 +9,12 @@ plugins {
 
 android {
     namespace = "com.aidsyla.mubble"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.aidsyla.mubble"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0"
 
@@ -35,15 +34,14 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlin {
-        target {
-            compilerOptions {
-                optIn.add("kotlin.RequiresOptIn")
-            }
-        }
-    }
     buildFeatures {
         compose = true
+    }
+}
+
+kotlin {
+    compilerOptions {
+        optIn.add("kotlin.RequiresOptIn")
     }
 }
 
