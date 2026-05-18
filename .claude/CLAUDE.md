@@ -58,10 +58,10 @@ Always run `./gradlew spotlessApply` before committing.
 
 ## Key Library Versions
 
-- Kotlin 2.2.0, KSP 2.2.0-2.0.2
-- AGP 8.13.2, Compose BOM 2025.06.01
-- Material3 1.4.0-alpha17 (expressive components available)
-- Navigation Compose 2.9.1 (type-safe routes)
-- Hilt 2.56.2
-- Media3 ExoPlayer 1.7.1 (video playback in `feature/videos/`)
-- DataStore Preferences 1.1.7
+- Kotlin 2.3.21
+- AGP 9.2.1, Compose BOM 2026.05.00
+- Material3 1.5.0-alpha19 (expressive components available)
+- Navigation Compose 2.9.8 (type-safe routes)
+- Hilt 2.59.2
+- Media3 ExoPlayer 1.10.1 (video playback in `feature/videos/`)
+- DataStore Preferences 1.2.1
